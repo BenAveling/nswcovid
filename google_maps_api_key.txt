@@ -1,0 +1,7 @@
+# This somewhat random string is a Google API key.
+
+AIzaSyDh5hod8bm-ok7ma0Ld2F4F721tAtxQDQU
+
+# To run this map yourself, you'll need your own key. 
+# See:
+# https://developers.google.com/maps/documentation/places/web-service/get-api-key

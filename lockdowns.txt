@@ -1,0 +1,67 @@
+# Greater Sydney (Note: Some of these LGA are overriden by entries later in this file)
+https://www.nsw.gov.au/covid-19/rules/greater-sydney
+colour: red
+region: Greater Sydney
+Bayside
+Blacktown
+Burwood
+Camden
+Campbelltown
+Canada Bay
+Canterbury-Bankstown
+Cumberland
+Fairfield
+Georges River
+Hornsby
+Hunter's Hill
+Inner West
+Ku-ring-gai
+Lane Cove
+Liverpool
+Mosman
+North Sydney
+Northern Beaches
+Parramatta
+Penrith
+Randwick
+Ryde
+Strathfield
+Sutherland
+Sydney
+Hills
+Waverley
+Willoughby
+Woollahra
+# Sydney Surrounds (excludes Hawkesbury and Wollondilly?)
+Blue Mountains
+Central Coast
+Wollongong
+Shellharbour
+
+# As at 2021-08-04, what was 3 locked down LGA is now 8
+https://www.nsw.gov.au/covid-19/rules/affected-area
+colour: orange
+region: Greater Sydney
+Blacktown
+Campbelltown
+Canterbury-Bankstown
+Cumberland
+Fairfield
+Georges River
+Liverpool
+Parramatta
+
+# As of 5/8, also NewCastle and Hunter restrictions
+https://www.nsw.gov.au/covid-19/rules/affected-regions
+colour: yellow
+region: NewCastle and Hunter
+Newcastle
+Cessnock
+Dungog
+Lake Macquarie
+Maitland
+Muswellbrook
+Port Stephens
+Singleton
+
+# FIXME: if any LGA is a substring of another LGA, bad stuff may happen.

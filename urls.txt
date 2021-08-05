@@ -1,0 +1,9 @@
+# updated daily, m-f
+
+https://data.nsw.gov.au/data/dataset/covid-19-cases-by-location/resource/21304414-1ff1-4243-a5d2-f52778048b29
+
+https://data.nsw.gov.au/data/dataset/aefcde60-3b0c-4bc0-9af1-6fe652944ec2/resource/21304414-1ff1-4243-a5d2-f52778048b29/download/confirmed_cases_table1_location.csv
+
+https://www.nsw.gov.au/covid-19/rules/affected-area#map-local-government-areas-of-concern
+
+http://honisoit.com/2017/09/food-fault-lines-mapping-class-division-through-food-chains/

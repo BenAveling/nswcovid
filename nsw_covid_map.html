@@ -1,0 +1,1792 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>NSW Covid Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>
+      <P><font color="red">Sorry, but this page requires javascript.</font> 
+    </noscript>
+    <div id="map"></div>
+    <div id="legend"
+         style="background: #fff;
+           padding: 10px;
+           margin: 10px;
+           width: 100px;">
+      <strong>Barcharts</strong>
+      <BR>Each little barchart represents cases/day between 2021-07-22 and 2021-08-04.
+
+      <strong>Restrictions</strong> <!-- no one should have let me choose colours. Sorry. -->
+      <BR><div style="color: #ff0000">Red: <A href="https://www.nsw.gov.au/covid-19/rules/greater-sydney">Greater Sydney</A></div>
+      <div style="color: #ff8800">Orange: <A href="https://www.nsw.gov.au/covid-19/rules/affected-area">Western Sydney</A></div>
+      <div style="color: #aaaa00">Yellow: <A href="https://www.nsw.gov.au/covid-19/rules/affected-regions">Newcastle and Hunter</A></div>
+      <div style="color: #990099">Purple: No restrictions.</div>
+
+      <BR><strong>Data from:</strong> <A href="https://data.nsw.gov.au/data/dataset/covid-19-cases-by-location/resource/21304414-1ff1-4243-a5d2-f52778048b29">data.nsw.gov.au</A>
+
+      <!-- <BR>Hover the mouse over them for more detail.can comment this out for screenshots -->
+      <!-- TODO Add buttons to choose between LGA and Postcodes -->
+      <!-- TODO Move more of the locked down details into lockeddown.txt and read it from there -->
+      </div>
+    </div>
+    <script type="text/javascript">
+      var map;
+      function init_map() {
+        map = new google.maps.Map(
+          document.getElementById("map"),
+          {
+            center: {
+              // Fairfield
+              // lat: -33.887203, 
+              // lng: 150.979458 
+              // Parramatta
+              // lat: -33.7995485181818,
+              // lng: 151.0328134909090
+              lat: -33.887203, 
+              lng: 151.0328134909090
+            },
+            zoom: 11 // higher number = more zoomed in 
+          }
+        );
+        const legend = document.getElementById("legend");
+        map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+      };
+
+      function add_box(n,w,s,e,c) {
+        var box = new google.maps.Rectangle(
+          {
+            strokeColor: c,
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: c,
+            fillOpacity: 0.35,
+            map: map,
+            bounds: {
+              north: n,
+              west: w,
+              south: s,
+              east: e,
+            }
+          }
+        );
+      }
+
+      function add_circle(lat,lng,size,c) {
+        var radius=50*Math.sqrt(size)
+        var box = new google.maps.Circle(
+          {
+            strokeColor: c,
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: c,
+            fillOpacity: 0.35,
+            map: map,
+            center: { lat: lat, lng: lng },
+            radius: radius,
+            // e.g. radius: Math.sqrt(citymap[city].population) * 100,
+          }
+        );
+      }
+
+      function add_text(lat,lng,title,label,details) {
+        const myLatLng = { lat: lat, lng: lng };
+        const marker = new google.maps.Marker(
+          {
+            position: myLatLng,
+            map: map,
+            label: label,
+            title: title,
+            opacity: 0
+          }
+        );
+        const infowindow = new google.maps.InfoWindow({ content: details });
+        marker.addListener(
+          "mouseover", () => {
+            infowindow.open(
+              {
+                anchor: marker,
+                map,
+                shouldFocus: false,
+              }
+            );
+          }
+        );
+        marker.addListener(
+          "mouseout", () => {
+            infowindow.close();
+          }
+        );
+      }
+      function add_boxes(name,label,text,lat,lng,cases,colour) {
+        add_text(lat,lng,name,label,text);
+        var high=0.002;
+        var wide=0.002; // For a single case to be a square, keep wide=high
+        var s=lat;
+        var w=lng;
+        var first=1;
+        // add_circle(s,w,10,colour);
+        for (let day = 0; day < 14; day++) {
+          if(cases[day]>0 || !first){
+            first=0;
+            // n, w, s, e, colour
+            add_box(s+cases[day]*high,w,s,w+wide,colour);
+            // lat,lng,size
+            // add_circle(s,w,cases[day],"#ff0000");
+            w+=wide;
+          }
+        }
+        // No one should let me choose colours - help needed here please!
+      }
+    </script>
+    <script type="text/javascript">
+      function init(){
+        init_map();
+        // Postcode 2000, Sydney LGA is at -33.85985,151.20901 
+        // Postcode 2000, Sydney LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2000, Sydney LGA (Greater Sydney) cases:  0 1 0 0 0 0 0 0 0 0 0 0 0 1, total 2 ( 1 : 1) 
+        // Postcode 2000, Sydney LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-08-04
+        add_boxes("Postcode 2000, Sydney LGA (Greater Sydney)", "P", "Postcode 2000, Sydney LGA (Greater Sydney)<p>2 cases on 2021-07-23 and 2021-08-04:<p>2021-07-23: 1<br>2021-08-04: 1<br><p>Week to week Reff=1", -33.85985,151.20901, [ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ], "#ff0000");
+
+        // Postcode 2007, Sydney LGA is at -33.8823187,151.197131 
+        // Postcode 2007, Sydney LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2007, Sydney LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2008, Sydney LGA is at -33.8933,151.189 
+        // Postcode 2008, Sydney LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2008, Sydney LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2009, Sydney LGA is at -33.8687895,151.1942171 
+        // Postcode 2009, Sydney LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2009, Sydney LGA (Greater Sydney) cases:  0 0 0 0 0 1 1 0 1 0 0 1 0 1, total 5 ( 2 : 3) 
+        // Postcode 2009, Sydney LGA (Greater Sydney): cases all fall between 2021-07-27 and 2021-08-04
+        add_boxes("Postcode 2009, Sydney LGA (Greater Sydney)", "P", "Postcode 2009, Sydney LGA (Greater Sydney)<p>5 cases between 2021-07-27 and 2021-08-04:<p>2021-07-27: 1<br>2021-07-28: 1<br>2021-07-30: 1<br>2021-08-02: 1<br>2021-08-04: 1<br><p>Week to week Reff=1.5", -33.8687895,151.1942171, [ 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1 ], "#ff0000");
+
+        // Postcode 2010, Sydney LGA is at -33.881,151.217 
+        // Postcode 2010, Sydney LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2010, Sydney LGA (Greater Sydney) cases:  1 0 1 0 0 0 0 0 1 0 1 0 0 0, total 4 ( 2 : 2) 
+        // Postcode 2010, Sydney LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-01
+        add_boxes("Postcode 2010, Sydney LGA (Greater Sydney)", "P", "Postcode 2010, Sydney LGA (Greater Sydney)<p>4 cases between 2021-07-22 and 2021-08-01:<p>2021-07-22: 1<br>2021-07-24: 1<br>2021-07-30: 1<br>2021-08-01: 1<br><p>Week to week Reff=1", -33.881,151.217, [ 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2011, Sydney LGA is at -33.8704,151.2223 
+        // Postcode 2011, Sydney LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2011, Sydney LGA (Greater Sydney) cases:  2 0 0 0 0 1 0 0 0 0 0 0 0 0, total 3 ( 3 : 0) 
+        // Postcode 2011, Sydney LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-07-27
+        add_boxes("Postcode 2011, Sydney LGA (Greater Sydney)", "P", "Postcode 2011, Sydney LGA (Greater Sydney)<p>3 cases between 2021-07-22 and 2021-07-27:<p>2021-07-22: 2<br>2021-07-27: 1<br><p>Week to week Reff=0", -33.8704,151.2223, [ 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2015, Sydney LGA is at -33.895,151.191 
+        // Postcode 2015, Sydney LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2015, Sydney LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2016, Sydney LGA is at -33.892215,151.205873 
+        // Postcode 2016, Sydney LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2016, Sydney LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2017, Sydney LGA is at -33.908,151.2105 
+        // Postcode 2017, Sydney LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2017, Sydney LGA (Greater Sydney) cases:  0 0 0 0 1 0 0 0 0 0 0 2 0 0, total 3 ( 1 : 2) 
+        // Postcode 2017, Sydney LGA (Greater Sydney): cases all fall between 2021-07-26 and 2021-08-02
+        add_boxes("Postcode 2017, Sydney LGA (Greater Sydney)", "P", "Postcode 2017, Sydney LGA (Greater Sydney)<p>3 cases between 2021-07-26 and 2021-08-02:<p>2021-07-26: 1<br>2021-08-02: 2<br><p>Week to week Reff=2", -33.908,151.2105, [ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0 ], "#ff0000");
+
+        // Postcode 2018, Sydney LGA is at -33.9221918,151.201678 
+        // Postcode 2018, Sydney LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2018, Sydney LGA (Greater Sydney) cases:  0 0 0 0 1 1 0 0 0 0 0 0 0 0, total 2 ( 2 : 0) 
+        // Postcode 2018, Sydney LGA (Greater Sydney): cases all fall between 2021-07-26 and 2021-07-27
+        add_boxes("Postcode 2018, Sydney LGA (Greater Sydney)", "P", "Postcode 2018, Sydney LGA (Greater Sydney)<p>2 cases on 2021-07-26 and 2021-07-27:<p>2021-07-26: 1<br>2021-07-27: 1<br><p>Week to week Reff=0", -33.9221918,151.201678, [ 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2019, Bayside LGA is at -33.9469267,151.1973167 
+        // Postcode 2019, Bayside LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2019, Bayside LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2020, Bayside LGA is at -33.9399228,151.1752764 
+        // Postcode 2020, Bayside LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2020, Bayside LGA (Greater Sydney) cases:  1 0 1 2 0 2 0 0 2 0 0 0 0 0, total 8 ( 6 : 2) 
+        // Postcode 2020, Bayside LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-07-30
+        add_boxes("Postcode 2020, Bayside LGA (Greater Sydney)", "P", "Postcode 2020, Bayside LGA (Greater Sydney)<p>8 cases between 2021-07-22 and 2021-07-30:<p>2021-07-22: 1<br>2021-07-24: 1<br>2021-07-25: 2<br>2021-07-27: 2<br>2021-07-30: 2<br><p>Week to week Reff=0.33", -33.9399228,151.1752764, [ 1, 0, 1, 2, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2021, Woollahra LGA is at -33.8850215,151.2262353 
+        // Postcode 2021, Woollahra LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2021, Woollahra LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2022, Waverley LGA is at -33.901,151.248 
+        // Postcode 2022, Waverley LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2022, Waverley LGA (Greater Sydney) cases:  0 0 1 0 0 0 0 0 0 0 0 0 0 0, total 1 ( 1 : 0) 
+        // Postcode 2022, Waverley LGA (Greater Sydney): cases all fall between 2021-07-24 and 2021-07-24
+        add_boxes("Postcode 2022, Waverley LGA (Greater Sydney)", "P", "Postcode 2022, Waverley LGA (Greater Sydney)<p>1 case on 2021-07-24<p>2021-07-24: 1<br><p>Week to week Reff=0", -33.901,151.248, [ 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2023, Woollahra LGA is at -33.8826955,151.2539627 
+        // Postcode 2023, Woollahra LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2023, Woollahra LGA (Greater Sydney) cases:  0 0 0 0 0 1 0 0 0 0 0 0 0 0, total 1 ( 1 : 0) 
+        // Postcode 2023, Woollahra LGA (Greater Sydney): cases all fall between 2021-07-27 and 2021-07-27
+        add_boxes("Postcode 2023, Woollahra LGA (Greater Sydney)", "P", "Postcode 2023, Woollahra LGA (Greater Sydney)<p>1 case on 2021-07-27<p>2021-07-27: 1<br><p>Week to week Reff=0", -33.8826955,151.2539627, [ 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2024, Waverley LGA is at -33.899693,151.2554202 
+        // Postcode 2024, Waverley LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2024, Waverley LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 1 2 0 0, total 3 ( 0 : 3) 
+        // Postcode 2024, Waverley LGA (Greater Sydney): cases all fall between 2021-08-01 and 2021-08-02
+        add_boxes("Postcode 2024, Waverley LGA (Greater Sydney)", "P", "Postcode 2024, Waverley LGA (Greater Sydney)<p>3 cases between 2021-08-01 and 2021-08-02:<p>2021-08-01: 1<br>2021-08-02: 2<br>", -33.899693,151.2554202, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0 ], "#ff0000");
+
+        // Postcode 2025, Woollahra LGA is at -33.8865002,151.2437606 
+        // Postcode 2025, Woollahra LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2025, Woollahra LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2026, Waverley LGA is at -33.898,151.268 
+        // Postcode 2026, Waverley LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2026, Waverley LGA (Greater Sydney) cases:  0 0 2 0 0 0 0 0 0 0 0 0 0 0, total 2 ( 2 : 0) 
+        // Postcode 2026, Waverley LGA (Greater Sydney): cases all fall between 2021-07-24 and 2021-07-24
+        add_boxes("Postcode 2026, Waverley LGA (Greater Sydney)", "P", "Postcode 2026, Waverley LGA (Greater Sydney)<p>2 cases on 2021-07-24<p>2021-07-24: 2<br><p>Week to week Reff=0", -33.898,151.268, [ 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2027, Woollahra LGA is at -33.87045,151.25097 
+        // Postcode 2027, Woollahra LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2027, Woollahra LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2028, Woollahra LGA is at -33.8775,151.2412 
+        // Postcode 2028, Woollahra LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2028, Woollahra LGA (Greater Sydney) cases:  0 0 0 0 0 0 1 0 0 0 0 0 0 0, total 1 ( 1 : 0) 
+        // Postcode 2028, Woollahra LGA (Greater Sydney): cases all fall between 2021-07-28 and 2021-07-28
+        add_boxes("Postcode 2028, Woollahra LGA (Greater Sydney)", "P", "Postcode 2028, Woollahra LGA (Greater Sydney)<p>1 case on 2021-07-28<p>2021-07-28: 1<br><p>Week to week Reff=0", -33.8775,151.2412, [ 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2029, Woollahra LGA is at -33.8754209,151.265623 
+        // Postcode 2029, Woollahra LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2029, Woollahra LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2030, Waverley LGA is at -33.8398183,151.2816573 
+        // Postcode 2030, Waverley LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2030, Waverley LGA (Greater Sydney) cases:  0 1 0 0 0 1 0 0 0 0 0 0 1 0, total 3 ( 2 : 1) 
+        // Postcode 2030, Waverley LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-08-03
+        add_boxes("Postcode 2030, Waverley LGA (Greater Sydney)", "P", "Postcode 2030, Waverley LGA (Greater Sydney)<p>3 cases between 2021-07-23 and 2021-08-03:<p>2021-07-23: 1<br>2021-07-27: 1<br>2021-08-03: 1<br><p>Week to week Reff=0.5", -33.8398183,151.2816573, [ 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 ], "#ff0000");
+
+        // Postcode 2031, Randwick LGA is at -33.9203899,151.2438854 
+        // Postcode 2031, Randwick LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2031, Randwick LGA (Greater Sydney) cases:  1 0 0 1 1 0 0 1 0 0 0 0 0 0, total 4 ( 3 : 1) 
+        // Postcode 2031, Randwick LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-07-29
+        add_boxes("Postcode 2031, Randwick LGA (Greater Sydney)", "P", "Postcode 2031, Randwick LGA (Greater Sydney)<p>4 cases between 2021-07-22 and 2021-07-29:<p>2021-07-22: 1<br>2021-07-25: 1<br>2021-07-26: 1<br>2021-07-29: 1<br><p>Week to week Reff=0.33", -33.9203899,151.2438854, [ 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2032, Randwick LGA is at -33.92457,151.22765 
+        // Postcode 2032, Randwick LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2032, Randwick LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2033, Randwick LGA is at -33.9096151,151.2189869 
+        // Postcode 2033, Randwick LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2033, Randwick LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 1 0 0 0 0 0, total 1 ( 0 : 1) 
+        // Postcode 2033, Randwick LGA (Greater Sydney): cases all fall between 2021-07-30 and 2021-07-30
+        add_boxes("Postcode 2033, Randwick LGA (Greater Sydney)", "P", "Postcode 2033, Randwick LGA (Greater Sydney)<p>1 case on 2021-07-30<p>2021-07-30: 1<br>", -33.9096151,151.2189869, [ 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2034, Randwick LGA is at -33.933,151.259 
+        // Postcode 2034, Randwick LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2034, Randwick LGA (Greater Sydney) cases:  0 0 0 0 1 0 0 0 0 0 0 0 0 0, total 1 ( 1 : 0) 
+        // Postcode 2034, Randwick LGA (Greater Sydney): cases all fall between 2021-07-26 and 2021-07-26
+        add_boxes("Postcode 2034, Randwick LGA (Greater Sydney)", "P", "Postcode 2034, Randwick LGA (Greater Sydney)<p>1 case on 2021-07-26<p>2021-07-26: 1<br><p>Week to week Reff=0", -33.933,151.259, [ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2035, Randwick LGA is at -33.9406443,151.2154524 
+        // Postcode 2035, Randwick LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2035, Randwick LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2036, Randwick LGA is at -33.976,151.218 
+        // Postcode 2036, Randwick LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2036, Randwick LGA (Greater Sydney) cases:  0 0 0 0 0 1 0 1 0 0 0 0 0 0, total 2 ( 1 : 1) 
+        // Postcode 2036, Randwick LGA (Greater Sydney): cases all fall between 2021-07-27 and 2021-07-29
+        add_boxes("Postcode 2036, Randwick LGA (Greater Sydney)", "P", "Postcode 2036, Randwick LGA (Greater Sydney)<p>2 cases on 2021-07-27 and 2021-07-29:<p>2021-07-27: 1<br>2021-07-29: 1<br><p>Week to week Reff=1", -33.976,151.218, [ 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2037, Sydney LGA is at -33.8797767,151.1869715 
+        // Postcode 2037, Sydney LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2037, Sydney LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2038, Inner West LGA is at -33.8824062,151.1723645 
+        // Postcode 2038, Inner West LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2038, Inner West LGA (Greater Sydney) cases:  0 0 0 0 0 1 0 0 1 0 1 0 0 0, total 3 ( 1 : 2) 
+        // Postcode 2038, Inner West LGA (Greater Sydney): cases all fall between 2021-07-27 and 2021-08-01
+        add_boxes("Postcode 2038, Inner West LGA (Greater Sydney)", "P", "Postcode 2038, Inner West LGA (Greater Sydney)<p>3 cases between 2021-07-27 and 2021-08-01:<p>2021-07-27: 1<br>2021-07-30: 1<br>2021-08-01: 1<br><p>Week to week Reff=2", -33.8824062,151.1723645, [ 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2039, Inner West LGA is at -33.8661553,151.1738213 
+        // Postcode 2039, Inner West LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2039, Inner West LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2040, Inner West LGA is at -33.874345,151.164693 
+        // Postcode 2040, Inner West LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2040, Inner West LGA (Greater Sydney) cases:  0 0 0 0 0 1 0 0 0 0 0 0 0 0, total 1 ( 1 : 0) 
+        // Postcode 2040, Inner West LGA (Greater Sydney): cases all fall between 2021-07-27 and 2021-07-27
+        add_boxes("Postcode 2040, Inner West LGA (Greater Sydney)", "P", "Postcode 2040, Inner West LGA (Greater Sydney)<p>1 case on 2021-07-27<p>2021-07-27: 1<br><p>Week to week Reff=0", -33.874345,151.164693, [ 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2041, Inner West LGA is at -33.85275,151.18024 
+        // Postcode 2041, Inner West LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2041, Inner West LGA (Greater Sydney) cases:  1 0 0 0 0 0 0 0 0 1 0 0 1 0, total 3 ( 1 : 2) 
+        // Postcode 2041, Inner West LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-03
+        add_boxes("Postcode 2041, Inner West LGA (Greater Sydney)", "P", "Postcode 2041, Inner West LGA (Greater Sydney)<p>3 cases between 2021-07-22 and 2021-08-03:<p>2021-07-22: 1<br>2021-07-31: 1<br>2021-08-03: 1<br><p>Week to week Reff=2", -33.85275,151.18024, [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0 ], "#ff0000");
+
+        // Postcode 2042, Sydney LGA is at -33.8978149,151.1785003 
+        // Postcode 2042, Sydney LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2042, Sydney LGA (Greater Sydney) cases:  0 0 0 1 0 1 0 0 0 0 0 0 1 0, total 3 ( 2 : 1) 
+        // Postcode 2042, Sydney LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-08-03
+        add_boxes("Postcode 2042, Sydney LGA (Greater Sydney)", "P", "Postcode 2042, Sydney LGA (Greater Sydney)<p>3 cases between 2021-07-25 and 2021-08-03:<p>2021-07-25: 1<br>2021-07-27: 1<br>2021-08-03: 1<br><p>Week to week Reff=0.5", -33.8978149,151.1785003, [ 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 ], "#ff0000");
+
+        // Postcode 2043, Sydney LGA is at -33.9023649,151.1854757 
+        // Postcode 2043, Sydney LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2043, Sydney LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2044, Inner West LGA is at -33.925048,151.1604169 
+        // Postcode 2044, Inner West LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2044, Inner West LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2045, Inner West LGA is at -33.8786088,151.1374068 
+        // Postcode 2045, Inner West LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2045, Inner West LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2046, Canada Bay LGA is at -33.8574937,151.1323094 
+        // Postcode 2046, Canada Bay LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2046, Canada Bay LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 1 0 0 1, total 2 ( 0 : 2) 
+        // Postcode 2046, Canada Bay LGA (Greater Sydney): cases all fall between 2021-08-01 and 2021-08-04
+        add_boxes("Postcode 2046, Canada Bay LGA (Greater Sydney)", "P", "Postcode 2046, Canada Bay LGA (Greater Sydney)<p>2 cases on 2021-08-01 and 2021-08-04:<p>2021-08-01: 1<br>2021-08-04: 1<br>", -33.8574937,151.1323094, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1 ], "#ff0000");
+
+        // Postcode 2047, Canada Bay LGA is at -33.8523805,151.1548847 
+        // Postcode 2047, Canada Bay LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2047, Canada Bay LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 1 0 0 0, total 1 ( 0 : 1) 
+        // Postcode 2047, Canada Bay LGA (Greater Sydney): cases all fall between 2021-08-01 and 2021-08-01
+        add_boxes("Postcode 2047, Canada Bay LGA (Greater Sydney)", "P", "Postcode 2047, Canada Bay LGA (Greater Sydney)<p>1 case on 2021-08-01<p>2021-08-01: 1<br>", -33.8523805,151.1548847, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2048, Inner West LGA is at -33.8812,151.171 
+        // Postcode 2048, Inner West LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2048, Inner West LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2049, Inner West LGA is at -33.8962174,151.1541497 
+        // Postcode 2049, Inner West LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2049, Inner West LGA (Greater Sydney) cases:  0 0 0 0 3 0 0 0 0 0 0 0 0 0, total 3 ( 3 : 0) 
+        // Postcode 2049, Inner West LGA (Greater Sydney): cases all fall between 2021-07-26 and 2021-07-26
+        add_boxes("Postcode 2049, Inner West LGA (Greater Sydney)", "P", "Postcode 2049, Inner West LGA (Greater Sydney)<p>3 cases on 2021-07-26<p>2021-07-26: 3<br><p>Week to week Reff=0", -33.8962174,151.1541497, [ 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2050, Sydney LGA is at -33.8896644,151.1821576 
+        // Postcode 2050, Sydney LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2050, Sydney LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2060, North Sydney LGA is at -33.84016,151.19543 
+        // Postcode 2060, North Sydney LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2060, North Sydney LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2061, North Sydney LGA is at -33.84765,151.21201 
+        // Postcode 2061, North Sydney LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2061, North Sydney LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2062, North Sydney LGA is at -33.8228068,151.2146155 
+        // Postcode 2062, North Sydney LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2062, North Sydney LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2063, Willoughby LGA is at -33.8123999,151.2189869 
+        // Postcode 2063, Willoughby LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2063, Willoughby LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2064, Willoughby LGA is at -33.8086312,151.1840188 
+        // Postcode 2064, Willoughby LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2064, Willoughby LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2065, Lane Cove LGA is at -33.83356,151.19128 
+        // Postcode 2065, Lane Cove LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2065, Lane Cove LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2066, Lane Cove LGA is at -33.82466,151.1622 
+        // Postcode 2066, Lane Cove LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2066, Lane Cove LGA (Greater Sydney) cases:  0 0 1 0 0 0 0 1 0 0 1 0 0 0, total 3 ( 1 : 2) 
+        // Postcode 2066, Lane Cove LGA (Greater Sydney): cases all fall between 2021-07-24 and 2021-08-01
+        add_boxes("Postcode 2066, Lane Cove LGA (Greater Sydney)", "P", "Postcode 2066, Lane Cove LGA (Greater Sydney)<p>3 cases between 2021-07-24 and 2021-08-01:<p>2021-07-24: 1<br>2021-07-29: 1<br>2021-08-01: 1<br><p>Week to week Reff=2", -33.82466,151.1622, [ 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2067, Willoughby LGA is at -33.7966739,151.1621677 
+        // Postcode 2067, Willoughby LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2067, Willoughby LGA (Greater Sydney) cases:  1 0 0 0 0 0 2 0 0 0 1 2 3 0, total 9 ( 3 : 6) 
+        // Postcode 2067, Willoughby LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-03
+        add_boxes("Postcode 2067, Willoughby LGA (Greater Sydney)", "P", "Postcode 2067, Willoughby LGA (Greater Sydney)<p>9 cases between 2021-07-22 and 2021-08-03:<p>2021-07-22: 1<br>2021-07-28: 2<br>2021-08-01: 1<br>2021-08-02: 2<br>2021-08-03: 3<br><p>Week to week Reff=2", -33.7966739,151.1621677, [ 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1, 2, 3, 0 ], "#ff0000");
+
+        // Postcode 2068, Willoughby LGA is at -33.795,151.204 
+        // Postcode 2068, Willoughby LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2068, Willoughby LGA (Greater Sydney) cases:  0 0 0 0 1 0 0 0 0 0 0 0 0 0, total 1 ( 1 : 0) 
+        // Postcode 2068, Willoughby LGA (Greater Sydney): cases all fall between 2021-07-26 and 2021-07-26
+        add_boxes("Postcode 2068, Willoughby LGA (Greater Sydney)", "P", "Postcode 2068, Willoughby LGA (Greater Sydney)<p>1 case on 2021-07-26<p>2021-07-26: 1<br><p>Week to week Reff=0", -33.795,151.204, [ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2069, Ku-ring-gai LGA is at -33.7755896,151.2000449 
+        // Postcode 2069, Ku-ring-gai LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2069, Ku-ring-gai LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2070, Ku-ring-gai LGA is at -33.7816232,151.1490935 
+        // Postcode 2070, Ku-ring-gai LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2070, Ku-ring-gai LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2071, Ku-ring-gai LGA is at -33.76864,151.16347 
+        // Postcode 2071, Ku-ring-gai LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2071, Ku-ring-gai LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2072, Ku-ring-gai LGA is at -33.7551473,151.1548847 
+        // Postcode 2072, Ku-ring-gai LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2072, Ku-ring-gai LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2073, Ku-ring-gai LGA is at -33.7619959,151.1280668 
+        // Postcode 2073, Ku-ring-gai LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2073, Ku-ring-gai LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2074, Ku-ring-gai LGA is at -33.7289366,151.1218346 
+        // Postcode 2074, Ku-ring-gai LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2074, Ku-ring-gai LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2075, Ku-ring-gai LGA is at -33.711,151.1595 
+        // Postcode 2075, Ku-ring-gai LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2075, Ku-ring-gai LGA (Greater Sydney) cases:  0 1 0 0 0 0 0 0 0 0 0 0 0 0, total 1 ( 1 : 0) 
+        // Postcode 2075, Ku-ring-gai LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-07-23
+        add_boxes("Postcode 2075, Ku-ring-gai LGA (Greater Sydney)", "P", "Postcode 2075, Ku-ring-gai LGA (Greater Sydney)<p>1 case on 2021-07-23<p>2021-07-23: 1<br><p>Week to week Reff=0", -33.711,151.1595, [ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2076, Ku-ring-gai LGA is at -33.7186308,151.1103686 
+        // Postcode 2076, Ku-ring-gai LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2076, Ku-ring-gai LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2077, Hornsby LGA is at -33.7083472,151.1068252 
+        // Postcode 2077, Hornsby LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2077, Hornsby LGA (Greater Sydney) cases:  0 0 0 0 2 0 0 0 0 0 0 0 0 0, total 2 ( 2 : 0) 
+        // Postcode 2077, Hornsby LGA (Greater Sydney): cases all fall between 2021-07-26 and 2021-07-26
+        add_boxes("Postcode 2077, Hornsby LGA (Greater Sydney)", "P", "Postcode 2077, Hornsby LGA (Greater Sydney)<p>2 cases on 2021-07-26<p>2021-07-26: 2<br><p>Week to week Reff=0", -33.7083472,151.1068252, [ 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2079, Hornsby LGA is at -33.6709087,151.125756 
+        // Postcode 2079, Hornsby LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2079, Hornsby LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2080, Hornsby LGA is at -33.6500724,151.134494 
+        // Postcode 2080, Hornsby LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2080, Hornsby LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2081, Hornsby LGA is at -33.5879078,151.16854 
+        // Postcode 2081, Hornsby LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2081, Hornsby LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2082, Hornsby LGA is at -33.602344,151.120659 
+        // Postcode 2082, Hornsby LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2082, Hornsby LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2083, Hornsby LGA is at -33.523,151.201 
+        // Postcode 2083, Hornsby LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2083, Hornsby LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2084, Northern Beaches LGA is at -33.683,151.223 
+        // Postcode 2084, Northern Beaches LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2084, Northern Beaches LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2085, Northern Beaches LGA is at -33.73801,151.19297 
+        // Postcode 2085, Northern Beaches LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2085, Northern Beaches LGA (Greater Sydney) cases:  0 0 0 2 0 0 0 0 0 0 0 0 0 0, total 2 ( 2 : 0) 
+        // Postcode 2085, Northern Beaches LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-07-25
+        add_boxes("Postcode 2085, Northern Beaches LGA (Greater Sydney)", "P", "Postcode 2085, Northern Beaches LGA (Greater Sydney)<p>2 cases on 2021-07-25<p>2021-07-25: 2<br><p>Week to week Reff=0", -33.73801,151.19297, [ 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2086, Northern Beaches LGA is at -33.7507736,151.2406985 
+        // Postcode 2086, Northern Beaches LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2086, Northern Beaches LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2087, Northern Beaches LGA is at -33.7742,151.2155 
+        // Postcode 2087, Northern Beaches LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2087, Northern Beaches LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2088, Mosman LGA is at -33.8244677,151.2409774 
+        // Postcode 2088, Mosman LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2088, Mosman LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2089, North Sydney LGA is at -33.8311445,151.2226991 
+        // Postcode 2089, North Sydney LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2089, North Sydney LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2090, North Sydney LGA is at -33.84076,151.22789 
+        // Postcode 2090, North Sydney LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2090, North Sydney LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2092, Northern Beaches LGA is at -33.7927181,151.2423032 
+        // Postcode 2092, Northern Beaches LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2092, Northern Beaches LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2093, Northern Beaches LGA is at -33.785604,151.2495903 
+        // Postcode 2093, Northern Beaches LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2093, Northern Beaches LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 1, total 1 ( 0 : 1) 
+        // Postcode 2093, Northern Beaches LGA (Greater Sydney): cases all fall between 2021-08-04 and 2021-08-04
+        add_boxes("Postcode 2093, Northern Beaches LGA (Greater Sydney)", "P", "Postcode 2093, Northern Beaches LGA (Greater Sydney)<p>1 case on 2021-08-04<p>2021-08-04: 1<br>", -33.785604,151.2495903, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ], "#ff0000");
+
+        // Postcode 2094, Northern Beaches LGA is at -33.7940757,151.2729111 
+        // Postcode 2094, Northern Beaches LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2094, Northern Beaches LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2095, Northern Beaches LGA is at -33.8060158,151.2947775 
+        // Postcode 2095, Northern Beaches LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2095, Northern Beaches LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 1 0 0 1 0 0 0, total 2 ( 0 : 2) 
+        // Postcode 2095, Northern Beaches LGA (Greater Sydney): cases all fall between 2021-07-29 and 2021-08-01
+        add_boxes("Postcode 2095, Northern Beaches LGA (Greater Sydney)", "P", "Postcode 2095, Northern Beaches LGA (Greater Sydney)<p>2 cases on 2021-07-29 and 2021-08-01:<p>2021-07-29: 1<br>2021-08-01: 1<br>", -33.8060158,151.2947775, [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2096, Northern Beaches LGA is at -33.7825,151.284722 
+        // Postcode 2096, Northern Beaches LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2096, Northern Beaches LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2097, Northern Beaches LGA is at -33.7315,151.28016 
+        // Postcode 2097, Northern Beaches LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2097, Northern Beaches LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 1 0 0 0 0 1 0, total 2 ( 0 : 2) 
+        // Postcode 2097, Northern Beaches LGA (Greater Sydney): cases all fall between 2021-07-29 and 2021-08-03
+        add_boxes("Postcode 2097, Northern Beaches LGA (Greater Sydney)", "P", "Postcode 2097, Northern Beaches LGA (Greater Sydney)<p>2 cases on 2021-07-29 and 2021-08-03:<p>2021-07-29: 1<br>2021-08-03: 1<br>", -33.7315,151.28016, [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0 ], "#ff0000");
+
+        // Postcode 2099, Northern Beaches LGA is at -33.7586,151.29 
+        // Postcode 2099, Northern Beaches LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2099, Northern Beaches LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 1 0 0 0, total 1 ( 0 : 1) 
+        // Postcode 2099, Northern Beaches LGA (Greater Sydney): cases all fall between 2021-08-01 and 2021-08-01
+        add_boxes("Postcode 2099, Northern Beaches LGA (Greater Sydney)", "P", "Postcode 2099, Northern Beaches LGA (Greater Sydney)<p>1 case on 2021-08-01<p>2021-08-01: 1<br>", -33.7586,151.29, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2100, Northern Beaches LGA is at -33.7672145,151.2653692 
+        // Postcode 2100, Northern Beaches LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2100, Northern Beaches LGA (Greater Sydney) cases:  1 0 0 4 1 0 1 0 1 0 0 0 0 0, total 8 ( 7 : 1) 
+        // Postcode 2100, Northern Beaches LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-07-30
+        add_boxes("Postcode 2100, Northern Beaches LGA (Greater Sydney)", "P", "Postcode 2100, Northern Beaches LGA (Greater Sydney)<p>8 cases between 2021-07-22 and 2021-07-30:<p>2021-07-22: 1<br>2021-07-25: 4<br>2021-07-26: 1<br>2021-07-28: 1<br>2021-07-30: 1<br><p>Week to week Reff=0.14", -33.7672145,151.2653692, [ 1, 0, 0, 4, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2101, Northern Beaches LGA is at -33.7065,151.2884 
+        // Postcode 2101, Northern Beaches LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2101, Northern Beaches LGA (Greater Sydney) cases:  0 0 2 1 0 1 0 0 0 1 0 0 0 0, total 5 ( 4 : 1) 
+        // Postcode 2101, Northern Beaches LGA (Greater Sydney): cases all fall between 2021-07-24 and 2021-07-31
+        add_boxes("Postcode 2101, Northern Beaches LGA (Greater Sydney)", "P", "Postcode 2101, Northern Beaches LGA (Greater Sydney)<p>5 cases between 2021-07-24 and 2021-07-31:<p>2021-07-24: 2<br>2021-07-25: 1<br>2021-07-27: 1<br>2021-07-31: 1<br><p>Week to week Reff=0.25", -33.7065,151.2884, [ 0, 0, 2, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2102, Northern Beaches LGA is at -33.6957,151.296 
+        // Postcode 2102, Northern Beaches LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2102, Northern Beaches LGA (Greater Sydney) cases:  0 0 0 2 1 0 0 0 0 0 0 0 0 0, total 3 ( 3 : 0) 
+        // Postcode 2102, Northern Beaches LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-07-26
+        add_boxes("Postcode 2102, Northern Beaches LGA (Greater Sydney)", "P", "Postcode 2102, Northern Beaches LGA (Greater Sydney)<p>3 cases between 2021-07-25 and 2021-07-26:<p>2021-07-25: 2<br>2021-07-26: 1<br><p>Week to week Reff=0", -33.6957,151.296, [ 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2103, Northern Beaches LGA is at -33.6757024,151.3064407 
+        // Postcode 2103, Northern Beaches LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2103, Northern Beaches LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2104, Northern Beaches LGA is at -33.6610245,151.2889461 
+        // Postcode 2104, Northern Beaches LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2104, Northern Beaches LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2106, Northern Beaches LGA is at -33.6533125,151.3234816 
+        // Postcode 2106, Northern Beaches LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2106, Northern Beaches LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2107, Northern Beaches LGA is at -33.6131448,151.3304989 
+        // Postcode 2107, Northern Beaches LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2107, Northern Beaches LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2108, Northern Beaches LGA is at -33.6049927,151.2866804 
+        // Postcode 2108, Northern Beaches LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2108, Northern Beaches LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2110, Hunters Hill LGA is at -33.8417,151.16968 
+        // Postcode 2110, Hunters Hill LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2111, Hunters Hill LGA is at -33.832435,151.116938 
+        // Postcode 2111, Hunters Hill LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2112, Ryde LGA is at -33.8157466,151.1030164 
+        // Postcode 2112, Ryde LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2112, Ryde LGA (Greater Sydney) cases:  0 3 0 1 0 0 0 0 2 1 1 0 1 0, total 9 ( 4 : 5) 
+        // Postcode 2112, Ryde LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-08-03
+        add_boxes("Postcode 2112, Ryde LGA (Greater Sydney)", "P", "Postcode 2112, Ryde LGA (Greater Sydney)<p>9 cases between 2021-07-23 and 2021-08-03:<p>2021-07-23: 3<br>2021-07-25: 1<br>2021-07-30: 2<br>2021-07-31: 1<br>2021-08-01: 1<br>2021-08-03: 1<br><p>Week to week Reff=1.2", -33.8157466,151.1030164, [ 0, 3, 0, 1, 0, 0, 0, 0, 2, 1, 1, 0, 1, 0 ], "#ff0000");
+
+        // Postcode 2113, Ryde LGA is at -33.7931778,151.1197879 
+        // Postcode 2113, Ryde LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2113, Ryde LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2114, Ryde LGA is at -33.8067672,151.0824602 
+        // Postcode 2114, Ryde LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2114, Ryde LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 1 0 1 0 0 0 0, total 2 ( 0 : 2) 
+        // Postcode 2114, Ryde LGA (Greater Sydney): cases all fall between 2021-07-29 and 2021-07-31
+        add_boxes("Postcode 2114, Ryde LGA (Greater Sydney)", "P", "Postcode 2114, Ryde LGA (Greater Sydney)<p>2 cases on 2021-07-29 and 2021-07-31:<p>2021-07-29: 1<br>2021-07-31: 1<br>", -33.8067672,151.0824602, [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2115, Parramatta LGA is at -33.8132521,151.0616918 
+        // Postcode 2115, Parramatta LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2115, Parramatta LGA (Greater Sydney) cases:  0 1 0 1 0 0 0 1 3 0 0 0 0 0, total 6 ( 2 : 4) 
+        // Postcode 2115, Parramatta LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-07-30
+        add_boxes("Postcode 2115, Parramatta LGA (Greater Sydney)", "P", "Postcode 2115, Parramatta LGA (Greater Sydney)<p>6 cases between 2021-07-23 and 2021-07-30:<p>2021-07-23: 1<br>2021-07-25: 1<br>2021-07-29: 1<br>2021-07-30: 3<br><p>Week to week Reff=2", -33.8132521,151.0616918, [ 0, 1, 0, 1, 0, 0, 0, 1, 3, 0, 0, 0, 0, 0 ], "#ff8800");
+
+        // Postcode 2116, Parramatta LGA is at -33.8124093,151.0384023 
+        // Postcode 2116, Parramatta LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2116, Parramatta LGA (Greater Sydney) cases:  1 0 0 1 1 0 0 0 0 0 0 0 0 0, total 3 ( 3 : 0) 
+        // Postcode 2116, Parramatta LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-07-26
+        add_boxes("Postcode 2116, Parramatta LGA (Greater Sydney)", "P", "Postcode 2116, Parramatta LGA (Greater Sydney)<p>3 cases between 2021-07-22 and 2021-07-26:<p>2021-07-22: 1<br>2021-07-25: 1<br>2021-07-26: 1<br><p>Week to week Reff=0", -33.8124093,151.0384023, [ 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff8800");
+
+        // Postcode 2117, Parramatta LGA is at -33.79417,151.03802 
+        // Postcode 2117, Parramatta LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2117, Parramatta LGA (Greater Sydney) cases:  2 0 0 2 0 1 1 1 0 0 0 0 0 0, total 7 ( 6 : 1) 
+        // Postcode 2117, Parramatta LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-07-29
+        add_boxes("Postcode 2117, Parramatta LGA (Greater Sydney)", "P", "Postcode 2117, Parramatta LGA (Greater Sydney)<p>7 cases between 2021-07-22 and 2021-07-29:<p>2021-07-22: 2<br>2021-07-25: 2<br>2021-07-27: 1<br>2021-07-28: 1<br>2021-07-29: 1<br><p>Week to week Reff=0.17", -33.79417,151.03802, [ 2, 0, 0, 2, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0 ], "#ff8800");
+
+        // Postcode 2118, Parramatta LGA is at -33.7842472,151.028727 
+        // Postcode 2118, Parramatta LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2118, Parramatta LGA (Greater Sydney) cases:  1 0 0 0 0 0 0 0 1 0 3 0 0 0, total 5 ( 1 : 4) 
+        // Postcode 2118, Parramatta LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-01
+        add_boxes("Postcode 2118, Parramatta LGA (Greater Sydney)", "P", "Postcode 2118, Parramatta LGA (Greater Sydney)<p>5 cases between 2021-07-22 and 2021-08-01:<p>2021-07-22: 1<br>2021-07-30: 1<br>2021-08-01: 3<br><p>Week to week Reff=4", -33.7842472,151.028727, [ 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 3, 0, 0, 0 ], "#ff8800");
+
+        // Postcode 2119, Hornsby LGA is at -33.7553681,151.078072 
+        // Postcode 2119, Hornsby LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2119, Hornsby LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2120, Hornsby LGA is at -33.72299,151.07064 
+        // Postcode 2120, Hornsby LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2120, Hornsby LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2121, Parramatta LGA is at -33.7623,151.101 
+        // Postcode 2121, Parramatta LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2121, Parramatta LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2122, Ryde LGA is at -33.7800906,151.1029137 
+        // Postcode 2122, Ryde LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2122, Ryde LGA (Greater Sydney) cases:  0 0 0 0 1 0 0 2 1 0 0 0 0 1, total 5 ( 1 : 4) 
+        // Postcode 2122, Ryde LGA (Greater Sydney): cases all fall between 2021-07-26 and 2021-08-04
+        add_boxes("Postcode 2122, Ryde LGA (Greater Sydney)", "P", "Postcode 2122, Ryde LGA (Greater Sydney)<p>5 cases between 2021-07-26 and 2021-08-04:<p>2021-07-26: 1<br>2021-07-29: 2<br>2021-07-30: 1<br>2021-08-04: 1<br><p>Week to week Reff=4", -33.7800906,151.1029137, [ 0, 0, 0, 0, 1, 0, 0, 2, 1, 0, 0, 0, 0, 1 ], "#ff0000");
+
+        // Postcode 2125, The Hills Shire LGA is at -33.7462388,151.0296696 
+        // Postcode 2125, The Hills Shire LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2125, The Hills Shire LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2126, Hornsby LGA is at -33.7287467,151.0413133 
+        // Postcode 2126, Hornsby LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2126, Hornsby LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2127, Parramatta LGA is at -33.828,151.077 
+        // Postcode 2127, Parramatta LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2127, Parramatta LGA (Greater Sydney) cases:  0 0 0 2 1 0 0 2 0 0 0 0 2 1, total 8 ( 3 : 5) 
+        // Postcode 2127, Parramatta LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-08-04
+        add_boxes("Postcode 2127, Parramatta LGA (Greater Sydney)", "P", "Postcode 2127, Parramatta LGA (Greater Sydney)<p>8 cases between 2021-07-25 and 2021-08-04:<p>2021-07-25: 2<br>2021-07-26: 1<br>2021-07-29: 2<br>2021-08-03: 2<br>2021-08-04: 1<br><p>Week to week Reff=1.7", -33.828,151.077, [ 0, 0, 0, 2, 1, 0, 0, 2, 0, 0, 0, 0, 2, 1 ], "#ff8800");
+
+        // Postcode 2128, Parramatta LGA is at -33.8343506,151.0442244 
+        // Postcode 2128, Parramatta LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2128, Parramatta LGA (Greater Sydney) cases:  0 0 0 0 0 0 1 0 0 0 0 0 0 0, total 1 ( 1 : 0) 
+        // Postcode 2128, Parramatta LGA (Greater Sydney): cases all fall between 2021-07-28 and 2021-07-28
+        add_boxes("Postcode 2128, Parramatta LGA (Greater Sydney)", "P", "Postcode 2128, Parramatta LGA (Greater Sydney)<p>1 case on 2021-07-28<p>2021-07-28: 1<br><p>Week to week Reff=0", -33.8343506,151.0442244, [ 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 ], "#ff8800");
+
+        // Postcode 2130, Inner West LGA is at -33.8922971,151.1359504 
+        // Postcode 2130, Inner West LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2130, Inner West LGA (Greater Sydney) cases:  0 0 0 0 0 1 1 0 2 8 3 4 3 3, total 25 ( 2 : 23) 
+        // Postcode 2130, Inner West LGA (Greater Sydney): cases all fall between 2021-07-27 and 2021-08-04
+        add_boxes("Postcode 2130, Inner West LGA (Greater Sydney)", "P", "Postcode 2130, Inner West LGA (Greater Sydney)<p>25 cases between 2021-07-27 and 2021-08-04:<p>2021-07-27: 1<br>2021-07-28: 1<br>2021-07-30: 2<br>2021-07-31: 8<br>2021-08-01: 3<br>2021-08-02: 4<br>2021-08-03: 3<br>2021-08-04: 3<br><p>Week to week Reff=12", -33.8922971,151.1359504, [ 0, 0, 0, 0, 0, 1, 1, 0, 2, 8, 3, 4, 3, 3 ], "#ff0000");
+
+        // Postcode 2131, Inner West LGA is at -33.8904917,151.1254852 
+        // Postcode 2131, Inner West LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2131, Inner West LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 3 2 0 0 1 2, total 8 ( 0 : 8) 
+        // Postcode 2131, Inner West LGA (Greater Sydney): cases all fall between 2021-07-30 and 2021-08-04
+        add_boxes("Postcode 2131, Inner West LGA (Greater Sydney)", "P", "Postcode 2131, Inner West LGA (Greater Sydney)<p>8 cases between 2021-07-30 and 2021-08-04:<p>2021-07-30: 3<br>2021-07-31: 2<br>2021-08-03: 1<br>2021-08-04: 2<br>", -33.8904917,151.1254852, [ 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 0, 0, 1, 2 ], "#ff0000");
+
+        // Postcode 2132, Burwood LGA is at -33.8828873,151.114106 
+        // Postcode 2132, Burwood LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2132, Burwood LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2133, Canterbury-Bankstown LGA is at -33.89059,151.09246 
+        // Postcode 2133, Canterbury-Bankstown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2133, Canterbury-Bankstown LGA (Greater Sydney) cases:  2 0 0 0 0 2 1 1 0 0 0 0 2 0, total 8 ( 5 : 3) 
+        // Postcode 2133, Canterbury-Bankstown LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-03
+        add_boxes("Postcode 2133, Canterbury-Bankstown LGA (Greater Sydney)", "P", "Postcode 2133, Canterbury-Bankstown LGA (Greater Sydney)<p>8 cases between 2021-07-22 and 2021-08-03:<p>2021-07-22: 2<br>2021-07-27: 2<br>2021-07-28: 1<br>2021-07-29: 1<br>2021-08-03: 2<br><p>Week to week Reff=0.6", -33.89059,151.09246, [ 2, 0, 0, 0, 0, 2, 1, 1, 0, 0, 0, 0, 2, 0 ], "#ff8800");
+
+        // Postcode 2134, Burwood LGA is at -33.8799121,151.1024569 
+        // Postcode 2134, Burwood LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2134, Burwood LGA (Greater Sydney) cases:  0 1 0 2 0 0 0 0 0 0 0 1 0 1, total 5 ( 3 : 2) 
+        // Postcode 2134, Burwood LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-08-04
+        add_boxes("Postcode 2134, Burwood LGA (Greater Sydney)", "P", "Postcode 2134, Burwood LGA (Greater Sydney)<p>5 cases between 2021-07-23 and 2021-08-04:<p>2021-07-23: 1<br>2021-07-25: 2<br>2021-08-02: 1<br>2021-08-04: 1<br><p>Week to week Reff=0.67", -33.8799121,151.1024569, [ 0, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1 ], "#ff0000");
+
+        // Postcode 2135, Strathfield LGA is at -33.8808808,151.0762495 
+        // Postcode 2135, Strathfield LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2135, Strathfield LGA (Greater Sydney) cases:  4 0 2 1 0 0 1 1 1 1 2 1 1 1, total 16 ( 8 : 8) 
+        // Postcode 2135, Strathfield LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2135, Strathfield LGA (Greater Sydney)", "P", "Postcode 2135, Strathfield LGA (Greater Sydney)<p>16 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 4<br>2021-07-24: 2<br>2021-07-25: 1<br>2021-07-28: 1<br>2021-07-29: 1<br>2021-07-30: 1<br>2021-07-31: 1<br>2021-08-01: 2<br>2021-08-02: 1<br>2021-08-03: 1<br>2021-08-04: 1<br><p>Week to week Reff=1", -33.8808808,151.0762495, [ 4, 0, 2, 1, 0, 0, 1, 1, 1, 1, 2, 1, 1, 1 ], "#ff0000");
+
+        // Postcode 2136, Strathfield LGA is at -33.8943055,151.0830083 
+        // Postcode 2136, Strathfield LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2136, Strathfield LGA (Greater Sydney) cases:  0 0 0 0 0 0 1 2 0 1 1 1 0 0, total 6 ( 1 : 5) 
+        // Postcode 2136, Strathfield LGA (Greater Sydney): cases all fall between 2021-07-28 and 2021-08-02
+        add_boxes("Postcode 2136, Strathfield LGA (Greater Sydney)", "P", "Postcode 2136, Strathfield LGA (Greater Sydney)<p>6 cases between 2021-07-28 and 2021-08-02:<p>2021-07-28: 1<br>2021-07-29: 2<br>2021-07-31: 1<br>2021-08-01: 1<br>2021-08-02: 1<br><p>Week to week Reff=5", -33.8943055,151.0830083, [ 0, 0, 0, 0, 0, 0, 1, 2, 0, 1, 1, 1, 0, 0 ], "#ff0000");
+
+        // Postcode 2137, Canada Bay LGA is at -33.8604,151.08856 
+        // Postcode 2137, Canada Bay LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2137, Canada Bay LGA (Greater Sydney) cases:  0 0 0 0 0 1 0 0 0 0 0 0 0 0, total 1 ( 1 : 0) 
+        // Postcode 2137, Canada Bay LGA (Greater Sydney): cases all fall between 2021-07-27 and 2021-07-27
+        add_boxes("Postcode 2137, Canada Bay LGA (Greater Sydney)", "P", "Postcode 2137, Canada Bay LGA (Greater Sydney)<p>1 case on 2021-07-27<p>2021-07-27: 1<br><p>Week to week Reff=0", -33.8604,151.08856, [ 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2138, Canada Bay LGA is at -33.82821,151.08569 
+        // Postcode 2138, Canada Bay LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2138, Canada Bay LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 1 0 2 1 0, total 4 ( 0 : 4) 
+        // Postcode 2138, Canada Bay LGA (Greater Sydney): cases all fall between 2021-07-31 and 2021-08-03
+        add_boxes("Postcode 2138, Canada Bay LGA (Greater Sydney)", "P", "Postcode 2138, Canada Bay LGA (Greater Sydney)<p>4 cases between 2021-07-31 and 2021-08-03:<p>2021-07-31: 1<br>2021-08-02: 2<br>2021-08-03: 1<br>", -33.82821,151.08569, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 1, 0 ], "#ff0000");
+
+        // Postcode 2140, Strathfield LGA is at -33.858623,151.0791612 
+        // Postcode 2140, Strathfield LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2140, Strathfield LGA (Greater Sydney) cases:  0 0 0 1 2 3 0 3 3 3 4 3 2 1, total 25 ( 6 : 19) 
+        // Postcode 2140, Strathfield LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-08-04
+        add_boxes("Postcode 2140, Strathfield LGA (Greater Sydney)", "P", "Postcode 2140, Strathfield LGA (Greater Sydney)<p>25 cases between 2021-07-25 and 2021-08-04:<p>2021-07-25: 1<br>2021-07-26: 2<br>2021-07-27: 3<br>2021-07-29: 3<br>2021-07-30: 3<br>2021-07-31: 3<br>2021-08-01: 4<br>2021-08-02: 3<br>2021-08-03: 2<br>2021-08-04: 1<br><p>Week to week Reff=3.2", -33.858623,151.0791612, [ 0, 0, 0, 1, 2, 3, 0, 3, 3, 3, 4, 3, 2, 1 ], "#ff0000");
+
+        // Postcode 2141, Cumberland LGA is at -33.87276,151.05562 
+        // Postcode 2141, Cumberland LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2141, Cumberland LGA (Greater Sydney) cases:  0 0 2 4 6 0 1 0 2 2 0 0 1 1, total 19 ( 13 : 6) 
+        // Postcode 2141, Cumberland LGA (Greater Sydney): cases all fall between 2021-07-24 and 2021-08-04
+        add_boxes("Postcode 2141, Cumberland LGA (Greater Sydney)", "P", "Postcode 2141, Cumberland LGA (Greater Sydney)<p>19 cases between 2021-07-24 and 2021-08-04:<p>2021-07-24: 2<br>2021-07-25: 4<br>2021-07-26: 6<br>2021-07-28: 1<br>2021-07-30: 2<br>2021-07-31: 2<br>2021-08-03: 1<br>2021-08-04: 1<br><p>Week to week Reff=0.46", -33.87276,151.05562, [ 0, 0, 2, 4, 6, 0, 1, 0, 2, 2, 0, 0, 1, 1 ], "#ff8800");
+
+        // Postcode 2142, Cumberland LGA is at -33.8577224,151.0107506 
+        // Postcode 2142, Cumberland LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2142, Cumberland LGA (Greater Sydney) cases:  1 0 0 1 0 2 3 2 5 3 8 6 7 7, total 45 ( 7 : 38) 
+        // Postcode 2142, Cumberland LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2142, Cumberland LGA (Greater Sydney)", "P", "Postcode 2142, Cumberland LGA (Greater Sydney)<p>45 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 1<br>2021-07-25: 1<br>2021-07-27: 2<br>2021-07-28: 3<br>2021-07-29: 2<br>2021-07-30: 5<br>2021-07-31: 3<br>2021-08-01: 8<br>2021-08-02: 6<br>2021-08-03: 7<br>2021-08-04: 7<br><p>Week to week Reff=5.4", -33.8577224,151.0107506, [ 1, 0, 0, 1, 0, 2, 3, 2, 5, 3, 8, 6, 7, 7 ], "#ff8800");
+
+        // Postcode 2143, Canterbury-Bankstown LGA is at -33.8857,151.028 
+        // Postcode 2143, Canterbury-Bankstown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2143, Canterbury-Bankstown LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 1 0 0 1 1, total 3 ( 0 : 3) 
+        // Postcode 2143, Canterbury-Bankstown LGA (Greater Sydney): cases all fall between 2021-07-31 and 2021-08-04
+        add_boxes("Postcode 2143, Canterbury-Bankstown LGA (Greater Sydney)", "P", "Postcode 2143, Canterbury-Bankstown LGA (Greater Sydney)<p>3 cases between 2021-07-31 and 2021-08-04:<p>2021-07-31: 1<br>2021-08-03: 1<br>2021-08-04: 1<br>", -33.8857,151.028, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1 ], "#ff8800");
+
+        // Postcode 2144, Cumberland LGA is at -33.8485,151.03 
+        // Postcode 2144, Cumberland LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2144, Cumberland LGA (Greater Sydney) cases:  4 13 4 6 1 1 8 2 2 7 7 6 8 5, total 74 ( 37 : 37) 
+        // Postcode 2144, Cumberland LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2144, Cumberland LGA (Greater Sydney)", "P", "Postcode 2144, Cumberland LGA (Greater Sydney)<p>74 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 4<br>2021-07-23: 13<br>2021-07-24: 4<br>2021-07-25: 6<br>2021-07-26: 1<br>2021-07-27: 1<br>2021-07-28: 8<br>2021-07-29: 2<br>2021-07-30: 2<br>2021-07-31: 7<br>2021-08-01: 7<br>2021-08-02: 6<br>2021-08-03: 8<br>2021-08-04: 5<br><p>Week to week Reff=1", -33.8485,151.03, [ 4, 13, 4, 6, 1, 1, 8, 2, 2, 7, 7, 6, 8, 5 ], "#ff8800");
+
+        // Postcode 2145, Cumberland LGA is at -33.8085661,150.9869597 
+        // Postcode 2145, Cumberland LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2145, Cumberland LGA (Greater Sydney) cases:  8 12 7 11 6 1 13 20 19 13 10 14 16 7, total 157 ( 58 : 99) 
+        // Postcode 2145, Cumberland LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2145, Cumberland LGA (Greater Sydney)", "P", "Postcode 2145, Cumberland LGA (Greater Sydney)<p>157 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 8<br>2021-07-23: 12<br>2021-07-24: 7<br>2021-07-25: 11<br>2021-07-26: 6<br>2021-07-27: 1<br>2021-07-28: 13<br>2021-07-29: 20<br>2021-07-30: 19<br>2021-07-31: 13<br>2021-08-01: 10<br>2021-08-02: 14<br>2021-08-03: 16<br>2021-08-04: 7<br><p>Week to week Reff=1.7", -33.8085661,150.9869597, [ 8, 12, 7, 11, 6, 1, 13, 20, 19, 13, 10, 14, 16, 7 ], "#ff8800");
+
+        // Postcode 2146, Parramatta LGA is at -33.7841326,150.95429 
+        // Postcode 2146, Parramatta LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2146, Parramatta LGA (Greater Sydney) cases:  1 1 3 3 6 1 1 0 1 0 3 1 1 8, total 30 ( 16 : 14) 
+        // Postcode 2146, Parramatta LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2146, Parramatta LGA (Greater Sydney)", "P", "Postcode 2146, Parramatta LGA (Greater Sydney)<p>30 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 1<br>2021-07-23: 1<br>2021-07-24: 3<br>2021-07-25: 3<br>2021-07-26: 6<br>2021-07-27: 1<br>2021-07-28: 1<br>2021-07-30: 1<br>2021-08-01: 3<br>2021-08-02: 1<br>2021-08-03: 1<br>2021-08-04: 8<br><p>Week to week Reff=0.88", -33.7841326,150.95429, [ 1, 1, 3, 3, 6, 1, 1, 0, 1, 0, 3, 1, 1, 8 ], "#ff8800");
+
+        // Postcode 2147, Blacktown LGA is at -33.7661982,150.921715 
+        // Postcode 2147, Blacktown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2147, Blacktown LGA (Greater Sydney) cases:  4 2 1 0 0 2 3 6 1 4 4 2 0 1, total 30 ( 12 : 18) 
+        // Postcode 2147, Blacktown LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2147, Blacktown LGA (Greater Sydney)", "P", "Postcode 2147, Blacktown LGA (Greater Sydney)<p>30 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 4<br>2021-07-23: 2<br>2021-07-24: 1<br>2021-07-27: 2<br>2021-07-28: 3<br>2021-07-29: 6<br>2021-07-30: 1<br>2021-07-31: 4<br>2021-08-01: 4<br>2021-08-02: 2<br>2021-08-04: 1<br><p>Week to week Reff=1.5", -33.7661982,150.921715, [ 4, 2, 1, 0, 0, 2, 3, 6, 1, 4, 4, 2, 0, 1 ], "#ff8800");
+
+        // Postcode 2148, Blacktown LGA is at -33.7981153,150.9176528 
+        // Postcode 2148, Blacktown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2148, Blacktown LGA (Greater Sydney) cases:  5 5 8 5 4 10 7 4 2 5 2 4 4 8, total 73 ( 44 : 29) 
+        // Postcode 2148, Blacktown LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2148, Blacktown LGA (Greater Sydney)", "P", "Postcode 2148, Blacktown LGA (Greater Sydney)<p>73 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 5<br>2021-07-23: 5<br>2021-07-24: 8<br>2021-07-25: 5<br>2021-07-26: 4<br>2021-07-27: 10<br>2021-07-28: 7<br>2021-07-29: 4<br>2021-07-30: 2<br>2021-07-31: 5<br>2021-08-01: 2<br>2021-08-02: 4<br>2021-08-03: 4<br>2021-08-04: 8<br><p>Week to week Reff=0.66", -33.7981153,150.9176528, [ 5, 5, 8, 5, 4, 10, 7, 4, 2, 5, 2, 4, 4, 8 ], "#ff8800");
+
+        // Postcode 2150, Parramatta LGA is at -33.8173782,151.0016557 
+        // Postcode 2150, Parramatta LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2150, Parramatta LGA (Greater Sydney) cases:  0 0 0 1 1 0 6 2 5 3 1 0 8 2, total 29 ( 8 : 21) 
+        // Postcode 2150, Parramatta LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-08-04
+        add_boxes("Postcode 2150, Parramatta LGA (Greater Sydney)", "P", "Postcode 2150, Parramatta LGA (Greater Sydney)<p>29 cases between 2021-07-25 and 2021-08-04:<p>2021-07-25: 1<br>2021-07-26: 1<br>2021-07-28: 6<br>2021-07-29: 2<br>2021-07-30: 5<br>2021-07-31: 3<br>2021-08-01: 1<br>2021-08-03: 8<br>2021-08-04: 2<br><p>Week to week Reff=2.6", -33.8173782,151.0016557, [ 0, 0, 0, 1, 1, 0, 6, 2, 5, 3, 1, 0, 8, 2 ], "#ff8800");
+
+        // Postcode 2151, Parramatta LGA is at -33.7750537,151.0238278 
+        // Postcode 2151, Parramatta LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2151, Parramatta LGA (Greater Sydney) cases:  5 0 0 0 0 0 0 0 1 0 1 2 4 1, total 14 ( 5 : 9) 
+        // Postcode 2151, Parramatta LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2151, Parramatta LGA (Greater Sydney)", "P", "Postcode 2151, Parramatta LGA (Greater Sydney)<p>14 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 5<br>2021-07-30: 1<br>2021-08-01: 1<br>2021-08-02: 2<br>2021-08-03: 4<br>2021-08-04: 1<br><p>Week to week Reff=1.8", -33.7750537,151.0238278, [ 5, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 2, 4, 1 ], "#ff8800");
+
+        // Postcode 2152, Parramatta LGA is at -33.78974,150.9921094 
+        // Postcode 2152, Parramatta LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2152, Parramatta LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 1, total 1 ( 0 : 1) 
+        // Postcode 2152, Parramatta LGA (Greater Sydney): cases all fall between 2021-08-04 and 2021-08-04
+        add_boxes("Postcode 2152, Parramatta LGA (Greater Sydney)", "P", "Postcode 2152, Parramatta LGA (Greater Sydney)<p>1 case on 2021-08-04<p>2021-08-04: 1<br>", -33.78974,150.9921094, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ], "#ff8800");
+
+        // Postcode 2153, The Hills Shire LGA is at -33.7773471,150.9745309 
+        // Postcode 2153, The Hills Shire LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2153, The Hills Shire LGA (Greater Sydney) cases:  0 0 0 4 1 0 1 1 2 1 1 1 2 0, total 14 ( 6 : 8) 
+        // Postcode 2153, The Hills Shire LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-08-03
+        add_boxes("Postcode 2153, The Hills Shire LGA (Greater Sydney)", "P", "Postcode 2153, The Hills Shire LGA (Greater Sydney)<p>14 cases between 2021-07-25 and 2021-08-03:<p>2021-07-25: 4<br>2021-07-26: 1<br>2021-07-28: 1<br>2021-07-29: 1<br>2021-07-30: 2<br>2021-07-31: 1<br>2021-08-01: 1<br>2021-08-02: 1<br>2021-08-03: 2<br><p>Week to week Reff=1.3", -33.7773471,150.9745309, [ 0, 0, 0, 4, 1, 0, 1, 1, 2, 1, 1, 1, 2, 0 ], "#ff0000");
+
+        // Postcode 2154, The Hills Shire LGA is at -33.7270691,150.9947439 
+        // Postcode 2154, The Hills Shire LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2154, The Hills Shire LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 1 3 0 0 0 0 1, total 5 ( 0 : 5) 
+        // Postcode 2154, The Hills Shire LGA (Greater Sydney): cases all fall between 2021-07-29 and 2021-08-04
+        add_boxes("Postcode 2154, The Hills Shire LGA (Greater Sydney)", "P", "Postcode 2154, The Hills Shire LGA (Greater Sydney)<p>5 cases between 2021-07-29 and 2021-08-04:<p>2021-07-29: 1<br>2021-07-30: 3<br>2021-08-04: 1<br>", -33.7270691,150.9947439, [ 0, 0, 0, 0, 0, 0, 0, 1, 3, 0, 0, 0, 0, 1 ], "#ff0000");
+
+        // Postcode 2155, The Hills Shire LGA is at -33.68162,150.91552 
+        // Postcode 2155, The Hills Shire LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2155, The Hills Shire LGA (Greater Sydney) cases:  1 0 0 1 0 0 1 0 0 0 0 0 2 0, total 5 ( 3 : 2) 
+        // Postcode 2155, The Hills Shire LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-03
+        add_boxes("Postcode 2155, The Hills Shire LGA (Greater Sydney)", "P", "Postcode 2155, The Hills Shire LGA (Greater Sydney)<p>5 cases between 2021-07-22 and 2021-08-03:<p>2021-07-22: 1<br>2021-07-25: 1<br>2021-07-28: 1<br>2021-08-03: 2<br><p>Week to week Reff=0.67", -33.68162,150.91552, [ 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 2, 0 ], "#ff0000");
+
+        // Postcode 2156, The Hills Shire LGA is at -33.6693,151.00158 
+        // Postcode 2156, The Hills Shire LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2156, The Hills Shire LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 1 0 0 0, total 1 ( 0 : 1) 
+        // Postcode 2156, The Hills Shire LGA (Greater Sydney): cases all fall between 2021-08-01 and 2021-08-01
+        add_boxes("Postcode 2156, The Hills Shire LGA (Greater Sydney)", "P", "Postcode 2156, The Hills Shire LGA (Greater Sydney)<p>1 case on 2021-08-01<p>2021-08-01: 1<br>", -33.6693,151.00158, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2157, Hornsby LGA is at -33.601,150.976 
+        // Postcode 2157, Hornsby LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2157, Hornsby LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2158, The Hills Shire LGA is at -33.6918281,151.0197535 
+        // Postcode 2158, The Hills Shire LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2158, The Hills Shire LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2159, Hornsby LGA is at -33.65,151.043 
+        // Postcode 2159, Hornsby LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2159, Hornsby LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2160, Cumberland LGA is at -33.83742,150.96168 
+        // Postcode 2160, Cumberland LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2160, Cumberland LGA (Greater Sydney) cases:  1 1 5 2 2 3 6 0 6 0 4 9 1 1, total 41 ( 20 : 21) 
+        // Postcode 2160, Cumberland LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2160, Cumberland LGA (Greater Sydney)", "P", "Postcode 2160, Cumberland LGA (Greater Sydney)<p>41 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 1<br>2021-07-23: 1<br>2021-07-24: 5<br>2021-07-25: 2<br>2021-07-26: 2<br>2021-07-27: 3<br>2021-07-28: 6<br>2021-07-30: 6<br>2021-08-01: 4<br>2021-08-02: 9<br>2021-08-03: 1<br>2021-08-04: 1<br><p>Week to week Reff=1.1", -33.83742,150.96168, [ 1, 1, 5, 2, 2, 3, 6, 0, 6, 0, 4, 9, 1, 1 ], "#ff8800");
+
+        // Postcode 2161, Cumberland LGA is at -33.8627,150.966 
+        // Postcode 2161, Cumberland LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2161, Cumberland LGA (Greater Sydney) cases:  1 3 4 8 0 1 3 0 3 2 0 6 10 11, total 52 ( 20 : 32) 
+        // Postcode 2161, Cumberland LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2161, Cumberland LGA (Greater Sydney)", "P", "Postcode 2161, Cumberland LGA (Greater Sydney)<p>52 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 1<br>2021-07-23: 3<br>2021-07-24: 4<br>2021-07-25: 8<br>2021-07-27: 1<br>2021-07-28: 3<br>2021-07-30: 3<br>2021-07-31: 2<br>2021-08-02: 6<br>2021-08-03: 10<br>2021-08-04: 11<br><p>Week to week Reff=1.6", -33.8627,150.966, [ 1, 3, 4, 8, 0, 1, 3, 0, 3, 2, 0, 6, 10, 11 ], "#ff8800");
+
+        // Postcode 2162, Canterbury-Bankstown LGA is at -33.88836,151.00713 
+        // Postcode 2162, Canterbury-Bankstown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2162, Canterbury-Bankstown LGA (Greater Sydney) cases:  1 3 2 11 5 1 2 0 0 3 0 13 9 4, total 54 ( 25 : 29) 
+        // Postcode 2162, Canterbury-Bankstown LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2162, Canterbury-Bankstown LGA (Greater Sydney)", "P", "Postcode 2162, Canterbury-Bankstown LGA (Greater Sydney)<p>54 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 1<br>2021-07-23: 3<br>2021-07-24: 2<br>2021-07-25: 11<br>2021-07-26: 5<br>2021-07-27: 1<br>2021-07-28: 2<br>2021-07-31: 3<br>2021-08-02: 13<br>2021-08-03: 9<br>2021-08-04: 4<br><p>Week to week Reff=1.2", -33.88836,151.00713, [ 1, 3, 2, 11, 5, 1, 2, 0, 0, 3, 0, 13, 9, 4 ], "#ff8800");
+
+        // Postcode 2163, Fairfield LGA is at -33.881495,150.9821162 
+        // Postcode 2163, Fairfield LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2163, Fairfield LGA (Greater Sydney) cases:  0 1 2 0 0 3 3 0 2 4 4 0 1 5, total 25 ( 9 : 16) 
+        // Postcode 2163, Fairfield LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-08-04
+        add_boxes("Postcode 2163, Fairfield LGA (Greater Sydney)", "P", "Postcode 2163, Fairfield LGA (Greater Sydney)<p>25 cases between 2021-07-23 and 2021-08-04:<p>2021-07-23: 1<br>2021-07-24: 2<br>2021-07-27: 3<br>2021-07-28: 3<br>2021-07-30: 2<br>2021-07-31: 4<br>2021-08-01: 4<br>2021-08-03: 1<br>2021-08-04: 5<br><p>Week to week Reff=1.8", -33.881495,150.9821162, [ 0, 1, 2, 0, 0, 3, 3, 0, 2, 4, 4, 0, 1, 5 ], "#ff8800");
+
+        // Postcode 2164, Fairfield LGA is at -33.841827,150.962577 
+        // Postcode 2164, Fairfield LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2164, Fairfield LGA (Greater Sydney) cases:  3 4 3 0 4 0 8 1 5 9 0 2 0 0, total 39 ( 22 : 17) 
+        // Postcode 2164, Fairfield LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-02
+        add_boxes("Postcode 2164, Fairfield LGA (Greater Sydney)", "P", "Postcode 2164, Fairfield LGA (Greater Sydney)<p>39 cases between 2021-07-22 and 2021-08-02:<p>2021-07-22: 3<br>2021-07-23: 4<br>2021-07-24: 3<br>2021-07-26: 4<br>2021-07-28: 8<br>2021-07-29: 1<br>2021-07-30: 5<br>2021-07-31: 9<br>2021-08-02: 2<br><p>Week to week Reff=0.77", -33.841827,150.962577, [ 3, 4, 3, 0, 4, 0, 8, 1, 5, 9, 0, 2, 0, 0 ], "#ff8800");
+
+        // Postcode 2165, Fairfield LGA is at -33.87112,150.92322 
+        // Postcode 2165, Fairfield LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2165, Fairfield LGA (Greater Sydney) cases:  12 20 16 10 17 11 6 11 4 10 2 8 10 4, total 141 ( 92 : 49) 
+        // Postcode 2165, Fairfield LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2165, Fairfield LGA (Greater Sydney)", "P", "Postcode 2165, Fairfield LGA (Greater Sydney)<p>141 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 12<br>2021-07-23: 20<br>2021-07-24: 16<br>2021-07-25: 10<br>2021-07-26: 17<br>2021-07-27: 11<br>2021-07-28: 6<br>2021-07-29: 11<br>2021-07-30: 4<br>2021-07-31: 10<br>2021-08-01: 2<br>2021-08-02: 8<br>2021-08-03: 10<br>2021-08-04: 4<br><p>Week to week Reff=0.53", -33.87112,150.92322, [ 12, 20, 16, 10, 17, 11, 6, 11, 4, 10, 2, 8, 10, 4 ], "#ff8800");
+
+        // Postcode 2166, Fairfield LGA is at -33.906913,150.9685549 
+        // Postcode 2166, Fairfield LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2166, Fairfield LGA (Greater Sydney) cases:  6 0 2 3 3 12 12 2 6 7 1 2 0 0, total 56 ( 38 : 18) 
+        // Postcode 2166, Fairfield LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-02
+        add_boxes("Postcode 2166, Fairfield LGA (Greater Sydney)", "P", "Postcode 2166, Fairfield LGA (Greater Sydney)<p>56 cases between 2021-07-22 and 2021-08-02:<p>2021-07-22: 6<br>2021-07-24: 2<br>2021-07-25: 3<br>2021-07-26: 3<br>2021-07-27: 12<br>2021-07-28: 12<br>2021-07-29: 2<br>2021-07-30: 6<br>2021-07-31: 7<br>2021-08-01: 1<br>2021-08-02: 2<br><p>Week to week Reff=0.47", -33.906913,150.9685549, [ 6, 0, 2, 3, 3, 12, 12, 2, 6, 7, 1, 2, 0, 0 ], "#ff8800");
+
+        // Postcode 2167, Campbelltown LGA is at -33.9690916,150.8929227 
+        // Postcode 2167, Campbelltown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2167, Campbelltown LGA (Greater Sydney) cases:  0 0 0 0 1 0 0 0 1 0 1 0 1 0, total 4 ( 1 : 3) 
+        // Postcode 2167, Campbelltown LGA (Greater Sydney): cases all fall between 2021-07-26 and 2021-08-03
+        add_boxes("Postcode 2167, Campbelltown LGA (Greater Sydney)", "P", "Postcode 2167, Campbelltown LGA (Greater Sydney)<p>4 cases between 2021-07-26 and 2021-08-03:<p>2021-07-26: 1<br>2021-07-30: 1<br>2021-08-01: 1<br>2021-08-03: 1<br><p>Week to week Reff=3", -33.9690916,150.8929227, [ 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0 ], "#ff8800");
+
+        // Postcode 2168, Liverpool LGA is at -33.9164233,150.8914686 
+        // Postcode 2168, Liverpool LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2168, Liverpool LGA (Greater Sydney) cases:  1 0 3 2 1 1 9 5 3 8 4 5 1 5, total 48 ( 17 : 31) 
+        // Postcode 2168, Liverpool LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2168, Liverpool LGA (Greater Sydney)", "P", "Postcode 2168, Liverpool LGA (Greater Sydney)<p>48 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 1<br>2021-07-24: 3<br>2021-07-25: 2<br>2021-07-26: 1<br>2021-07-27: 1<br>2021-07-28: 9<br>2021-07-29: 5<br>2021-07-30: 3<br>2021-07-31: 8<br>2021-08-01: 4<br>2021-08-02: 5<br>2021-08-03: 1<br>2021-08-04: 5<br><p>Week to week Reff=1.8", -33.9164233,150.8914686, [ 1, 0, 3, 2, 1, 1, 9, 5, 3, 8, 4, 5, 1, 5 ], "#ff8800");
+
+        // Postcode 2170, Liverpool LGA is at -33.911343,150.9381637 
+        // Postcode 2170, Liverpool LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2170, Liverpool LGA (Greater Sydney) cases:  3 3 3 5 5 10 20 15 12 10 10 5 1 12, total 114 ( 49 : 65) 
+        // Postcode 2170, Liverpool LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2170, Liverpool LGA (Greater Sydney)", "P", "Postcode 2170, Liverpool LGA (Greater Sydney)<p>114 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 3<br>2021-07-23: 3<br>2021-07-24: 3<br>2021-07-25: 5<br>2021-07-26: 5<br>2021-07-27: 10<br>2021-07-28: 20<br>2021-07-29: 15<br>2021-07-30: 12<br>2021-07-31: 10<br>2021-08-01: 10<br>2021-08-02: 5<br>2021-08-03: 1<br>2021-08-04: 12<br><p>Week to week Reff=1.3", -33.911343,150.9381637, [ 3, 3, 3, 5, 5, 10, 20, 15, 12, 10, 10, 5, 1, 12 ], "#ff8800");
+
+        // Postcode 2171, Liverpool LGA is at -33.93569,150.8308 
+        // Postcode 2171, Liverpool LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2171, Liverpool LGA (Greater Sydney) cases:  8 2 7 4 1 4 4 2 5 0 6 1 6 1, total 51 ( 30 : 21) 
+        // Postcode 2171, Liverpool LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2171, Liverpool LGA (Greater Sydney)", "P", "Postcode 2171, Liverpool LGA (Greater Sydney)<p>51 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 8<br>2021-07-23: 2<br>2021-07-24: 7<br>2021-07-25: 4<br>2021-07-26: 1<br>2021-07-27: 4<br>2021-07-28: 4<br>2021-07-29: 2<br>2021-07-30: 5<br>2021-08-01: 6<br>2021-08-02: 1<br>2021-08-03: 6<br>2021-08-04: 1<br><p>Week to week Reff=0.7", -33.93569,150.8308, [ 8, 2, 7, 4, 1, 4, 4, 2, 5, 0, 6, 1, 6, 1 ], "#ff8800");
+
+        // Postcode 2172, Liverpool LGA is at -33.959,150.979 
+        // Postcode 2172, Liverpool LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2172, Liverpool LGA (Greater Sydney) cases:  2 0 0 0 0 0 0 0 0 0 0 0 0 0, total 2 ( 2 : 0) 
+        // Postcode 2172, Liverpool LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-07-22
+        add_boxes("Postcode 2172, Liverpool LGA (Greater Sydney)", "P", "Postcode 2172, Liverpool LGA (Greater Sydney)<p>2 cases on 2021-07-22<p>2021-07-22: 2<br><p>Week to week Reff=0", -33.959,150.979, [ 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff8800");
+
+        // Postcode 2173, Liverpool LGA is at -33.9492164,150.9424079 
+        // Postcode 2173, Liverpool LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2173, Liverpool LGA (Greater Sydney) cases:  0 0 0 0 1 0 1 0 0 0 0 0 0 0, total 2 ( 2 : 0) 
+        // Postcode 2173, Liverpool LGA (Greater Sydney): cases all fall between 2021-07-26 and 2021-07-28
+        add_boxes("Postcode 2173, Liverpool LGA (Greater Sydney)", "P", "Postcode 2173, Liverpool LGA (Greater Sydney)<p>2 cases on 2021-07-26 and 2021-07-28:<p>2021-07-26: 1<br>2021-07-28: 1<br><p>Week to week Reff=0", -33.9492164,150.9424079, [ 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0 ], "#ff8800");
+
+        // Postcode 2174, Liverpool LGA is at -33.9984,150.866 
+        // Postcode 2174, Liverpool LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2174, Liverpool LGA (Greater Sydney) cases:  0 0 1 0 0 0 1 0 0 2 3 4 3 0, total 14 ( 2 : 12) 
+        // Postcode 2174, Liverpool LGA (Greater Sydney): cases all fall between 2021-07-24 and 2021-08-03
+        add_boxes("Postcode 2174, Liverpool LGA (Greater Sydney)", "P", "Postcode 2174, Liverpool LGA (Greater Sydney)<p>14 cases between 2021-07-24 and 2021-08-03:<p>2021-07-24: 1<br>2021-07-28: 1<br>2021-07-31: 2<br>2021-08-01: 3<br>2021-08-02: 4<br>2021-08-03: 3<br><p>Week to week Reff=6", -33.9984,150.866, [ 0, 0, 1, 0, 0, 0, 1, 0, 0, 2, 3, 4, 3, 0 ], "#ff8800");
+
+        // Postcode 2175, Fairfield LGA is at -33.848126,150.8493059 
+        // Postcode 2175, Fairfield LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2175, Fairfield LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2176, Fairfield LGA is at -33.8762,150.9123 
+        // Postcode 2176, Fairfield LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2176, Fairfield LGA (Greater Sydney) cases:  7 9 10 3 2 11 14 7 3 9 4 2 7 4, total 92 ( 56 : 36) 
+        // Postcode 2176, Fairfield LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2176, Fairfield LGA (Greater Sydney)", "P", "Postcode 2176, Fairfield LGA (Greater Sydney)<p>92 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 7<br>2021-07-23: 9<br>2021-07-24: 10<br>2021-07-25: 3<br>2021-07-26: 2<br>2021-07-27: 11<br>2021-07-28: 14<br>2021-07-29: 7<br>2021-07-30: 3<br>2021-07-31: 9<br>2021-08-01: 4<br>2021-08-02: 2<br>2021-08-03: 7<br>2021-08-04: 4<br><p>Week to week Reff=0.64", -33.8762,150.9123, [ 7, 9, 10, 3, 2, 11, 14, 7, 3, 9, 4, 2, 7, 4 ], "#ff8800");
+
+        // Postcode 2177, Fairfield LGA is at -33.828,151.077 
+        // Postcode 2177, Fairfield LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2177, Fairfield LGA (Greater Sydney) cases:  1 3 0 0 0 0 6 0 2 4 4 0 0 8, total 28 ( 10 : 18) 
+        // Postcode 2177, Fairfield LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2177, Fairfield LGA (Greater Sydney)", "P", "Postcode 2177, Fairfield LGA (Greater Sydney)<p>28 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 1<br>2021-07-23: 3<br>2021-07-28: 6<br>2021-07-30: 2<br>2021-07-31: 4<br>2021-08-01: 4<br>2021-08-04: 8<br><p>Week to week Reff=1.8", -33.828,151.077, [ 1, 3, 0, 0, 0, 0, 6, 0, 2, 4, 4, 0, 0, 8 ], "#ff8800");
+
+        // Postcode 2178, Penrith LGA is at -33.857,150.81 
+        // Postcode 2178, Penrith LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2178, Penrith LGA (Greater Sydney) cases:  0 0 0 0 0 0 1 0 0 0 0 0 0 0, total 1 ( 1 : 0) 
+        // Postcode 2178, Penrith LGA (Greater Sydney): cases all fall between 2021-07-28 and 2021-07-28
+        add_boxes("Postcode 2178, Penrith LGA (Greater Sydney)", "P", "Postcode 2178, Penrith LGA (Greater Sydney)<p>1 case on 2021-07-28<p>2021-07-28: 1<br><p>Week to week Reff=0", -33.857,150.81, [ 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2179, Liverpool LGA is at -33.965,150.801 
+        // Postcode 2179, Liverpool LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2179, Liverpool LGA (Greater Sydney) cases:  0 2 0 0 1 0 1 4 2 2 0 2 0 1, total 15 ( 4 : 11) 
+        // Postcode 2179, Liverpool LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-08-04
+        add_boxes("Postcode 2179, Liverpool LGA (Greater Sydney)", "P", "Postcode 2179, Liverpool LGA (Greater Sydney)<p>15 cases between 2021-07-23 and 2021-08-04:<p>2021-07-23: 2<br>2021-07-26: 1<br>2021-07-28: 1<br>2021-07-29: 4<br>2021-07-30: 2<br>2021-07-31: 2<br>2021-08-02: 2<br>2021-08-04: 1<br><p>Week to week Reff=2.8", -33.965,150.801, [ 0, 2, 0, 0, 1, 0, 1, 4, 2, 2, 0, 2, 0, 1 ], "#ff8800");
+
+        // Postcode 2190, Canterbury-Bankstown LGA is at -33.915,151.051 
+        // Postcode 2190, Canterbury-Bankstown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2190, Canterbury-Bankstown LGA (Greater Sydney) cases:  0 1 5 5 1 0 1 2 8 2 3 2 6 3, total 39 ( 13 : 26) 
+        // Postcode 2190, Canterbury-Bankstown LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-08-04
+        add_boxes("Postcode 2190, Canterbury-Bankstown LGA (Greater Sydney)", "P", "Postcode 2190, Canterbury-Bankstown LGA (Greater Sydney)<p>39 cases between 2021-07-23 and 2021-08-04:<p>2021-07-23: 1<br>2021-07-24: 5<br>2021-07-25: 5<br>2021-07-26: 1<br>2021-07-28: 1<br>2021-07-29: 2<br>2021-07-30: 8<br>2021-07-31: 2<br>2021-08-01: 3<br>2021-08-02: 2<br>2021-08-03: 6<br>2021-08-04: 3<br><p>Week to week Reff=2", -33.915,151.051, [ 0, 1, 5, 5, 1, 0, 1, 2, 8, 2, 3, 2, 6, 3 ], "#ff8800");
+
+        // Postcode 2191, Canterbury-Bankstown LGA is at -33.9061117,151.0849848 
+        // Postcode 2191, Canterbury-Bankstown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2191, Canterbury-Bankstown LGA (Greater Sydney) cases:  2 2 1 0 0 0 0 0 2 3 2 0 0 1, total 13 ( 5 : 8) 
+        // Postcode 2191, Canterbury-Bankstown LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2191, Canterbury-Bankstown LGA (Greater Sydney)", "P", "Postcode 2191, Canterbury-Bankstown LGA (Greater Sydney)<p>13 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 2<br>2021-07-23: 2<br>2021-07-24: 1<br>2021-07-30: 2<br>2021-07-31: 3<br>2021-08-01: 2<br>2021-08-04: 1<br><p>Week to week Reff=1.6", -33.9061117,151.0849848, [ 2, 2, 1, 0, 0, 0, 0, 0, 2, 3, 2, 0, 0, 1 ], "#ff8800");
+
+        // Postcode 2192, Canterbury-Bankstown LGA is at -33.9178204,151.0908086 
+        // Postcode 2192, Canterbury-Bankstown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2192, Canterbury-Bankstown LGA (Greater Sydney) cases:  1 3 2 2 1 3 4 1 6 4 0 2 4 0, total 33 ( 16 : 17) 
+        // Postcode 2192, Canterbury-Bankstown LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-03
+        add_boxes("Postcode 2192, Canterbury-Bankstown LGA (Greater Sydney)", "P", "Postcode 2192, Canterbury-Bankstown LGA (Greater Sydney)<p>33 cases between 2021-07-22 and 2021-08-03:<p>2021-07-22: 1<br>2021-07-23: 3<br>2021-07-24: 2<br>2021-07-25: 2<br>2021-07-26: 1<br>2021-07-27: 3<br>2021-07-28: 4<br>2021-07-29: 1<br>2021-07-30: 6<br>2021-07-31: 4<br>2021-08-02: 2<br>2021-08-03: 4<br><p>Week to week Reff=1.1", -33.9178204,151.0908086, [ 1, 3, 2, 2, 1, 3, 4, 1, 6, 4, 0, 2, 4, 0 ], "#ff8800");
+
+        // Postcode 2193, Canterbury-Bankstown LGA is at -33.91058,151.12919 
+        // Postcode 2193, Canterbury-Bankstown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2193, Canterbury-Bankstown LGA (Greater Sydney) cases:  1 0 2 5 3 1 6 0 1 4 6 0 4 0, total 33 ( 18 : 15) 
+        // Postcode 2193, Canterbury-Bankstown LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-03
+        add_boxes("Postcode 2193, Canterbury-Bankstown LGA (Greater Sydney)", "P", "Postcode 2193, Canterbury-Bankstown LGA (Greater Sydney)<p>33 cases between 2021-07-22 and 2021-08-03:<p>2021-07-22: 1<br>2021-07-24: 2<br>2021-07-25: 5<br>2021-07-26: 3<br>2021-07-27: 1<br>2021-07-28: 6<br>2021-07-30: 1<br>2021-07-31: 4<br>2021-08-01: 6<br>2021-08-03: 4<br><p>Week to week Reff=0.83", -33.91058,151.12919, [ 1, 0, 2, 5, 3, 1, 6, 0, 1, 4, 6, 0, 4, 0 ], "#ff8800");
+
+        // Postcode 2194, Canterbury-Bankstown LGA is at -33.9105784,151.1024569 
+        // Postcode 2194, Canterbury-Bankstown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2194, Canterbury-Bankstown LGA (Greater Sydney) cases:  0 2 5 4 3 4 16 11 6 22 12 16 12 8, total 121 ( 34 : 87) 
+        // Postcode 2194, Canterbury-Bankstown LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-08-04
+        add_boxes("Postcode 2194, Canterbury-Bankstown LGA (Greater Sydney)", "P", "Postcode 2194, Canterbury-Bankstown LGA (Greater Sydney)<p>121 cases between 2021-07-23 and 2021-08-04:<p>2021-07-23: 2<br>2021-07-24: 5<br>2021-07-25: 4<br>2021-07-26: 3<br>2021-07-27: 4<br>2021-07-28: 16<br>2021-07-29: 11<br>2021-07-30: 6<br>2021-07-31: 22<br>2021-08-01: 12<br>2021-08-02: 16<br>2021-08-03: 12<br>2021-08-04: 8<br><p>Week to week Reff=2.6", -33.9105784,151.1024569, [ 0, 2, 5, 4, 3, 4, 16, 11, 6, 22, 12, 16, 12, 8 ], "#ff8800");
+
+        // Postcode 2195, Canterbury-Bankstown LGA is at -33.9228671,151.0683887 
+        // Postcode 2195, Canterbury-Bankstown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2195, Canterbury-Bankstown LGA (Greater Sydney) cases:  12 2 5 9 6 2 18 8 5 1 6 4 10 2, total 90 ( 54 : 36) 
+        // Postcode 2195, Canterbury-Bankstown LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2195, Canterbury-Bankstown LGA (Greater Sydney)", "P", "Postcode 2195, Canterbury-Bankstown LGA (Greater Sydney)<p>90 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 12<br>2021-07-23: 2<br>2021-07-24: 5<br>2021-07-25: 9<br>2021-07-26: 6<br>2021-07-27: 2<br>2021-07-28: 18<br>2021-07-29: 8<br>2021-07-30: 5<br>2021-07-31: 1<br>2021-08-01: 6<br>2021-08-02: 4<br>2021-08-03: 10<br>2021-08-04: 2<br><p>Week to week Reff=0.67", -33.9228671,151.0683887, [ 12, 2, 5, 9, 6, 2, 18, 8, 5, 1, 6, 4, 10, 2 ], "#ff8800");
+
+        // Postcode 2196, Canterbury-Bankstown LGA is at -33.9369131,151.074461 
+        // Postcode 2196, Canterbury-Bankstown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2196, Canterbury-Bankstown LGA (Greater Sydney) cases:  5 3 3 3 0 1 6 5 6 15 3 2 1 4, total 57 ( 21 : 36) 
+        // Postcode 2196, Canterbury-Bankstown LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2196, Canterbury-Bankstown LGA (Greater Sydney)", "P", "Postcode 2196, Canterbury-Bankstown LGA (Greater Sydney)<p>57 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 5<br>2021-07-23: 3<br>2021-07-24: 3<br>2021-07-25: 3<br>2021-07-27: 1<br>2021-07-28: 6<br>2021-07-29: 5<br>2021-07-30: 6<br>2021-07-31: 15<br>2021-08-01: 3<br>2021-08-02: 2<br>2021-08-03: 1<br>2021-08-04: 4<br><p>Week to week Reff=1.7", -33.9369131,151.074461, [ 5, 3, 3, 3, 0, 1, 6, 5, 6, 15, 3, 2, 1, 4 ], "#ff8800");
+
+        // Postcode 2197, Canterbury-Bankstown LGA is at -33.8990652,150.9976541 
+        // Postcode 2197, Canterbury-Bankstown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2197, Canterbury-Bankstown LGA (Greater Sydney) cases:  0 2 0 0 0 0 0 0 2 6 2 4 7 2, total 25 ( 2 : 23) 
+        // Postcode 2197, Canterbury-Bankstown LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-08-04
+        add_boxes("Postcode 2197, Canterbury-Bankstown LGA (Greater Sydney)", "P", "Postcode 2197, Canterbury-Bankstown LGA (Greater Sydney)<p>25 cases between 2021-07-23 and 2021-08-04:<p>2021-07-23: 2<br>2021-07-30: 2<br>2021-07-31: 6<br>2021-08-01: 2<br>2021-08-02: 4<br>2021-08-03: 7<br>2021-08-04: 2<br><p>Week to week Reff=12", -33.8990652,150.9976541, [ 0, 2, 0, 0, 0, 0, 0, 0, 2, 6, 2, 4, 7, 2 ], "#ff8800");
+
+        // Postcode 2198, Canterbury-Bankstown LGA is at -33.9062913,150.9860137 
+        // Postcode 2198, Canterbury-Bankstown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2198, Canterbury-Bankstown LGA (Greater Sydney) cases:  1 0 0 1 2 1 2 0 2 1 1 1 3 0, total 15 ( 7 : 8) 
+        // Postcode 2198, Canterbury-Bankstown LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-03
+        add_boxes("Postcode 2198, Canterbury-Bankstown LGA (Greater Sydney)", "P", "Postcode 2198, Canterbury-Bankstown LGA (Greater Sydney)<p>15 cases between 2021-07-22 and 2021-08-03:<p>2021-07-22: 1<br>2021-07-25: 1<br>2021-07-26: 2<br>2021-07-27: 1<br>2021-07-28: 2<br>2021-07-30: 2<br>2021-07-31: 1<br>2021-08-01: 1<br>2021-08-02: 1<br>2021-08-03: 3<br><p>Week to week Reff=1.1", -33.9062913,150.9860137, [ 1, 0, 0, 1, 2, 1, 2, 0, 2, 1, 1, 1, 3, 0 ], "#ff8800");
+
+        // Postcode 2199, Canterbury-Bankstown LGA is at -33.9097192,151.0100527 
+        // Postcode 2199, Canterbury-Bankstown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2199, Canterbury-Bankstown LGA (Greater Sydney) cases:  1 7 0 1 0 3 2 3 5 2 0 4 3 1, total 32 ( 14 : 18) 
+        // Postcode 2199, Canterbury-Bankstown LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2199, Canterbury-Bankstown LGA (Greater Sydney)", "P", "Postcode 2199, Canterbury-Bankstown LGA (Greater Sydney)<p>32 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 1<br>2021-07-23: 7<br>2021-07-25: 1<br>2021-07-27: 3<br>2021-07-28: 2<br>2021-07-29: 3<br>2021-07-30: 5<br>2021-07-31: 2<br>2021-08-02: 4<br>2021-08-03: 3<br>2021-08-04: 1<br><p>Week to week Reff=1.3", -33.9097192,151.0100527, [ 1, 7, 0, 1, 0, 3, 2, 3, 5, 2, 0, 4, 3, 1 ], "#ff8800");
+
+        // Postcode 2200, Canterbury-Bankstown LGA is at -33.915,151.051 
+        // Postcode 2200, Canterbury-Bankstown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2200, Canterbury-Bankstown LGA (Greater Sydney) cases:  4 3 6 7 5 13 5 9 6 15 6 7 9 11, total 106 ( 43 : 63) 
+        // Postcode 2200, Canterbury-Bankstown LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2200, Canterbury-Bankstown LGA (Greater Sydney)", "P", "Postcode 2200, Canterbury-Bankstown LGA (Greater Sydney)<p>106 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 4<br>2021-07-23: 3<br>2021-07-24: 6<br>2021-07-25: 7<br>2021-07-26: 5<br>2021-07-27: 13<br>2021-07-28: 5<br>2021-07-29: 9<br>2021-07-30: 6<br>2021-07-31: 15<br>2021-08-01: 6<br>2021-08-02: 7<br>2021-08-03: 9<br>2021-08-04: 11<br><p>Week to week Reff=1.5", -33.915,151.051, [ 4, 3, 6, 7, 5, 13, 5, 9, 6, 15, 6, 7, 9, 11 ], "#ff8800");
+
+        // Postcode 2203, Inner West LGA is at -33.9041707,151.1374068 
+        // Postcode 2203, Inner West LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2203, Inner West LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2204, Inner West LGA is at -33.908799,151.1479343 
+        // Postcode 2204, Inner West LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2204, Inner West LGA (Greater Sydney) cases:  1 0 0 0 0 0 4 1 0 0 0 0 1 2, total 9 ( 5 : 4) 
+        // Postcode 2204, Inner West LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2204, Inner West LGA (Greater Sydney)", "P", "Postcode 2204, Inner West LGA (Greater Sydney)<p>9 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 1<br>2021-07-28: 4<br>2021-07-29: 1<br>2021-08-03: 1<br>2021-08-04: 2<br><p>Week to week Reff=0.8", -33.908799,151.1479343, [ 1, 0, 0, 0, 0, 0, 4, 1, 0, 0, 0, 0, 1, 2 ], "#ff0000");
+
+        // Postcode 2205, Bayside LGA is at -33.9299813,151.1534281 
+        // Postcode 2205, Bayside LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2205, Bayside LGA (Greater Sydney) cases:  2 2 0 0 0 0 0 0 0 0 0 0 0 0, total 4 ( 4 : 0) 
+        // Postcode 2205, Bayside LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-07-23
+        add_boxes("Postcode 2205, Bayside LGA (Greater Sydney)", "P", "Postcode 2205, Bayside LGA (Greater Sydney)<p>4 cases between 2021-07-22 and 2021-07-23:<p>2021-07-22: 2<br>2021-07-23: 2<br><p>Week to week Reff=0", -33.9299813,151.1534281, [ 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2206, Canterbury-Bankstown LGA is at -33.9237,151.141 
+        // Postcode 2206, Canterbury-Bankstown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2206, Canterbury-Bankstown LGA (Greater Sydney) cases:  0 0 1 0 0 0 2 0 1 1 5 4 1 0, total 15 ( 3 : 12) 
+        // Postcode 2206, Canterbury-Bankstown LGA (Greater Sydney): cases all fall between 2021-07-24 and 2021-08-03
+        add_boxes("Postcode 2206, Canterbury-Bankstown LGA (Greater Sydney)", "P", "Postcode 2206, Canterbury-Bankstown LGA (Greater Sydney)<p>15 cases between 2021-07-24 and 2021-08-03:<p>2021-07-24: 1<br>2021-07-28: 2<br>2021-07-30: 1<br>2021-07-31: 1<br>2021-08-01: 5<br>2021-08-02: 4<br>2021-08-03: 1<br><p>Week to week Reff=4", -33.9237,151.141, [ 0, 0, 1, 0, 0, 0, 2, 0, 1, 1, 5, 4, 1, 0 ], "#ff8800");
+
+        // Postcode 2207, Bayside LGA is at -33.9525324,151.1226904 
+        // Postcode 2207, Bayside LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2207, Bayside LGA (Greater Sydney) cases:  0 0 0 0 2 2 5 3 3 1 2 0 2 2, total 22 ( 9 : 13) 
+        // Postcode 2207, Bayside LGA (Greater Sydney): cases all fall between 2021-07-26 and 2021-08-04
+        add_boxes("Postcode 2207, Bayside LGA (Greater Sydney)", "P", "Postcode 2207, Bayside LGA (Greater Sydney)<p>22 cases between 2021-07-26 and 2021-08-04:<p>2021-07-26: 2<br>2021-07-27: 2<br>2021-07-28: 5<br>2021-07-29: 3<br>2021-07-30: 3<br>2021-07-31: 1<br>2021-08-01: 2<br>2021-08-03: 2<br>2021-08-04: 2<br><p>Week to week Reff=1.4", -33.9525324,151.1226904, [ 0, 0, 0, 0, 2, 2, 5, 3, 3, 1, 2, 0, 2, 2 ], "#ff0000");
+
+        // Postcode 2208, Canterbury-Bankstown LGA is at -33.9511,151.092 
+        // Postcode 2208, Canterbury-Bankstown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2208, Canterbury-Bankstown LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 2 2 3 2 0, total 9 ( 0 : 9) 
+        // Postcode 2208, Canterbury-Bankstown LGA (Greater Sydney): cases all fall between 2021-07-31 and 2021-08-03
+        add_boxes("Postcode 2208, Canterbury-Bankstown LGA (Greater Sydney)", "P", "Postcode 2208, Canterbury-Bankstown LGA (Greater Sydney)<p>9 cases between 2021-07-31 and 2021-08-03:<p>2021-07-31: 2<br>2021-08-01: 2<br>2021-08-02: 3<br>2021-08-03: 2<br>", -33.9511,151.092, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 3, 2, 0 ], "#ff8800");
+
+        // Postcode 2209, Georges River LGA is at -33.947329,151.0707329 
+        // Postcode 2209, Georges River LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2209, Georges River LGA (Greater Sydney) cases:  3 1 0 1 0 1 1 2 2 0 1 0 0 0, total 12 ( 7 : 5) 
+        // Postcode 2209, Georges River LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-01
+        add_boxes("Postcode 2209, Georges River LGA (Greater Sydney)", "P", "Postcode 2209, Georges River LGA (Greater Sydney)<p>12 cases between 2021-07-22 and 2021-08-01:<p>2021-07-22: 3<br>2021-07-23: 1<br>2021-07-25: 1<br>2021-07-27: 1<br>2021-07-28: 1<br>2021-07-29: 2<br>2021-07-30: 2<br>2021-08-01: 1<br><p>Week to week Reff=0.71", -33.947329,151.0707329, [ 3, 1, 0, 1, 0, 1, 1, 2, 2, 0, 1, 0, 0, 0 ], "#ff8800");
+
+        // Postcode 2210, Georges River LGA is at -33.9508615,151.0523782 
+        // Postcode 2210, Georges River LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2210, Georges River LGA (Greater Sydney) cases:  0 5 0 2 1 0 1 1 0 4 0 0 0 0, total 14 ( 9 : 5) 
+        // Postcode 2210, Georges River LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-07-31
+        add_boxes("Postcode 2210, Georges River LGA (Greater Sydney)", "P", "Postcode 2210, Georges River LGA (Greater Sydney)<p>14 cases between 2021-07-23 and 2021-07-31:<p>2021-07-23: 5<br>2021-07-25: 2<br>2021-07-26: 1<br>2021-07-28: 1<br>2021-07-29: 1<br>2021-07-31: 4<br><p>Week to week Reff=0.56", -33.9508615,151.0523782, [ 0, 5, 0, 2, 1, 0, 1, 1, 0, 4, 0, 0, 0, 0 ], "#ff8800");
+
+        // Postcode 2211, Canterbury-Bankstown LGA is at -33.973,151.035 
+        // Postcode 2211, Canterbury-Bankstown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2211, Canterbury-Bankstown LGA (Greater Sydney) cases:  0 0 4 0 1 1 2 2 0 0 0 3 0 1, total 14 ( 8 : 6) 
+        // Postcode 2211, Canterbury-Bankstown LGA (Greater Sydney): cases all fall between 2021-07-24 and 2021-08-04
+        add_boxes("Postcode 2211, Canterbury-Bankstown LGA (Greater Sydney)", "P", "Postcode 2211, Canterbury-Bankstown LGA (Greater Sydney)<p>14 cases between 2021-07-24 and 2021-08-04:<p>2021-07-24: 4<br>2021-07-26: 1<br>2021-07-27: 1<br>2021-07-28: 2<br>2021-07-29: 2<br>2021-08-02: 3<br>2021-08-04: 1<br><p>Week to week Reff=0.75", -33.973,151.035, [ 0, 0, 4, 0, 1, 1, 2, 2, 0, 0, 0, 3, 0, 1 ], "#ff8800");
+
+        // Postcode 2212, Canterbury-Bankstown LGA is at -33.9452471,151.018035 
+        // Postcode 2212, Canterbury-Bankstown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2212, Canterbury-Bankstown LGA (Greater Sydney) cases:  0 2 0 0 1 0 0 0 1 0 2 0 3 1, total 10 ( 3 : 7) 
+        // Postcode 2212, Canterbury-Bankstown LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-08-04
+        add_boxes("Postcode 2212, Canterbury-Bankstown LGA (Greater Sydney)", "P", "Postcode 2212, Canterbury-Bankstown LGA (Greater Sydney)<p>10 cases between 2021-07-23 and 2021-08-04:<p>2021-07-23: 2<br>2021-07-26: 1<br>2021-07-30: 1<br>2021-08-01: 2<br>2021-08-03: 3<br>2021-08-04: 1<br><p>Week to week Reff=2.3", -33.9452471,151.018035, [ 0, 2, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0, 3, 1 ], "#ff8800");
+
+        // Postcode 2213, Canterbury-Bankstown LGA is at -33.96929,151.00624 
+        // Postcode 2213, Canterbury-Bankstown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2213, Canterbury-Bankstown LGA (Greater Sydney) cases:  0 0 0 0 0 0 1 1 0 1 0 0 2 4, total 9 ( 1 : 8) 
+        // Postcode 2213, Canterbury-Bankstown LGA (Greater Sydney): cases all fall between 2021-07-28 and 2021-08-04
+        add_boxes("Postcode 2213, Canterbury-Bankstown LGA (Greater Sydney)", "P", "Postcode 2213, Canterbury-Bankstown LGA (Greater Sydney)<p>9 cases between 2021-07-28 and 2021-08-04:<p>2021-07-28: 1<br>2021-07-29: 1<br>2021-07-31: 1<br>2021-08-03: 2<br>2021-08-04: 4<br><p>Week to week Reff=8", -33.96929,151.00624, [ 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 2, 4 ], "#ff8800");
+
+        // Postcode 2216, Bayside LGA is at -33.9529,151.138 
+        // Postcode 2216, Bayside LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2216, Bayside LGA (Greater Sydney) cases:  0 0 0 0 1 1 1 0 0 1 0 2 2 2, total 10 ( 3 : 7) 
+        // Postcode 2216, Bayside LGA (Greater Sydney): cases all fall between 2021-07-26 and 2021-08-04
+        add_boxes("Postcode 2216, Bayside LGA (Greater Sydney)", "P", "Postcode 2216, Bayside LGA (Greater Sydney)<p>10 cases between 2021-07-26 and 2021-08-04:<p>2021-07-26: 1<br>2021-07-27: 1<br>2021-07-28: 1<br>2021-07-31: 1<br>2021-08-02: 2<br>2021-08-03: 2<br>2021-08-04: 2<br><p>Week to week Reff=2.3", -33.9529,151.138, [ 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 2, 2, 2 ], "#ff0000");
+
+        // Postcode 2217, Bayside LGA is at -33.982,151.148 
+        // Postcode 2217, Bayside LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2217, Bayside LGA (Greater Sydney) cases:  1 0 0 2 0 0 0 0 0 0 0 1 0 0, total 4 ( 3 : 1) 
+        // Postcode 2217, Bayside LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-02
+        add_boxes("Postcode 2217, Bayside LGA (Greater Sydney)", "P", "Postcode 2217, Bayside LGA (Greater Sydney)<p>4 cases between 2021-07-22 and 2021-08-02:<p>2021-07-22: 1<br>2021-07-25: 2<br>2021-08-02: 1<br><p>Week to week Reff=0.33", -33.982,151.148, [ 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ], "#ff0000");
+
+        // Postcode 2218, Georges River LGA is at -33.9685296,151.1246063 
+        // Postcode 2218, Georges River LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2218, Georges River LGA (Greater Sydney) cases:  1 0 0 0 0 0 0 0 0 0 4 0 1 0, total 6 ( 1 : 5) 
+        // Postcode 2218, Georges River LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-03
+        add_boxes("Postcode 2218, Georges River LGA (Greater Sydney)", "P", "Postcode 2218, Georges River LGA (Greater Sydney)<p>6 cases between 2021-07-22 and 2021-08-03:<p>2021-07-22: 1<br>2021-08-01: 4<br>2021-08-03: 1<br><p>Week to week Reff=5", -33.9685296,151.1246063, [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 1, 0 ], "#ff8800");
+
+        // Postcode 2219, Bayside LGA is at -33.98898,151.1393 
+        // Postcode 2219, Bayside LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2219, Bayside LGA (Greater Sydney) cases:  0 0 0 0 0 1 1 1 0 0 0 0 1 4, total 8 ( 2 : 6) 
+        // Postcode 2219, Bayside LGA (Greater Sydney): cases all fall between 2021-07-27 and 2021-08-04
+        add_boxes("Postcode 2219, Bayside LGA (Greater Sydney)", "P", "Postcode 2219, Bayside LGA (Greater Sydney)<p>8 cases between 2021-07-27 and 2021-08-04:<p>2021-07-27: 1<br>2021-07-28: 1<br>2021-07-29: 1<br>2021-08-03: 1<br>2021-08-04: 4<br><p>Week to week Reff=3", -33.98898,151.1393, [ 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 4 ], "#ff0000");
+
+        // Postcode 2220, Georges River LGA is at -33.966189,151.1051663 
+        // Postcode 2220, Georges River LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2220, Georges River LGA (Greater Sydney) cases:  2 0 0 0 1 1 0 1 2 0 0 1 0 1, total 9 ( 4 : 5) 
+        // Postcode 2220, Georges River LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2220, Georges River LGA (Greater Sydney)", "P", "Postcode 2220, Georges River LGA (Greater Sydney)<p>9 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 2<br>2021-07-26: 1<br>2021-07-27: 1<br>2021-07-29: 1<br>2021-07-30: 2<br>2021-08-02: 1<br>2021-08-04: 1<br><p>Week to week Reff=1.2", -33.966189,151.1051663, [ 2, 0, 0, 0, 1, 1, 0, 1, 2, 0, 0, 1, 0, 1 ], "#ff8800");
+
+        // Postcode 2221, Georges River LGA is at -33.98,151.1035 
+        // Postcode 2221, Georges River LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2221, Georges River LGA (Greater Sydney) cases:  0 0 1 0 1 0 0 1 0 0 1 0 2 1, total 7 ( 2 : 5) 
+        // Postcode 2221, Georges River LGA (Greater Sydney): cases all fall between 2021-07-24 and 2021-08-04
+        add_boxes("Postcode 2221, Georges River LGA (Greater Sydney)", "P", "Postcode 2221, Georges River LGA (Greater Sydney)<p>7 cases between 2021-07-24 and 2021-08-04:<p>2021-07-24: 1<br>2021-07-26: 1<br>2021-07-29: 1<br>2021-08-01: 1<br>2021-08-03: 2<br>2021-08-04: 1<br><p>Week to week Reff=2.5", -33.98,151.1035, [ 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 2, 1 ], "#ff8800");
+
+        // Postcode 2222, Georges River LGA is at -33.9623045,151.0849848 
+        // Postcode 2222, Georges River LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2222, Georges River LGA (Greater Sydney) cases:  3 0 2 0 0 0 1 0 0 0 1 0 0 0, total 7 ( 6 : 1) 
+        // Postcode 2222, Georges River LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-01
+        add_boxes("Postcode 2222, Georges River LGA (Greater Sydney)", "P", "Postcode 2222, Georges River LGA (Greater Sydney)<p>7 cases between 2021-07-22 and 2021-08-01:<p>2021-07-22: 3<br>2021-07-24: 2<br>2021-07-28: 1<br>2021-08-01: 1<br><p>Week to week Reff=0.17", -33.9623045,151.0849848, [ 3, 0, 2, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 ], "#ff8800");
+
+        // Postcode 2223, Georges River LGA is at -33.98118,151.07479 
+        // Postcode 2223, Georges River LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2223, Georges River LGA (Greater Sydney) cases:  1 0 0 3 0 3 0 2 1 0 0 1 0 0, total 11 ( 7 : 4) 
+        // Postcode 2223, Georges River LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-02
+        add_boxes("Postcode 2223, Georges River LGA (Greater Sydney)", "P", "Postcode 2223, Georges River LGA (Greater Sydney)<p>11 cases between 2021-07-22 and 2021-08-02:<p>2021-07-22: 1<br>2021-07-25: 3<br>2021-07-27: 3<br>2021-07-29: 2<br>2021-07-30: 1<br>2021-08-02: 1<br><p>Week to week Reff=0.57", -33.98118,151.07479, [ 1, 0, 0, 3, 0, 3, 0, 2, 1, 0, 0, 1, 0, 0 ], "#ff8800");
+
+        // Postcode 2224, Sutherland Shire LGA is at -34.02318,151.11156 
+        // Postcode 2224, Sutherland Shire LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2224, Sutherland Shire LGA (Greater Sydney) cases:  0 0 2 0 0 0 0 0 0 0 0 0 0 1, total 3 ( 2 : 1) 
+        // Postcode 2224, Sutherland Shire LGA (Greater Sydney): cases all fall between 2021-07-24 and 2021-08-04
+        add_boxes("Postcode 2224, Sutherland Shire LGA (Greater Sydney)", "P", "Postcode 2224, Sutherland Shire LGA (Greater Sydney)<p>3 cases between 2021-07-24 and 2021-08-04:<p>2021-07-24: 2<br>2021-08-04: 1<br><p>Week to week Reff=0.5", -34.02318,151.11156, [ 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ], "#ff0000");
+
+        // Postcode 2225, Sutherland Shire LGA is at -34.0016599,151.0791612 
+        // Postcode 2225, Sutherland Shire LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2225, Sutherland Shire LGA (Greater Sydney) cases:  0 0 0 0 0 1 0 0 0 0 0 0 0 0, total 1 ( 1 : 0) 
+        // Postcode 2225, Sutherland Shire LGA (Greater Sydney): cases all fall between 2021-07-27 and 2021-07-27
+        add_boxes("Postcode 2225, Sutherland Shire LGA (Greater Sydney)", "P", "Postcode 2225, Sutherland Shire LGA (Greater Sydney)<p>1 case on 2021-07-27<p>2021-07-27: 1<br><p>Week to week Reff=0", -34.0016599,151.0791612, [ 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2226, Sutherland Shire LGA is at -34.01695,151.06522 
+        // Postcode 2226, Sutherland Shire LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2226, Sutherland Shire LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2227, Sutherland Shire LGA is at -34.0496,151.0864 
+        // Postcode 2227, Sutherland Shire LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2227, Sutherland Shire LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2228, Sutherland Shire LGA is at -34.04977,151.10334 
+        // Postcode 2228, Sutherland Shire LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2228, Sutherland Shire LGA (Greater Sydney) cases:  0 0 0 1 0 0 0 0 0 0 0 0 0 0, total 1 ( 1 : 0) 
+        // Postcode 2228, Sutherland Shire LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-07-25
+        add_boxes("Postcode 2228, Sutherland Shire LGA (Greater Sydney)", "P", "Postcode 2228, Sutherland Shire LGA (Greater Sydney)<p>1 case on 2021-07-25<p>2021-07-25: 1<br><p>Week to week Reff=0", -34.04977,151.10334, [ 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2229, Sutherland Shire LGA is at -34.0460194,151.1228434 
+        // Postcode 2229, Sutherland Shire LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2229, Sutherland Shire LGA (Greater Sydney) cases:  1 2 1 0 0 0 0 0 0 0 0 0 0 0, total 4 ( 4 : 0) 
+        // Postcode 2229, Sutherland Shire LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-07-24
+        add_boxes("Postcode 2229, Sutherland Shire LGA (Greater Sydney)", "P", "Postcode 2229, Sutherland Shire LGA (Greater Sydney)<p>4 cases between 2021-07-22 and 2021-07-24:<p>2021-07-22: 1<br>2021-07-23: 2<br>2021-07-24: 1<br><p>Week to week Reff=0", -34.0460194,151.1228434, [ 1, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2230, Sutherland Shire LGA is at -34.04788,151.14113 
+        // Postcode 2230, Sutherland Shire LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2230, Sutherland Shire LGA (Greater Sydney) cases:  0 0 1 1 0 0 0 0 0 0 0 0 0 0, total 2 ( 2 : 0) 
+        // Postcode 2230, Sutherland Shire LGA (Greater Sydney): cases all fall between 2021-07-24 and 2021-07-25
+        add_boxes("Postcode 2230, Sutherland Shire LGA (Greater Sydney)", "P", "Postcode 2230, Sutherland Shire LGA (Greater Sydney)<p>2 cases on 2021-07-24 and 2021-07-25:<p>2021-07-24: 1<br>2021-07-25: 1<br><p>Week to week Reff=0", -34.04788,151.14113, [ 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2231, Sutherland Shire LGA is at -34.0194134,151.1985879 
+        // Postcode 2231, Sutherland Shire LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2231, Sutherland Shire LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2232, Sutherland Shire LGA is at -34.02772,151.04152 
+        // Postcode 2232, Sutherland Shire LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2232, Sutherland Shire LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2233, Sutherland Shire LGA is at -34.0552,151.0321 
+        // Postcode 2233, Sutherland Shire LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2233, Sutherland Shire LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 1 0 0, total 1 ( 0 : 1) 
+        // Postcode 2233, Sutherland Shire LGA (Greater Sydney): cases all fall between 2021-08-02 and 2021-08-02
+        add_boxes("Postcode 2233, Sutherland Shire LGA (Greater Sydney)", "P", "Postcode 2233, Sutherland Shire LGA (Greater Sydney)<p>1 case on 2021-08-02<p>2021-08-02: 1<br>", -34.0552,151.0321, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ], "#ff0000");
+
+        // Postcode 2234, Sutherland Shire LGA is at -34.0169635,151.0116028 
+        // Postcode 2234, Sutherland Shire LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2234, Sutherland Shire LGA (Greater Sydney) cases:  0 1 0 0 0 0 0 0 0 0 1 1 0 0, total 3 ( 1 : 2) 
+        // Postcode 2234, Sutherland Shire LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-08-02
+        add_boxes("Postcode 2234, Sutherland Shire LGA (Greater Sydney)", "P", "Postcode 2234, Sutherland Shire LGA (Greater Sydney)<p>3 cases between 2021-07-23 and 2021-08-02:<p>2021-07-23: 1<br>2021-08-01: 1<br>2021-08-02: 1<br><p>Week to week Reff=2", -34.0169635,151.0116028, [ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0 ], "#ff0000");
+
+        // Postcode 2250, Central Coast LGA is at -33.407,151.36 
+        // Postcode 2250, Central Coast LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2250, Central Coast LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 1 0 0 0 0 0, total 1 ( 0 : 1) 
+        // Postcode 2250, Central Coast LGA (Greater Sydney): cases all fall between 2021-07-30 and 2021-07-30
+        add_boxes("Postcode 2250, Central Coast LGA (Greater Sydney)", "P", "Postcode 2250, Central Coast LGA (Greater Sydney)<p>1 case on 2021-07-30<p>2021-07-30: 1<br>", -33.407,151.36, [ 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2251, Central Coast LGA is at -33.4686568,151.3662283 
+        // Postcode 2251, Central Coast LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2251, Central Coast LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2256, Central Coast LGA is at -33.484,151.314 
+        // Postcode 2256, Central Coast LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2256, Central Coast LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2257, Central Coast LGA is at -33.524,151.343 
+        // Postcode 2257, Central Coast LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2257, Central Coast LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2258, Central Coast LGA is at -33.332,151.368 
+        // Postcode 2258, Central Coast LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2258, Central Coast LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2259, Central Coast LGA is at -33.223,151.285 
+        // Postcode 2259, Central Coast LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2259, Central Coast LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 1, total 1 ( 0 : 1) 
+        // Postcode 2259, Central Coast LGA (Greater Sydney): cases all fall between 2021-08-04 and 2021-08-04
+        add_boxes("Postcode 2259, Central Coast LGA (Greater Sydney)", "P", "Postcode 2259, Central Coast LGA (Greater Sydney)<p>1 case on 2021-08-04<p>2021-08-04: 1<br>", -33.223,151.285, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ], "#ff0000");
+
+        // Postcode 2260, Central Coast LGA is at -33.418,151.443 
+        // Postcode 2260, Central Coast LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2260, Central Coast LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2261, Central Coast LGA is at -33.365,151.443 
+        // Postcode 2261, Central Coast LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2261, Central Coast LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2262, Central Coast LGA is at -33.2153793,151.5223628 
+        // Postcode 2262, Central Coast LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2262, Central Coast LGA (Greater Sydney) cases:  0 4 0 1 0 0 0 0 0 0 0 0 0 0, total 5 ( 5 : 0) 
+        // Postcode 2262, Central Coast LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-07-25
+        add_boxes("Postcode 2262, Central Coast LGA (Greater Sydney)", "P", "Postcode 2262, Central Coast LGA (Greater Sydney)<p>5 cases between 2021-07-23 and 2021-07-25:<p>2021-07-23: 4<br>2021-07-25: 1<br><p>Week to week Reff=0", -33.2153793,151.5223628, [ 0, 4, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2263, Central Coast LGA is at -33.2624548,151.5457228 
+        // Postcode 2263, Central Coast LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2263, Central Coast LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2264, Lake Macquarie LGA is at -33.101509,151.5471829 
+        // Postcode 2264, Lake Macquarie LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2264, Lake Macquarie LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2265, Lake Macquarie LGA is at -33.057,151.41 
+        // Postcode 2265, Lake Macquarie LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2265, Lake Macquarie LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2278, Lake Macquarie LGA is at -32.949,151.551 
+        // Postcode 2278, Lake Macquarie LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2278, Lake Macquarie LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2280, Lake Macquarie LGA is at -33.015,151.635 
+        // Postcode 2280, Lake Macquarie LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2280, Lake Macquarie LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2281, Lake Macquarie LGA is at -33.093,151.662 
+        // Postcode 2281, Lake Macquarie LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2281, Lake Macquarie LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2282, Lake Macquarie LGA is at -32.982,151.651 
+        // Postcode 2282, Lake Macquarie LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2282, Lake Macquarie LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2283, Lake Macquarie LGA is at -33.016194,151.582583 
+        // Postcode 2283, Lake Macquarie LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2283, Lake Macquarie LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2284, Lake Macquarie LGA is at -32.987,151.607 
+        // Postcode 2284, Lake Macquarie LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2284, Lake Macquarie LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2285, Lake Macquarie LGA is at -32.953,151.65 
+        // Postcode 2285, Lake Macquarie LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2285, Lake Macquarie LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2286, Lake Macquarie LGA is at -32.9062316,151.5756575 
+        // Postcode 2286, Lake Macquarie LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2286, Lake Macquarie LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2287, Newcastle LGA is at -32.9206376,151.6754926 
+        // Postcode 2287, Newcastle LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2287, Newcastle LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2289, Newcastle LGA is at -32.951,151.691 
+        // Postcode 2289, Newcastle LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2289, Newcastle LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2290, Lake Macquarie LGA is at -32.9698546,151.7210265 
+        // Postcode 2290, Lake Macquarie LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2290, Lake Macquarie LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 1 0 0 0 0 0, total 1 ( 0 : 1) 
+        // Postcode 2290, Lake Macquarie LGA (NewCastle and Hunter): cases all fall between 2021-07-30 and 2021-07-30
+        add_boxes("Postcode 2290, Lake Macquarie LGA (NewCastle and Hunter)", "P", "Postcode 2290, Lake Macquarie LGA (NewCastle and Hunter)<p>1 case on 2021-07-30<p>2021-07-30: 1<br>", -32.9698546,151.7210265, [ 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 ], "#aaaa00");
+
+        // Postcode 2291, Newcastle LGA is at -32.940278,151.758889 
+        // Postcode 2291, Newcastle LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2291, Newcastle LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2292, Newcastle LGA is at -32.915,151.736 
+        // Postcode 2292, Newcastle LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2292, Newcastle LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2296, Newcastle LGA is at -32.9125002,151.7458759 
+        // Postcode 2296, Newcastle LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2296, Newcastle LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2297, Newcastle LGA is at -32.9050024,151.7575709 
+        // Postcode 2297, Newcastle LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2297, Newcastle LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2298, Newcastle LGA is at -32.901,151.715 
+        // Postcode 2298, Newcastle LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2298, Newcastle LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2299, Newcastle LGA is at -32.904,151.704 
+        // Postcode 2299, Newcastle LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2299, Newcastle LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2300, Newcastle LGA is at -32.931667,151.776111 
+        // Postcode 2300, Newcastle LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2300, Newcastle LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2303, Newcastle LGA is at -32.931,151.751 
+        // Postcode 2303, Newcastle LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2303, Newcastle LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2304, Newcastle LGA is at -32.881667,151.717778 
+        // Postcode 2304, Newcastle LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2304, Newcastle LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2305, Newcastle LGA is at -32.9273592,151.6903352 
+        // Postcode 2305, Newcastle LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2305, Newcastle LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2306, Lake Macquarie LGA is at -32.9908543,151.680106 
+        // Postcode 2306, Lake Macquarie LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2306, Lake Macquarie LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2311, Dungog LGA is at -32.1681325,151.5022211 
+        // Postcode 2311, Dungog LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2311, Dungog LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 1, total 1 ( 0 : 1) 
+        // Postcode 2311, Dungog LGA (NewCastle and Hunter): cases all fall between 2021-08-04 and 2021-08-04
+        add_boxes("Postcode 2311, Dungog LGA (NewCastle and Hunter)", "P", "Postcode 2311, Dungog LGA (NewCastle and Hunter)<p>1 case on 2021-08-04<p>2021-08-04: 1<br>", -32.1681325,151.5022211, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ], "#aaaa00");
+
+        // Postcode 2315, Port Stephens LGA is at -32.7257353,152.175002 
+        // Postcode 2315, Port Stephens LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2315, Port Stephens LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2316, Port Stephens LGA is at -32.751111,152.067778 
+        // Postcode 2316, Port Stephens LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2316, Port Stephens LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2317, Port Stephens LGA is at -32.706667,152.067778 
+        // Postcode 2317, Port Stephens LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2317, Port Stephens LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2318, Port Stephens LGA is at -32.815,151.842778 
+        // Postcode 2318, Port Stephens LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2318, Port Stephens LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2319, Port Stephens LGA is at -32.7594,151.99 
+        // Postcode 2319, Port Stephens LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2319, Port Stephens LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2320, Maitland LGA is at -32.698889,151.480556 
+        // Postcode 2320, Maitland LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2320, Maitland LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2321, Maitland LGA is at -32.675833,151.609639 
+        // Postcode 2321, Maitland LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2321, Maitland LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 1, total 1 ( 0 : 1) 
+        // Postcode 2321, Maitland LGA (NewCastle and Hunter): cases all fall between 2021-08-04 and 2021-08-04
+        add_boxes("Postcode 2321, Maitland LGA (NewCastle and Hunter)", "P", "Postcode 2321, Maitland LGA (NewCastle and Hunter)<p>1 case on 2021-08-04<p>2021-08-04: 1<br>", -32.675833,151.609639, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ], "#aaaa00");
+
+        // Postcode 2322, Maitland LGA is at -32.79,151.667778 
+        // Postcode 2322, Maitland LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2322, Maitland LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2323, Maitland LGA is at -32.742778,151.606667 
+        // Postcode 2323, Maitland LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2323, Maitland LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2324, Port Stephens LGA is at -35.153,149.007 
+        // Postcode 2324, Port Stephens LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2324, Port Stephens LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2325, Cessnock LGA is at -33.0482,150.919 
+        // Postcode 2325, Cessnock LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2325, Cessnock LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2327, Cessnock LGA is at -32.8247291,151.4946272 
+        // Postcode 2327, Cessnock LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2327, Cessnock LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2330, Singleton LGA is at -32.5859558,151.1228434 
+        // Postcode 2330, Singleton LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2330, Singleton LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2333, Muswellbrook LGA is at -32.2580271,150.664986 
+        // Postcode 2333, Muswellbrook LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2333, Muswellbrook LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2334, Cessnock LGA is at -32.6875639,151.38519 
+        // Postcode 2334, Cessnock LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2334, Cessnock LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2335, Singleton LGA is at -32.5896737,151.4085304 
+        // Postcode 2335, Singleton LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2335, Singleton LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2336, Upper Hunter Shire LGA is at -32.0900926,151.0991807 
+        // Postcode 2336, Upper Hunter Shire LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2337, Upper Hunter Shire LGA is at -31.9960782,151.2317376 
+        // Postcode 2337, Upper Hunter Shire LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2340, Tamworth Regional LGA is at -31.3,151.15 
+        // Postcode 2340, Tamworth Regional LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2343, Liverpool Plains LGA is at -31.6384,150.178 
+        // Postcode 2343, Liverpool Plains LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2343, Liverpool Plains LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2345, Tamworth Regional LGA is at -30.8593172,150.9038289 
+        // Postcode 2345, Tamworth Regional LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2350, Armidale Regional LGA is at -30.2528733,152.200731 
+        // Postcode 2350, Armidale Regional LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2357, Warrumbungle Shire LGA is at -31.0829,149.148 
+        // Postcode 2357, Warrumbungle Shire LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2358, Uralla LGA is at -30.4631048,151.320292 
+        // Postcode 2358, Uralla LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2360, Inverell LGA is at -29.7543888,151.3206565 
+        // Postcode 2360, Inverell LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2371, Glen Innes Severn LGA is at -29.3927362,151.3926336 
+        // Postcode 2371, Glen Innes Severn LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2372, Tenterfield LGA is at -28.5513252,152.1557046 
+        // Postcode 2372, Tenterfield LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2380, Gunnedah LGA is at -30.7325278,150.4134796 
+        // Postcode 2380, Gunnedah LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2400, Moree Plains LGA is at -29.4261888,149.8717445 
+        // Postcode 2400, Moree Plains LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2420, Dungog LGA is at -32.4771805,151.7517407 
+        // Postcode 2420, Dungog LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2420, Dungog LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2421, Dungog LGA is at -32.6012825,151.4791206 
+        // Postcode 2421, Dungog LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2421, Dungog LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2422, Mid-Coast LGA is at -31.8103365,151.8444507 
+        // Postcode 2422, Mid-Coast LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2423, Mid-Coast LGA is at -32.4499948,152.4455787 
+        // Postcode 2423, Mid-Coast LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2425, Mid-Coast LGA is at -32.3655093,151.9169953 
+        // Postcode 2425, Mid-Coast LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2427, Mid-Coast LGA is at -31.8744203,152.6434939 
+        // Postcode 2427, Mid-Coast LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2428, Mid-Coast LGA is at -32.3148924,152.4827041 
+        // Postcode 2428, Mid-Coast LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2430, Mid-Coast LGA is at -31.9920486,152.5590443 
+        // Postcode 2430, Mid-Coast LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2431, Kempsey LGA is at -30.884167,153.040278 
+        // Postcode 2431, Kempsey LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2439, Port Macquarie-Hastings LGA is at -31.6252016,152.6442284 
+        // Postcode 2439, Port Macquarie-Hastings LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2440, Kempsey LGA is at -31.080218,152.6890382 
+        // Postcode 2440, Kempsey LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2443, Port Macquarie-Hastings LGA is at -31.6349527,152.783833 
+        // Postcode 2443, Port Macquarie-Hastings LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2444, Port Macquarie-Hastings LGA is at -31.4573692,152.8323499 
+        // Postcode 2444, Port Macquarie-Hastings LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2445, Port Macquarie-Hastings LGA is at -31.5465341,152.8355653 
+        // Postcode 2445, Port Macquarie-Hastings LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2446, Port Macquarie-Hastings LGA is at -31.4535252,152.7118142 
+        // Postcode 2446, Port Macquarie-Hastings LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2447, Nambucca LGA is at -30.727555,152.7676633 
+        // Postcode 2447, Nambucca LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2448, Nambucca LGA is at -30.6165,152.876 
+        // Postcode 2448, Nambucca LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2450, Coffs Harbour LGA is at -30.2772291,152.9912123 
+        // Postcode 2450, Coffs Harbour LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2452, Coffs Harbour LGA is at -30.35,153.083333 
+        // Postcode 2452, Coffs Harbour LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2454, Bellingen LGA is at -30.4053606,152.9763941 
+        // Postcode 2454, Bellingen LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2456, Coffs Harbour LGA is at -30.1130375,153.1837924 
+        // Postcode 2456, Coffs Harbour LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2460, Clarence Valley LGA is at -29.5270959,152.7584765 
+        // Postcode 2460, Clarence Valley LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2463, Clarence Valley LGA is at -29.5153,153.135 
+        // Postcode 2463, Clarence Valley LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2464, Clarence Valley LGA is at -29.5308515,153.3317589 
+        // Postcode 2464, Clarence Valley LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2465, Clarence Valley LGA is at -29.4168813,153.244462 
+        // Postcode 2465, Clarence Valley LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2470, Richmond Valley LGA is at -28.9535888,153.0603846 
+        // Postcode 2470, Richmond Valley LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2476, Tenterfield LGA is at -28.3940787,152.6185302 
+        // Postcode 2476, Tenterfield LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2477, Ballina LGA is at -28.816667,153.4 
+        // Postcode 2477, Ballina LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2478, Ballina LGA is at -28.8646166,153.5332596 
+        // Postcode 2478, Ballina LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2479, Byron LGA is at -28.661,153.563 
+        // Postcode 2479, Byron LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2480, Lismore LGA is at -28.9,153.3 
+        // Postcode 2480, Lismore LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2481, Byron LGA is at -28.6065992,153.5527761 
+        // Postcode 2481, Byron LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2482, Byron LGA is at -28.5652,153.4346 
+        // Postcode 2482, Byron LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2483, Byron LGA is at -28.48,153.498333 
+        // Postcode 2483, Byron LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2484, Tweed LGA is at -28.3193,153.256 
+        // Postcode 2484, Tweed LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2485, Tweed LGA is at -28.1869511,153.5039021 
+        // Postcode 2485, Tweed LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2486, Tweed LGA is at -28.2514205,153.4360653 
+        // Postcode 2486, Tweed LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2487, Tweed LGA is at -28.2824136,153.506852 
+        // Postcode 2487, Tweed LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2490, Tweed LGA is at -28.283333,153.483333 
+        // Postcode 2490, Tweed LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2500, Wollongong LGA is at -34.424411,150.868205 
+        // Postcode 2500, Wollongong LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2500, Wollongong LGA (Greater Sydney) cases:  1 0 0 0 0 2 3 0 0 0 0 0 0 0, total 6 ( 6 : 0) 
+        // Postcode 2500, Wollongong LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-07-28
+        add_boxes("Postcode 2500, Wollongong LGA (Greater Sydney)", "P", "Postcode 2500, Wollongong LGA (Greater Sydney)<p>6 cases between 2021-07-22 and 2021-07-28:<p>2021-07-22: 1<br>2021-07-27: 2<br>2021-07-28: 3<br><p>Week to week Reff=0", -34.424411,150.868205, [ 1, 0, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2502, Wollongong LGA is at -34.484444,150.8875 
+        // Postcode 2502, Wollongong LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2502, Wollongong LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2505, Wollongong LGA is at -34.4744767,150.8900145 
+        // Postcode 2505, Wollongong LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2505, Wollongong LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2506, Wollongong LGA is at -34.4793722,150.840584 
+        // Postcode 2506, Wollongong LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2506, Wollongong LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 3 0, total 3 ( 0 : 3) 
+        // Postcode 2506, Wollongong LGA (Greater Sydney): cases all fall between 2021-08-03 and 2021-08-03
+        add_boxes("Postcode 2506, Wollongong LGA (Greater Sydney)", "P", "Postcode 2506, Wollongong LGA (Greater Sydney)<p>3 cases on 2021-08-03<p>2021-08-03: 3<br>", -34.4793722,150.840584, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0 ], "#ff0000");
+
+        // Postcode 2508, Wollongong LGA is at -34.1455116,150.9849229 
+        // Postcode 2508, Wollongong LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2508, Wollongong LGA (Greater Sydney) cases:  0 0 0 2 0 0 0 0 0 0 0 0 0 0, total 2 ( 2 : 0) 
+        // Postcode 2508, Wollongong LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-07-25
+        add_boxes("Postcode 2508, Wollongong LGA (Greater Sydney)", "P", "Postcode 2508, Wollongong LGA (Greater Sydney)<p>2 cases on 2021-07-25<p>2021-07-25: 2<br><p>Week to week Reff=0", -34.1455116,150.9849229, [ 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff0000");
+
+        // Postcode 2515, Wollongong LGA is at -34.275,150.953333 
+        // Postcode 2515, Wollongong LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2515, Wollongong LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2516, Wollongong LGA is at -34.3154,150.896 
+        // Postcode 2516, Wollongong LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2516, Wollongong LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2517, Wollongong LGA is at -34.341667,150.906111 
+        // Postcode 2517, Wollongong LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2517, Wollongong LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2518, Wollongong LGA is at -34.383333,150.9 
+        // Postcode 2518, Wollongong LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2518, Wollongong LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2519, Wollongong LGA is at -34.388885,150.893891 
+        // Postcode 2519, Wollongong LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2519, Wollongong LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2525, Wollongong LGA is at -34.4319396,150.8434913 
+        // Postcode 2525, Wollongong LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2525, Wollongong LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2526, Wollongong LGA is at -34.4536,150.845 
+        // Postcode 2526, Wollongong LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2526, Wollongong LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2527, Shellharbour LGA is at -34.6073242,150.7388665 
+        // Postcode 2527, Shellharbour LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2527, Shellharbour LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2528, Shellharbour LGA is at -34.5273709,150.8740205 
+        // Postcode 2528, Shellharbour LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2528, Shellharbour LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2529, Shellharbour LGA is at -34.5644,150.839 
+        // Postcode 2529, Shellharbour LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2529, Shellharbour LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2530, Wollongong LGA is at -34.533333,150.8 
+        // Postcode 2530, Wollongong LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2530, Wollongong LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2533, Kiama LGA is at -34.7,150.8 
+        // Postcode 2533, Kiama LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2535, Shoalhaven LGA is at -34.7306035,150.6691575 
+        // Postcode 2535, Shoalhaven LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2536, Eurobodalla LGA is at -35.8034707,150.1821324 
+        // Postcode 2536, Eurobodalla LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2537, Eurobodalla LGA is at -35.9490785,150.0280161 
+        // Postcode 2537, Eurobodalla LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2539, Shoalhaven LGA is at -35.2667,150.414 
+        // Postcode 2539, Shoalhaven LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2540, Shoalhaven LGA is at -34.9783852,150.5251245 
+        // Postcode 2540, Shoalhaven LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2541, Shoalhaven LGA is at -34.8824882,150.5849698 
+        // Postcode 2541, Shoalhaven LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2546, Eurobodalla LGA is at -36.391,150.064 
+        // Postcode 2546, Eurobodalla LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2548, Bega Valley LGA is at -36.8606897,149.8371005 
+        // Postcode 2548, Bega Valley LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2550, Bega Valley LGA is at -36.3450973,149.7530543 
+        // Postcode 2550, Bega Valley LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2556, Liverpool LGA is at -33.9404662,150.7330562 
+        // Postcode 2556, Liverpool LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2556, Liverpool LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 1 0 0 0 0, total 1 ( 0 : 1) 
+        // Postcode 2556, Liverpool LGA (Greater Sydney): cases all fall between 2021-07-31 and 2021-07-31
+        add_boxes("Postcode 2556, Liverpool LGA (Greater Sydney)", "P", "Postcode 2556, Liverpool LGA (Greater Sydney)<p>1 case on 2021-07-31<p>2021-07-31: 1<br>", -33.9404662,150.7330562, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 ], "#ff8800");
+
+        // Postcode 2557, Camden LGA is at -33.9224,150.76964 
+        // Postcode 2557, Camden LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2557, Camden LGA (Greater Sydney) cases:  0 0 0 0 1 0 3 0 0 0 0 0 1 1, total 6 ( 4 : 2) 
+        // Postcode 2557, Camden LGA (Greater Sydney): cases all fall between 2021-07-26 and 2021-08-04
+        add_boxes("Postcode 2557, Camden LGA (Greater Sydney)", "P", "Postcode 2557, Camden LGA (Greater Sydney)<p>6 cases between 2021-07-26 and 2021-08-04:<p>2021-07-26: 1<br>2021-07-28: 3<br>2021-08-03: 1<br>2021-08-04: 1<br><p>Week to week Reff=0.5", -33.9224,150.76964, [ 0, 0, 0, 0, 1, 0, 3, 0, 0, 0, 0, 0, 1, 1 ], "#ff0000");
+
+        // Postcode 2558, Campbelltown LGA is at -34.02373,150.80628 
+        // Postcode 2558, Campbelltown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2558, Campbelltown LGA (Greater Sydney) cases:  0 0 0 1 0 1 0 0 0 0 2 0 0 0, total 4 ( 2 : 2) 
+        // Postcode 2558, Campbelltown LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-08-01
+        add_boxes("Postcode 2558, Campbelltown LGA (Greater Sydney)", "P", "Postcode 2558, Campbelltown LGA (Greater Sydney)<p>4 cases between 2021-07-25 and 2021-08-01:<p>2021-07-25: 1<br>2021-07-27: 1<br>2021-08-01: 2<br><p>Week to week Reff=1", -34.02373,150.80628, [ 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 2, 0, 0, 0 ], "#ff8800");
+
+        // Postcode 2559, Campbelltown LGA is at -34.0444,150.8096 
+        // Postcode 2559, Campbelltown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2559, Campbelltown LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 1 0 1 0 0, total 2 ( 0 : 2) 
+        // Postcode 2559, Campbelltown LGA (Greater Sydney): cases all fall between 2021-07-31 and 2021-08-02
+        add_boxes("Postcode 2559, Campbelltown LGA (Greater Sydney)", "P", "Postcode 2559, Campbelltown LGA (Greater Sydney)<p>2 cases on 2021-07-31 and 2021-08-02:<p>2021-07-31: 1<br>2021-08-02: 1<br>", -34.0444,150.8096, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0 ], "#ff8800");
+
+        // Postcode 2560, Campbelltown LGA is at -34.0494108,150.8196748 
+        // Postcode 2560, Campbelltown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2560, Campbelltown LGA (Greater Sydney) cases:  1 2 0 2 2 5 6 9 3 7 4 7 10 8, total 66 ( 18 : 48) 
+        // Postcode 2560, Campbelltown LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2560, Campbelltown LGA (Greater Sydney)", "P", "Postcode 2560, Campbelltown LGA (Greater Sydney)<p>66 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 1<br>2021-07-23: 2<br>2021-07-25: 2<br>2021-07-26: 2<br>2021-07-27: 5<br>2021-07-28: 6<br>2021-07-29: 9<br>2021-07-30: 3<br>2021-07-31: 7<br>2021-08-01: 4<br>2021-08-02: 7<br>2021-08-03: 10<br>2021-08-04: 8<br><p>Week to week Reff=2.7", -34.0494108,150.8196748, [ 1, 2, 0, 2, 2, 5, 6, 9, 3, 7, 4, 7, 10, 8 ], "#ff8800");
+
+        // Postcode 2564, Campbelltown LGA is at -33.99434,150.88757 
+        // Postcode 2564, Campbelltown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2564, Campbelltown LGA (Greater Sydney) cases:  0 0 1 2 2 0 1 2 2 2 1 2 3 0, total 18 ( 6 : 12) 
+        // Postcode 2564, Campbelltown LGA (Greater Sydney): cases all fall between 2021-07-24 and 2021-08-03
+        add_boxes("Postcode 2564, Campbelltown LGA (Greater Sydney)", "P", "Postcode 2564, Campbelltown LGA (Greater Sydney)<p>18 cases between 2021-07-24 and 2021-08-03:<p>2021-07-24: 1<br>2021-07-25: 2<br>2021-07-26: 2<br>2021-07-28: 1<br>2021-07-29: 2<br>2021-07-30: 2<br>2021-07-31: 2<br>2021-08-01: 1<br>2021-08-02: 2<br>2021-08-03: 3<br><p>Week to week Reff=2", -33.99434,150.88757, [ 0, 0, 1, 2, 2, 0, 1, 2, 2, 2, 1, 2, 3, 0 ], "#ff8800");
+
+        // Postcode 2565, Campbelltown LGA is at -33.982,150.874 
+        // Postcode 2565, Campbelltown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2565, Campbelltown LGA (Greater Sydney) cases:  2 0 1 0 6 1 5 3 1 3 8 2 0 0, total 32 ( 15 : 17) 
+        // Postcode 2565, Campbelltown LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-02
+        add_boxes("Postcode 2565, Campbelltown LGA (Greater Sydney)", "P", "Postcode 2565, Campbelltown LGA (Greater Sydney)<p>32 cases between 2021-07-22 and 2021-08-02:<p>2021-07-22: 2<br>2021-07-24: 1<br>2021-07-26: 6<br>2021-07-27: 1<br>2021-07-28: 5<br>2021-07-29: 3<br>2021-07-30: 1<br>2021-07-31: 3<br>2021-08-01: 8<br>2021-08-02: 2<br><p>Week to week Reff=1.1", -33.982,150.874, [ 2, 0, 1, 0, 6, 1, 5, 3, 1, 3, 8, 2, 0, 0 ], "#ff8800");
+
+        // Postcode 2566, Campbelltown LGA is at -34.00758,150.8151 
+        // Postcode 2566, Campbelltown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2566, Campbelltown LGA (Greater Sydney) cases:  2 0 0 1 1 2 0 3 1 1 3 1 2 0, total 17 ( 6 : 11) 
+        // Postcode 2566, Campbelltown LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-03
+        add_boxes("Postcode 2566, Campbelltown LGA (Greater Sydney)", "P", "Postcode 2566, Campbelltown LGA (Greater Sydney)<p>17 cases between 2021-07-22 and 2021-08-03:<p>2021-07-22: 2<br>2021-07-25: 1<br>2021-07-26: 1<br>2021-07-27: 2<br>2021-07-29: 3<br>2021-07-30: 1<br>2021-07-31: 1<br>2021-08-01: 3<br>2021-08-02: 1<br>2021-08-03: 2<br><p>Week to week Reff=1.8", -34.00758,150.8151, [ 2, 0, 0, 1, 1, 2, 0, 3, 1, 1, 3, 1, 2, 0 ], "#ff8800");
+
+        // Postcode 2567, Camden LGA is at -34.035,150.757 
+        // Postcode 2567, Camden LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2567, Camden LGA (Greater Sydney) cases:  0 0 0 1 1 0 0 0 1 0 2 7 1 0, total 13 ( 2 : 11) 
+        // Postcode 2567, Camden LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-08-03
+        add_boxes("Postcode 2567, Camden LGA (Greater Sydney)", "P", "Postcode 2567, Camden LGA (Greater Sydney)<p>13 cases between 2021-07-25 and 2021-08-03:<p>2021-07-25: 1<br>2021-07-26: 1<br>2021-07-30: 1<br>2021-08-01: 2<br>2021-08-02: 7<br>2021-08-03: 1<br><p>Week to week Reff=5.5", -34.035,150.757, [ 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 2, 7, 1, 0 ], "#ff0000");
+
+        // Postcode 2568, Wollondilly LGA is at -34.1380681,150.7098171 
+        // Postcode 2568, Wollondilly LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2569, Wollondilly LGA is at -34.1924773,150.7040079 
+        // Postcode 2569, Wollondilly LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2570, Camden LGA is at -33.9818,150.58459 
+        // Postcode 2570, Camden LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2570, Camden LGA (Greater Sydney) cases:  0 1 0 0 1 3 0 1 0 1 0 1 0 0, total 8 ( 5 : 3) 
+        // Postcode 2570, Camden LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-08-02
+        add_boxes("Postcode 2570, Camden LGA (Greater Sydney)", "P", "Postcode 2570, Camden LGA (Greater Sydney)<p>8 cases between 2021-07-23 and 2021-08-02:<p>2021-07-23: 1<br>2021-07-26: 1<br>2021-07-27: 3<br>2021-07-29: 1<br>2021-07-31: 1<br>2021-08-02: 1<br><p>Week to week Reff=0.6", -33.9818,150.58459, [ 0, 1, 0, 0, 1, 3, 0, 1, 0, 1, 0, 1, 0, 0 ], "#ff0000");
+
+        // Postcode 2571, Wollondilly LGA is at -34.233333,150.7 
+        // Postcode 2571, Wollondilly LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2574, Wollondilly LGA is at -34.316667,150.566667 
+        // Postcode 2574, Wollondilly LGA cases:  0 0 0 1 0 0 0 2 0 1 0 0 0 0, total 4 ( 1 : 3) 
+        // Postcode 2574, Wollondilly LGA: cases all fall between 2021-07-25 and 2021-07-31
+        add_boxes("Postcode 2574, Wollondilly LGA", "P", "Postcode 2574, Wollondilly LGA<p>4 cases between 2021-07-25 and 2021-07-31:<p>2021-07-25: 1<br>2021-07-29: 2<br>2021-07-31: 1<br><p>Week to week Reff=3", -34.316667,150.566667, [ 0, 0, 0, 1, 0, 0, 0, 2, 0, 1, 0, 0, 0, 0 ], "#990099");
+
+        // Postcode 2575, Wingecarribee LGA is at -34.3665472,150.5377086 
+        // Postcode 2575, Wingecarribee LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2576, Wingecarribee LGA is at -34.55,150.533333 
+        // Postcode 2576, Wingecarribee LGA cases:  0 1 0 0 0 0 0 0 0 1 0 0 0 0, total 2 ( 1 : 1) 
+        // Postcode 2576, Wingecarribee LGA: cases all fall between 2021-07-23 and 2021-07-31
+        add_boxes("Postcode 2576, Wingecarribee LGA", "P", "Postcode 2576, Wingecarribee LGA<p>2 cases on 2021-07-23 and 2021-07-31:<p>2021-07-23: 1<br>2021-07-31: 1<br><p>Week to week Reff=1", -34.55,150.533333, [ 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 ], "#990099");
+
+        // Postcode 2577, Wingecarribee LGA is at -34.5841165,150.4343436 
+        // Postcode 2577, Wingecarribee LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2578, Wingecarribee LGA is at -34.6559402,150.2921468 
+        // Postcode 2578, Wingecarribee LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2580, Goulburn Mulwaree LGA is at -34.7971566,149.6014865 
+        // Postcode 2580, Goulburn Mulwaree LGA cases:  0 0 0 0 1 0 0 0 0 0 0 0 0 0, total 1 ( 1 : 0) 
+        // Postcode 2580, Goulburn Mulwaree LGA: cases all fall between 2021-07-26 and 2021-07-26
+        add_boxes("Postcode 2580, Goulburn Mulwaree LGA", "P", "Postcode 2580, Goulburn Mulwaree LGA<p>1 case on 2021-07-26<p>2021-07-26: 1<br><p>Week to week Reff=0", -34.7971566,149.6014865, [ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#990099");
+
+        // Postcode 2581, Upper Lachlan Shire LGA is at -34.8888438,149.4705082 
+        // Postcode 2581, Upper Lachlan Shire LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2582, Yass Valley LGA is at -34.9816248,149.1946165 
+        // Postcode 2582, Yass Valley LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2583, Upper Lachlan Shire LGA is at -34.5210864,149.2847641 
+        // Postcode 2583, Upper Lachlan Shire LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2586, Hilltops LGA is at -34.2287999,149.0475049 
+        // Postcode 2586, Hilltops LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2590, Cootamundra-Gundagai Regional LGA is at -34.816667,147.75 
+        // Postcode 2590, Cootamundra-Gundagai Regional LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2619, Queanbeyan-Palerang Regional LGA is at -35.3831348,149.2017971 
+        // Postcode 2619, Queanbeyan-Palerang Regional LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2620, Queanbeyan-Palerang Regional LGA is at -35.4013629,149.3035356 
+        // Postcode 2620, Queanbeyan-Palerang Regional LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2621, Queanbeyan-Palerang Regional LGA is at -35.4573594,149.4958406 
+        // Postcode 2621, Queanbeyan-Palerang Regional LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2626, Snowy Monaro Regional LGA is at -35.8698453,149.1651801 
+        // Postcode 2626, Snowy Monaro Regional LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2627, Snowy Monaro Regional LGA is at -36.3464,148.551 
+        // Postcode 2627, Snowy Monaro Regional LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2628, Snowy Monaro Regional LGA is at -36.152,148.522 
+        // Postcode 2628, Snowy Monaro Regional LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2630, Snowy Monaro Regional LGA is at -36.1534652,148.9668483 
+        // Postcode 2630, Snowy Monaro Regional LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2631, Snowy Monaro Regional LGA is at -36.474802,149.376415 
+        // Postcode 2631, Snowy Monaro Regional LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2640, Albury LGA is at -35.9774387,147.2497502 
+        // Postcode 2640, Albury LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2641, Albury LGA is at -36.033,146.95 
+        // Postcode 2641, Albury LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2642, Greater Hume Shire LGA is at -35.3920822,147.0608114 
+        // Postcode 2642, Greater Hume Shire LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2643, Federation LGA is at -35.9580119,146.6289429 
+        // Postcode 2643, Federation LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2644, Greater Hume Shire LGA is at -35.7239,147.644 
+        // Postcode 2644, Greater Hume Shire LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2646, Federation LGA is at -35.8259371,145.9724089 
+        // Postcode 2646, Federation LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2647, Federation LGA is at -35.9286597,146.0472969 
+        // Postcode 2647, Federation LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2650, Wagga Wagga LGA is at -34.9092601,147.3913317 
+        // Postcode 2650, Wagga Wagga LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2652, Wagga Wagga LGA is at -35.1885222,147.2444739 
+        // Postcode 2652, Wagga Wagga LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2653, Snowy Valleys LGA is at -35.6627892,148.0279027 
+        // Postcode 2653, Snowy Valleys LGA cases:  0 0 0 0 0 0 0 0 0 0 0 1 0 0, total 1 ( 0 : 1) 
+        // Postcode 2653, Snowy Valleys LGA: cases all fall between 2021-08-02 and 2021-08-02
+        add_boxes("Postcode 2653, Snowy Valleys LGA", "P", "Postcode 2653, Snowy Valleys LGA<p>1 case on 2021-08-02<p>2021-08-02: 1<br>", -35.6627892,148.0279027, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ], "#990099");
+
+        // Postcode 2660, Greater Hume Shire LGA is at -35.6507562,147.1289701 
+        // Postcode 2660, Greater Hume Shire LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2663, Junee LGA is at -34.901956,147.6945633 
+        // Postcode 2663, Junee LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2666, Temora LGA is at -34.2917756,147.5555951 
+        // Postcode 2666, Temora LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2680, Griffith LGA is at -34.3,146.083333 
+        // Postcode 2680, Griffith LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2700, Narrandera LGA is at -35.047201,146.198629 
+        // Postcode 2700, Narrandera LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2711, Hay LGA is at -34.7395134,143.7165278 
+        // Postcode 2711, Hay LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2713, Berrigan LGA is at -35.5967,145.387 
+        // Postcode 2713, Berrigan LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2714, Berrigan LGA is at -35.6604843,145.2245615 
+        // Postcode 2714, Berrigan LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2716, Murrumbidgee LGA is at -35.4724,145.747 
+        // Postcode 2716, Murrumbidgee LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2720, Snowy Valleys LGA is at -35.6804894,148.4931281 
+        // Postcode 2720, Snowy Valleys LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2722, Cootamundra-Gundagai Regional LGA is at -35.1150869,148.0512119 
+        // Postcode 2722, Cootamundra-Gundagai Regional LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2745, Penrith LGA is at -33.865,150.64 
+        // Postcode 2745, Penrith LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2745, Penrith LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2747, Penrith LGA is at -33.7391,150.7273 
+        // Postcode 2747, Penrith LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2747, Penrith LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 1 0 0 0 2 2 1, total 6 ( 0 : 6) 
+        // Postcode 2747, Penrith LGA (Greater Sydney): cases all fall between 2021-07-29 and 2021-08-04
+        add_boxes("Postcode 2747, Penrith LGA (Greater Sydney)", "P", "Postcode 2747, Penrith LGA (Greater Sydney)<p>6 cases between 2021-07-29 and 2021-08-04:<p>2021-07-29: 1<br>2021-08-02: 2<br>2021-08-03: 2<br>2021-08-04: 1<br>", -33.7391,150.7273, [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2, 2, 1 ], "#ff0000");
+
+        // Postcode 2748, Penrith LGA is at -33.818067,150.7330562 
+        // Postcode 2748, Penrith LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2748, Penrith LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2749, Penrith LGA is at -33.72088,150.71302 
+        // Postcode 2749, Penrith LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2749, Penrith LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2750, Penrith LGA is at -33.7715054,150.7011034 
+        // Postcode 2750, Penrith LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2750, Penrith LGA (Greater Sydney) cases:  0 0 1 0 1 2 0 0 0 0 0 4 1 5, total 14 ( 4 : 10) 
+        // Postcode 2750, Penrith LGA (Greater Sydney): cases all fall between 2021-07-24 and 2021-08-04
+        add_boxes("Postcode 2750, Penrith LGA (Greater Sydney)", "P", "Postcode 2750, Penrith LGA (Greater Sydney)<p>14 cases between 2021-07-24 and 2021-08-04:<p>2021-07-24: 1<br>2021-07-26: 1<br>2021-07-27: 2<br>2021-08-02: 4<br>2021-08-03: 1<br>2021-08-04: 5<br><p>Week to week Reff=2.5", -33.7715054,150.7011034, [ 0, 0, 1, 0, 1, 2, 0, 0, 0, 0, 0, 4, 1, 5 ], "#ff0000");
+
+        // Postcode 2752, Wollondilly LGA is at -33.891667,150.603333 
+        // Postcode 2752, Wollondilly LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2753, Hawkesbury LGA is at -33.6222,150.6709 
+        // Postcode 2753, Hawkesbury LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2754, Hawkesbury LGA is at -33.5328009,150.7069125 
+        // Postcode 2754, Hawkesbury LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2756, Hawkesbury LGA is at -33.2688387,150.7672459 
+        // Postcode 2756, Hawkesbury LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2757, Hawkesbury LGA is at -33.5517656,150.7011034 
+        // Postcode 2757, Hawkesbury LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2758, Hawkesbury LGA is at -33.4453628,150.7979215 
+        // Postcode 2758, Hawkesbury LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2759, Penrith LGA is at -33.7987,150.7824 
+        // Postcode 2759, Penrith LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2759, Penrith LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 4 2 0, total 6 ( 0 : 6) 
+        // Postcode 2759, Penrith LGA (Greater Sydney): cases all fall between 2021-08-02 and 2021-08-03
+        add_boxes("Postcode 2759, Penrith LGA (Greater Sydney)", "P", "Postcode 2759, Penrith LGA (Greater Sydney)<p>6 cases between 2021-08-02 and 2021-08-03:<p>2021-08-02: 4<br>2021-08-03: 2<br>", -33.7987,150.7824, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 0 ], "#ff0000");
+
+        // Postcode 2760, Penrith LGA is at -33.769979,150.7734575 
+        // Postcode 2760, Penrith LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2760, Penrith LGA (Greater Sydney) cases:  1 0 0 0 0 1 5 2 1 1 1 2 5 2, total 21 ( 7 : 14) 
+        // Postcode 2760, Penrith LGA (Greater Sydney): cases all fall between 2021-07-22 and 2021-08-04
+        add_boxes("Postcode 2760, Penrith LGA (Greater Sydney)", "P", "Postcode 2760, Penrith LGA (Greater Sydney)<p>21 cases between 2021-07-22 and 2021-08-04:<p>2021-07-22: 1<br>2021-07-27: 1<br>2021-07-28: 5<br>2021-07-29: 2<br>2021-07-30: 1<br>2021-07-31: 1<br>2021-08-01: 1<br>2021-08-02: 2<br>2021-08-03: 5<br>2021-08-04: 2<br><p>Week to week Reff=2", -33.769979,150.7734575, [ 1, 0, 0, 0, 0, 1, 5, 2, 1, 1, 1, 2, 5, 2 ], "#ff0000");
+
+        // Postcode 2761, Blacktown LGA is at -33.7514593,150.8412545 
+        // Postcode 2761, Blacktown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2761, Blacktown LGA (Greater Sydney) cases:  0 1 0 1 0 0 0 0 1 0 0 0 0 0, total 3 ( 2 : 1) 
+        // Postcode 2761, Blacktown LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-07-30
+        add_boxes("Postcode 2761, Blacktown LGA (Greater Sydney)", "P", "Postcode 2761, Blacktown LGA (Greater Sydney)<p>3 cases between 2021-07-23 and 2021-07-30:<p>2021-07-23: 1<br>2021-07-25: 1<br>2021-07-30: 1<br><p>Week to week Reff=0.5", -33.7514593,150.8412545, [ 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 ], "#ff8800");
+
+        // Postcode 2762, Blacktown LGA is at -33.7044482,150.8667511 
+        // Postcode 2762, Blacktown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2762, Blacktown LGA (Greater Sydney) cases:  0 2 0 0 0 0 1 0 0 0 0 0 0 0, total 3 ( 3 : 0) 
+        // Postcode 2762, Blacktown LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-07-28
+        add_boxes("Postcode 2762, Blacktown LGA (Greater Sydney)", "P", "Postcode 2762, Blacktown LGA (Greater Sydney)<p>3 cases between 2021-07-23 and 2021-07-28:<p>2021-07-23: 2<br>2021-07-28: 1<br><p>Week to week Reff=0", -33.7044482,150.8667511, [ 0, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 ], "#ff8800");
+
+        // Postcode 2763, Blacktown LGA is at -33.7241591,150.8889765 
+        // Postcode 2763, Blacktown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2763, Blacktown LGA (Greater Sydney) cases:  0 1 1 1 4 3 0 0 0 0 1 0 2 0, total 13 ( 10 : 3) 
+        // Postcode 2763, Blacktown LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-08-03
+        add_boxes("Postcode 2763, Blacktown LGA (Greater Sydney)", "P", "Postcode 2763, Blacktown LGA (Greater Sydney)<p>13 cases between 2021-07-23 and 2021-08-03:<p>2021-07-23: 1<br>2021-07-24: 1<br>2021-07-25: 1<br>2021-07-26: 4<br>2021-07-27: 3<br>2021-08-01: 1<br>2021-08-03: 2<br><p>Week to week Reff=0.3", -33.7241591,150.8889765, [ 0, 1, 1, 1, 4, 3, 0, 0, 0, 0, 1, 0, 2, 0 ], "#ff8800");
+
+        // Postcode 2765, Blacktown LGA is at -33.6502,150.856 
+        // Postcode 2765, Blacktown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2765, Blacktown LGA (Greater Sydney) cases:  0 0 1 1 2 3 0 0 0 2 4 0 1 1, total 15 ( 7 : 8) 
+        // Postcode 2765, Blacktown LGA (Greater Sydney): cases all fall between 2021-07-24 and 2021-08-04
+        add_boxes("Postcode 2765, Blacktown LGA (Greater Sydney)", "P", "Postcode 2765, Blacktown LGA (Greater Sydney)<p>15 cases between 2021-07-24 and 2021-08-04:<p>2021-07-24: 1<br>2021-07-25: 1<br>2021-07-26: 2<br>2021-07-27: 3<br>2021-07-31: 2<br>2021-08-01: 4<br>2021-08-03: 1<br>2021-08-04: 1<br><p>Week to week Reff=1.1", -33.6502,150.856, [ 0, 0, 1, 1, 2, 3, 0, 0, 0, 2, 4, 0, 1, 1 ], "#ff8800");
+
+        // Postcode 2766, Blacktown LGA is at -33.7715246,150.843841 
+        // Postcode 2766, Blacktown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2766, Blacktown LGA (Greater Sydney) cases:  0 0 0 0 0 1 2 0 1 0 2 1 0 0, total 7 ( 3 : 4) 
+        // Postcode 2766, Blacktown LGA (Greater Sydney): cases all fall between 2021-07-27 and 2021-08-02
+        add_boxes("Postcode 2766, Blacktown LGA (Greater Sydney)", "P", "Postcode 2766, Blacktown LGA (Greater Sydney)<p>7 cases between 2021-07-27 and 2021-08-02:<p>2021-07-27: 1<br>2021-07-28: 2<br>2021-07-30: 1<br>2021-08-01: 2<br>2021-08-02: 1<br><p>Week to week Reff=1.3", -33.7715246,150.843841, [ 0, 0, 0, 0, 0, 1, 2, 0, 1, 0, 2, 1, 0, 0 ], "#ff8800");
+
+        // Postcode 2767, Blacktown LGA is at -33.759,150.878 
+        // Postcode 2767, Blacktown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2767, Blacktown LGA (Greater Sydney) cases:  0 0 0 0 0 1 1 0 2 0 1 0 1 1, total 7 ( 2 : 5) 
+        // Postcode 2767, Blacktown LGA (Greater Sydney): cases all fall between 2021-07-27 and 2021-08-04
+        add_boxes("Postcode 2767, Blacktown LGA (Greater Sydney)", "P", "Postcode 2767, Blacktown LGA (Greater Sydney)<p>7 cases between 2021-07-27 and 2021-08-04:<p>2021-07-27: 1<br>2021-07-28: 1<br>2021-07-30: 2<br>2021-08-01: 1<br>2021-08-03: 1<br>2021-08-04: 1<br><p>Week to week Reff=2.5", -33.759,150.878, [ 0, 0, 0, 0, 0, 1, 1, 0, 2, 0, 1, 0, 1, 1 ], "#ff8800");
+
+        // Postcode 2768, Blacktown LGA is at -33.723,150.926 
+        // Postcode 2768, Blacktown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2768, Blacktown LGA (Greater Sydney) cases:  0 0 1 0 4 2 2 1 2 0 0 0 1 1, total 14 ( 9 : 5) 
+        // Postcode 2768, Blacktown LGA (Greater Sydney): cases all fall between 2021-07-24 and 2021-08-04
+        add_boxes("Postcode 2768, Blacktown LGA (Greater Sydney)", "P", "Postcode 2768, Blacktown LGA (Greater Sydney)<p>14 cases between 2021-07-24 and 2021-08-04:<p>2021-07-24: 1<br>2021-07-26: 4<br>2021-07-27: 2<br>2021-07-28: 2<br>2021-07-29: 1<br>2021-07-30: 2<br>2021-08-03: 1<br>2021-08-04: 1<br><p>Week to week Reff=0.56", -33.723,150.926, [ 0, 0, 1, 0, 4, 2, 2, 1, 2, 0, 0, 0, 1, 1 ], "#ff8800");
+
+        // Postcode 2769, Blacktown LGA is at -33.7031923,150.9016476 
+        // Postcode 2769, Blacktown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2769, Blacktown LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 1 0 1 0 0, total 2 ( 0 : 2) 
+        // Postcode 2769, Blacktown LGA (Greater Sydney): cases all fall between 2021-07-31 and 2021-08-02
+        add_boxes("Postcode 2769, Blacktown LGA (Greater Sydney)", "P", "Postcode 2769, Blacktown LGA (Greater Sydney)<p>2 cases on 2021-07-31 and 2021-08-02:<p>2021-07-31: 1<br>2021-08-02: 1<br>", -33.7031923,150.9016476, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0 ], "#ff8800");
+
+        // Postcode 2770, Blacktown LGA is at -33.7254,150.79238 
+        // Postcode 2770, Blacktown LGA (Greater Sydney) is #ff8800 hard locked down
+        // Postcode 2770, Blacktown LGA (Greater Sydney) cases:  0 9 1 0 1 2 0 2 5 12 2 2 7 6, total 49 ( 13 : 36) 
+        // Postcode 2770, Blacktown LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-08-04
+        add_boxes("Postcode 2770, Blacktown LGA (Greater Sydney)", "P", "Postcode 2770, Blacktown LGA (Greater Sydney)<p>49 cases between 2021-07-23 and 2021-08-04:<p>2021-07-23: 9<br>2021-07-24: 1<br>2021-07-26: 1<br>2021-07-27: 2<br>2021-07-29: 2<br>2021-07-30: 5<br>2021-07-31: 12<br>2021-08-01: 2<br>2021-08-02: 2<br>2021-08-03: 7<br>2021-08-04: 6<br><p>Week to week Reff=2.8", -33.7254,150.79238, [ 0, 9, 1, 0, 1, 2, 0, 2, 5, 12, 2, 2, 7, 6 ], "#ff8800");
+
+        // Postcode 2773, Blue Mountains LGA is at -33.774,150.637 
+        // Postcode 2773, Blue Mountains LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2773, Blue Mountains LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2774, Blue Mountains LGA is at -33.716667,150.6 
+        // Postcode 2774, Blue Mountains LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2774, Blue Mountains LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2777, Blue Mountains LGA is at -33.695,150.624167 
+        // Postcode 2777, Blue Mountains LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2777, Blue Mountains LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 1, total 1 ( 0 : 1) 
+        // Postcode 2777, Blue Mountains LGA (Greater Sydney): cases all fall between 2021-08-04 and 2021-08-04
+        add_boxes("Postcode 2777, Blue Mountains LGA (Greater Sydney)", "P", "Postcode 2777, Blue Mountains LGA (Greater Sydney)<p>1 case on 2021-08-04<p>2021-08-04: 1<br>", -33.695,150.624167, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ], "#ff0000");
+
+        // Postcode 2778, Blue Mountains LGA is at -33.735556,150.478333 
+        // Postcode 2778, Blue Mountains LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2778, Blue Mountains LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2779, Blue Mountains LGA is at -33.7284065,150.4573297 
+        // Postcode 2779, Blue Mountains LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2779, Blue Mountains LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2780, Blue Mountains LGA is at -33.7004567,150.3135547 
+        // Postcode 2780, Blue Mountains LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2780, Blue Mountains LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2782, Blue Mountains LGA is at -33.7206345,150.3790612 
+        // Postcode 2782, Blue Mountains LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2782, Blue Mountains LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2783, Blue Mountains LGA is at -33.7256417,150.4370338 
+        // Postcode 2783, Blue Mountains LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2783, Blue Mountains LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2785, Blue Mountains LGA is at -33.6587,150.267 
+        // Postcode 2785, Blue Mountains LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2785, Blue Mountains LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2786, Blue Mountains LGA is at -33.5063449,150.3790612 
+        // Postcode 2786, Blue Mountains LGA (Greater Sydney) is #ff0000 hard locked down
+        // Postcode 2786, Blue Mountains LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2790, Lithgow LGA is at -33.3428163,150.4414368 
+        // Postcode 2790, Lithgow LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2795, Bathurst Regional LGA is at -33.4463763,149.8290532 
+        // Postcode 2795, Bathurst Regional LGA cases:  0 0 0 0 0 0 0 1 0 0 0 0 0 0, total 1 ( 0 : 1) 
+        // Postcode 2795, Bathurst Regional LGA: cases all fall between 2021-07-29 and 2021-07-29
+        add_boxes("Postcode 2795, Bathurst Regional LGA", "P", "Postcode 2795, Bathurst Regional LGA<p>1 case on 2021-07-29<p>2021-07-29: 1<br>", -33.4463763,149.8290532, [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 ], "#990099");
+
+        // Postcode 2799, Blayney LGA is at -33.4319642,149.3685277 
+        // Postcode 2799, Blayney LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2800, Orange LGA is at -33.2055023,149.0209719 
+        // Postcode 2800, Orange LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2810, Weddin LGA is at -33.6532115,148.3285577 
+        // Postcode 2810, Weddin LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2820, Dubbo Regional LGA is at -32.5918632,149.1131451 
+        // Postcode 2820, Dubbo Regional LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2821, Narromine LGA is at -32.4567,148.131 
+        // Postcode 2821, Narromine LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2824, Warren LGA is at -31.7026474,147.8161713 
+        // Postcode 2824, Warren LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2829, Coonamble LGA is at -30.393643,148.3002137 
+        // Postcode 2829, Coonamble LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2830, Dubbo Regional LGA is at -32.1949212,148.4981868 
+        // Postcode 2830, Dubbo Regional LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2843, Warrumbungle Shire LGA is at -31.7845656,149.7487272 
+        // Postcode 2843, Warrumbungle Shire LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2849, Mid-Western Regional LGA is at -33.1134503,150.5084736 
+        // Postcode 2849, Mid-Western Regional LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2850, Mid-Western Regional LGA is at -32.3652519,149.6449192 
+        // Postcode 2850, Mid-Western Regional LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2865, Cabonne LGA is at -33.1811485,148.688016 
+        // Postcode 2865, Cabonne LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2866, Cabonne LGA is at -32.9832,149.085 
+        // Postcode 2866, Cabonne LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2870, Parkes LGA is at -33.2150428,148.108875 
+        // Postcode 2870, Parkes LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Postcode 2880, Broken Hill LGA is at -29.4330519,142.0107687 
+        // Postcode 2880, Broken Hill LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+
+      }
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDh5hod8bm-ok7ma0Ld2F4F721tAtxQDQU&libraries=drawing&callback=init" async defer></script>
+
+  </body>
+</html>
