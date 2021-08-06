@@ -117,6 +117,7 @@ sub read_api_key($)
       die "Didn't expect '$_' in api key file '$file'";
     }
   }
+  die "Didn't find an api key in aip key file '$file'";
 }
 
 sub read_cases($){
@@ -472,7 +473,8 @@ sub case_s($)
 my $case_file='confirmed_cases_table1_location.csv';
 my $postcode_file='australian_postcodes.csv';
 my $lockdown_file='lockdowns.txt';
-my $api_key_file='google_maps_api_key.txt';
+my $api_key_file_1='local_google_maps_api_key.txt';
+my $api_key_file_2='google_maps_api_key.txt';
 
 my $out_file="nsw_covid_map.html";
 
@@ -480,7 +482,12 @@ read_cases($case_file) or die;
 read_postcodes($postcode_file) or die;
 locate_lgas();
 read_lockdowns($lockdown_file);
-read_api_key($api_key_file) or die;
+if(-e $api_key_file_1){
+  read_api_key($api_key_file_1);
+  print "Using local API Key: $api_key_file_1\n";
+}else{
+  read_api_key($api_key_file_2);
+}
 
 open(my $OUT,">",$out_file) or die "Can't write '$out_file': $!\n";
 binmode($OUT);
@@ -496,6 +503,5 @@ print_tail();
 
 select STDOUT;
 
-print "Done\n";
 print "Created $out_file\n";
-
+print "Done\n";
