@@ -22,9 +22,11 @@
 # the past 2 weeks in each LGA (Could easily be extended to Postcodes)
 #
 my $usage = qq{Usage:
-  perl mk_html.pl
+  perl mk_html.pl [-l]
   
-Input and output files are hardcoded.
+  -l output is for local use only
+
+Note: Input and output files are currently hardcoded.
 };
 # ######################################################################
 # History:
@@ -67,6 +69,7 @@ my %lgas=();
 my %postcodes=();
 my %lockdowns=();
 my $api_key;
+
 # TODO - tally up the cases in each region, but only the recent ones
 # my %gt_cases=(default=>0);
 
@@ -464,30 +467,31 @@ sub case_s($)
 # MAIN
 # ####
 
-# die $usage if !@ARGV;
-# this next line is useful on dos
-# @ARGV = map {glob($_)} @ARGV;
-
 # Files
 
 my $case_file='confirmed_cases_table1_location.csv';
 my $postcode_file='australian_postcodes.csv';
 my $lockdown_file='lockdowns.txt';
-my $api_key_file_1='local_google_maps_api_key.txt';
-my $api_key_file_2='google_maps_api_key.txt';
+my $api_key_file='google_maps_api_key.txt';
+my $local_api_key_file='local_google_maps_api_key.txt';
 
 my $out_file="nsw_covid_map.html";
+my $local_out_file="local_nsw_covid_map.html";
+
+foreach my $argv (@ARGV) {
+  if($argv eq '-l'){
+    $out_file=$local_out_file;
+    $api_key_file=$local_api_key_file;
+  }else{
+    die $usage;
+  }
+}
 
 read_cases($case_file) or die;
 read_postcodes($postcode_file) or die;
 locate_lgas();
 read_lockdowns($lockdown_file);
-if(-e $api_key_file_1){
-  read_api_key($api_key_file_1);
-  print "Using local API Key: $api_key_file_1\n";
-}else{
-  read_api_key($api_key_file_2);
-}
+read_api_key($api_key_file);
 
 open(my $OUT,">",$out_file) or die "Can't write '$out_file': $!\n";
 binmode($OUT);
@@ -496,8 +500,8 @@ select $OUT;
 print_header();
 
 # TODO Make the choice of postcode or LGA dynamically controllable via click buttons or something.
-# print_lgas();
-print_postcodes();
+print_lgas();
+# print_postcodes();
 
 print_tail();
 
