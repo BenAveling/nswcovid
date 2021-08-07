@@ -1,6 +1,6 @@
 # Greater Sydney (Note: Some of these LGA are overriden by entries later in this file)
 https://www.nsw.gov.au/covid-19/rules/greater-sydney
-colour: red
+colour: orange
 region: Greater Sydney
 Bayside
 Blacktown
@@ -40,8 +40,8 @@ Shellharbour
 
 # As at 2021-08-04, what was 3 locked down LGA is now 8
 https://www.nsw.gov.au/covid-19/rules/affected-area
-colour: orange
-region: Greater Sydney
+colour: red
+region: Western Sydney
 Blacktown
 Campbelltown
 Canterbury-Bankstown

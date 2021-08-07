@@ -1,7 +1,8 @@
 # nswcovid
+
 An interactive map of NSW showing selected publicly available Covid data.
 
-  https://benaveling.github.io/nswcovid/map/
+https://benaveling.github.io/nswcovid/map/
 
 Each little barchart represents cases/day for a geographic area over the last two weeks, or so. 
 

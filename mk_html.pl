@@ -19,7 +19,7 @@
 
 # ######################################################################
 # This script creates a google maps html page that shows 
-# the past 2 weeks in each LGA (Could easily be extended to Postcodes)
+# the past 2 weeks in each LGA or Postcode (but not both, not yet)
 #
 my $usage = qq{Usage:
   perl mk_html.pl [-l]
@@ -52,9 +52,9 @@ require 5.022; # lower would probably work, but has not been tested
 
 # No one should let me choose colours. Yet here we are
 my %colours=(
-    red=>"#ff0000",  # greater sydney
+    red=>"#ff0000",    # western sydney
+    orange=>"#ff8800", # greater sydney and nearby
     yellow=>"#aaaa00", # hunter (so far)
-    orange=>"#ff8800", # western sydney
     purple=>"#990099", # default
 );
 
@@ -227,8 +227,8 @@ print qq[
       <BR>Each little barchart represents cases/day between $from and $to.
 
       <strong>Restrictions</strong> <!-- no one should have let me choose colours. Sorry. -->
-      <BR><div style="color: $colours{red}">Red: <A href="https://www.nsw.gov.au/covid-19/rules/greater-sydney">Greater Sydney</A></div>
-      <div style="color: $colours{orange}">Orange: <A href="https://www.nsw.gov.au/covid-19/rules/affected-area">Western Sydney</A></div>
+      <div style="color: $colours{red}">Red: <A href="https://www.nsw.gov.au/covid-19/rules/affected-area">Western Sydney</A></div>
+      <div style="color: $colours{orange}">Orange: <A href="https://www.nsw.gov.au/covid-19/rules/greater-sydney">Greater Sydney and nearby</A></div>
       <div style="color: $colours{yellow}">Yellow: <A href="https://www.nsw.gov.au/covid-19/rules/affected-regions">Newcastle and Hunter</A></div>
       <div style="color: $colours{purple}">Purple: No restrictions.</div>
 
