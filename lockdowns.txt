@@ -37,6 +37,8 @@ Blue Mountains
 Central Coast
 Wollongong
 Shellharbour
+# 2021-08-07 + Armidale
+Armidale
 
 # As at 2021-08-04, what was 3 locked down LGA is now 8
 https://www.nsw.gov.au/covid-19/rules/affected-area
