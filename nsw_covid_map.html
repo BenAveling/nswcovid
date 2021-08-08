@@ -17,7 +17,7 @@
   </head>
   <body>
     <noscript>
-      <P><font color="red">Sorry, but this page requires javascript.</font> 
+      <P><font color="red">Sorry, but this page requires javascript.</font>
     </noscript>
     <div id="map"></div>
     <div id="legend"
@@ -52,15 +52,15 @@
           {
             center: {
               // Fairfield
-              // lat: -33.887203, 
-              // lng: 150.979458 
+              // lat: -33.887203,
+              // lng: 150.979458
               // Parramatta
               // lat: -33.7995485181818,
               // lng: 151.0328134909090
-              lat: -33.887203, 
+              lat: -33.887203,
               lng: 151.0328134909090
             },
-            zoom: 11 // higher number = more zoomed in 
+            zoom: 11 // higher number = more zoomed in
           }
         );
         const legend = document.getElementById("legend");
@@ -156,20 +156,18 @@
       function undisplay_all_boxes(){
         // remove box from map
         boxes.forEach(box => box.setMap(null));
-        // delete box from map 
+        // delete box from map
         // TODO: better to hide/unhide
         boxes=[];
       }
       function toggle_display(){
         undisplay_all_boxes()
-        if(displaying == 'lga'){
+        if(displaying == 'lgas'){
           // TODO: better to hide/unhide
-          // display_postcodes();
-          displaying = 'postcodes';
+          print_postcodes();
         }else{
           // TODO: better to hide/unhide
-          // display_lga();
-          displaying = 'lga';
+          print_lgas();
         }
       }
 
@@ -548,9 +546,10 @@
 
         // Yass Valley LGA is at -34.9816248,149.1946165 
         // Yass Valley LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        displaying = 'lgas';
       }
 
-      function print_codes(){
+      function print_postcodes(){
         // Postcode 2000, Sydney LGA is at -33.85985,151.20901 
         // Postcode 2000, Sydney LGA (Greater Sydney) is #ff8800 hard locked down
         // Postcode 2000, Sydney LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 1 0 0 2, total 3 ( 0 : 3) 
@@ -2243,6 +2242,7 @@
         // Postcode 2870, Parkes LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Postcode 2880, Broken Hill LGA is at -29.4330519,142.0107687 
         // Postcode 2880, Broken Hill LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        displaying = 'postcodes';
       }
 
       function init(){
