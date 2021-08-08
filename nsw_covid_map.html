@@ -40,10 +40,13 @@
       <!-- <BR>Hover the mouse over them for more detail.can comment this out for screenshots -->
       <!-- TODO Add buttons to choose between LGA and Postcodes -->
       <!-- TODO Move more of the locked down details into lockeddown.txt and read it from there -->
-      </div>
-    </div>
+     <button id="toggle_display" onclick="toggle_display()">Toggle display</button> <!-- FIXME Smaller font please -->
+      </div> <!-- end legend -->
+    </div> <!-- end map -->
     <script type="text/javascript">
       var map;
+      var displaying;
+      var boxes=[]; <!-- FIXME this is just BFI - try to be smarter -->
       function init_map() {
         map = new google.maps.Map(
           document.getElementById("map"),
@@ -82,6 +85,7 @@
             }
           }
         );
+        boxes.push(box);
       }
 
       function add_circle(lat,lng,size,c) {
@@ -150,8 +154,26 @@
         }
         // No one should let me choose colours - help needed here please!
       }
-    </script>
-    <script type="text/javascript">
+      function undisplay_all_boxes(){
+        // remove box from map
+        boxes.forEach(box => box.setMap(null));
+        // delete box from map 
+        // TODO: better to hide/unhide
+        boxes=[];
+      }
+      function toggle_display(){
+        undisplay_all_boxes()
+        if(displaying == 'lga'){
+          // TODO: better to hide/unhide
+          // display_postcodes();
+          displaying = 'postcodes';
+        }else{
+          // TODO: better to hide/unhide
+          // display_lga();
+          displaying = 'lga';
+        }
+      }
+
       function init(){
         init_map();
         // Albury LGA is at -36.00521935,147.0998751 
