@@ -377,7 +377,7 @@ sub print_barchart($$$$)
   my $title=shift;
   my $lat=shift or die "no lat for $title?";
   my $lng=shift or die "no lng for $title?";
-  print "        // $title is at $lat,$lng \n";
+  print "        // $title is at $lat,$lng\n";
   my $locked_down=0;
   my $colour=$colours{purple};
   my $url=undef;
@@ -405,7 +405,7 @@ sub print_barchart($$$$)
     $first||=$date if $cases;
     $last=$date if $cases;
   }
-  print ", total $t_cases ( $weekly_cases[0] : $weekly_cases[1]) \n";
+  print ", total $t_cases ( $weekly_cases[0] : $weekly_cases[1])\n";
   if(!$t_cases){
     return;
   }
