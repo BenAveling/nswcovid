@@ -22,9 +22,10 @@
 # the past 2 weeks in each LGA or Postcode (but not both, not yet)
 #
 my $usage = qq{Usage:
-  perl mk_html.pl [-l]
+  perl mk_html.pl [-l] [-p]
   
   -l output is for local use only
+  -p output by postcode, instead of LGA (temporary feature)
 
 Note: Input and output files are currently hardcoded.
 };
@@ -478,10 +479,16 @@ my $local_api_key_file='local_google_maps_api_key.txt';
 my $out_file="nsw_covid_map.html";
 my $local_out_file="local_nsw_covid_map.html";
 
+my $by_lga=1;
+my $by_postcode=0;
+
 foreach my $argv (@ARGV) {
   if($argv eq '-l'){
     $out_file=$local_out_file;
     $api_key_file=$local_api_key_file;
+  }elsif($argv eq '-p'){
+    $by_lga=0;
+    $by_postcode=1;
   }else{
     die $usage;
   }
@@ -500,8 +507,14 @@ select $OUT;
 print_header();
 
 # TODO Make the choice of postcode or LGA dynamically controllable via click buttons or something.
-print_lgas();
-# print_postcodes();
+if($by_lga){
+  print STDOUT "Printing LGAs.\n";
+  print_lgas();
+}
+if($by_postcode){
+  print STDOUT "Printing postcodes.\n";
+  print_postcodes();
+}
 
 print_tail();
 
