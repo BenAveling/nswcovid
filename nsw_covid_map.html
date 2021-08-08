@@ -27,7 +27,7 @@
            margin: 10px;
            width: 100px;">
       <strong>Barcharts</strong>
-      <BR>Each little barchart represents cases/day between 2021-07-23 and 2021-08-05.
+      <BR>Each little barchart represents cases/day between 2021-07-25 and 2021-08-07.
 
       <strong>Restrictions</strong> <!-- no one should have let me choose colours. Sorry. -->
       <div style="color: #ff0000">Red: <A href="https://www.nsw.gov.au/covid-19/rules/affected-area">Western Sydney</A></div>
@@ -157,19 +157,23 @@
         // Albury LGA is at -36.00521935,147.0998751 
         // Albury LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Armidale Regional LGA is at -30.2528733,152.200731 
-        // Armidale Regional LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Armidale Regional LGA (Greater Sydney) is #ff8800 hard locked down
+        // Armidale Regional LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 1 2, total 3 ( 0 : 3) 
+        // Armidale Regional LGA (Greater Sydney): cases all fall between 2021-08-06 and 2021-08-07
+        add_boxes("Armidale Regional LGA (Greater Sydney)", "A", "Armidale Regional LGA (Greater Sydney)<p>3 cases between 2021-08-06 and 2021-08-07:<p>2021-08-06: 1<br>2021-08-07: 2<br>", -30.2528733,152.200731, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2 ], "#ff8800");
+
         // Ballina LGA is at -28.8406418,153.4666298 
         // Ballina LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Bathurst Regional LGA is at -33.4463763,149.8290532 
-        // Bathurst Regional LGA cases:  0 0 0 0 0 0 1 0 0 0 0 0 0 0, total 1 ( 1 : 0) 
+        // Bathurst Regional LGA cases:  0 0 0 0 1 0 0 0 0 0 0 0 0 0, total 1 ( 1 : 0) 
         // Bathurst Regional LGA: cases all fall between 2021-07-29 and 2021-07-29
-        add_boxes("Bathurst Regional LGA", "B", "Bathurst Regional LGA<p>1 case on 2021-07-29<p>2021-07-29: 1<br><p>Week to week Reff=0", -33.4463763,149.8290532, [ 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 ], "#990099");
+        add_boxes("Bathurst Regional LGA", "B", "Bathurst Regional LGA<p>1 case on 2021-07-29<p>2021-07-29: 1<br><p>Week to week Reff=0", -33.4463763,149.8290532, [ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#990099");
 
         // Bayside LGA is at -33.9561776,151.153430228571 
         // Bayside LGA (Greater Sydney) is #ff8800 hard locked down
-        // Bayside LGA (Greater Sydney) cases:  2 1 4 3 6 7 4 5 2 2 3 5 8 3, total 55 ( 27 : 28) 
-        // Bayside LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-08-05
-        add_boxes("Bayside LGA (Greater Sydney)", "B", "Bayside LGA (Greater Sydney)<p>55 cases between 2021-07-23 and 2021-08-05:<p>2021-07-23: 2<br>2021-07-24: 1<br>2021-07-25: 4<br>2021-07-26: 3<br>2021-07-27: 6<br>2021-07-28: 7<br>2021-07-29: 4<br>2021-07-30: 5<br>2021-07-31: 2<br>2021-08-01: 2<br>2021-08-02: 3<br>2021-08-03: 5<br>2021-08-04: 8<br>2021-08-05: 3<br><p>Week to week Reff=1", -33.9561776,151.153430228571, [ 2, 1, 4, 3, 6, 7, 4, 5, 2, 2, 3, 5, 8, 3 ], "#ff8800");
+        // Bayside LGA (Greater Sydney) cases:  4 3 6 7 4 5 2 2 3 5 8 4 9 2, total 64 ( 31 : 33) 
+        // Bayside LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-08-07
+        add_boxes("Bayside LGA (Greater Sydney)", "B", "Bayside LGA (Greater Sydney)<p>64 cases between 2021-07-25 and 2021-08-07:<p>2021-07-25: 4<br>2021-07-26: 3<br>2021-07-27: 6<br>2021-07-28: 7<br>2021-07-29: 4<br>2021-07-30: 5<br>2021-07-31: 2<br>2021-08-01: 2<br>2021-08-02: 3<br>2021-08-03: 5<br>2021-08-04: 8<br>2021-08-05: 4<br>2021-08-06: 9<br>2021-08-07: 2<br><p>Week to week Reff=1.1", -33.9561776,151.153430228571, [ 4, 3, 6, 7, 4, 5, 2, 2, 3, 5, 8, 4, 9, 2 ], "#ff8800");
 
         // Bega Valley LGA is at -36.6028935,149.7950774 
         // Bega Valley LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
@@ -179,25 +183,25 @@
         // Berrigan LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Blacktown LGA is at -33.7342451818182,150.875838045455 
         // Blacktown LGA (Western Sydney) is #ff0000 hard locked down
-        // Blacktown LGA (Western Sydney) cases:  20 13 8 15 24 16 13 14 23 16 10 16 19 18, total 225 ( 109 : 116) 
-        // Blacktown LGA (Western Sydney): cases all fall between 2021-07-23 and 2021-08-05
-        add_boxes("Blacktown LGA (Western Sydney)", "B", "Blacktown LGA (Western Sydney)<p>225 cases between 2021-07-23 and 2021-08-05:<p>2021-07-23: 20<br>2021-07-24: 13<br>2021-07-25: 8<br>2021-07-26: 15<br>2021-07-27: 24<br>2021-07-28: 16<br>2021-07-29: 13<br>2021-07-30: 14<br>2021-07-31: 23<br>2021-08-01: 16<br>2021-08-02: 10<br>2021-08-03: 16<br>2021-08-04: 19<br>2021-08-05: 18<br><p>Week to week Reff=1.1", -33.7342451818182,150.875838045455, [ 20, 13, 8, 15, 24, 16, 13, 14, 23, 16, 10, 16, 19, 18 ], "#ff0000");
+        // Blacktown LGA (Western Sydney) cases:  8 15 24 15 13 14 23 16 11 18 19 30 34 16, total 256 ( 112 : 144) 
+        // Blacktown LGA (Western Sydney): cases all fall between 2021-07-25 and 2021-08-07
+        add_boxes("Blacktown LGA (Western Sydney)", "B", "Blacktown LGA (Western Sydney)<p>256 cases between 2021-07-25 and 2021-08-07:<p>2021-07-25: 8<br>2021-07-26: 15<br>2021-07-27: 24<br>2021-07-28: 15<br>2021-07-29: 13<br>2021-07-30: 14<br>2021-07-31: 23<br>2021-08-01: 16<br>2021-08-02: 11<br>2021-08-03: 18<br>2021-08-04: 19<br>2021-08-05: 30<br>2021-08-06: 34<br>2021-08-07: 16<br><p>Week to week Reff=1.3", -33.7342451818182,150.875838045455, [ 8, 15, 24, 15, 13, 14, 23, 16, 11, 18, 19, 30, 34, 16 ], "#ff0000");
 
         // Blayney LGA is at -33.4319642,149.3685277 
         // Blayney LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Blue Mountains LGA is at -33.69614073,150.45725406 
         // Blue Mountains LGA (Greater Sydney) is #ff8800 hard locked down
-        // Blue Mountains LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 1 0, total 1 ( 0 : 1) 
-        // Blue Mountains LGA (Greater Sydney): cases all fall between 2021-08-04 and 2021-08-04
-        add_boxes("Blue Mountains LGA (Greater Sydney)", "B", "Blue Mountains LGA (Greater Sydney)<p>1 case on 2021-08-04<p>2021-08-04: 1<br>", -33.69614073,150.45725406, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 ], "#ff8800");
+        // Blue Mountains LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 1 0 1 0, total 2 ( 0 : 2) 
+        // Blue Mountains LGA (Greater Sydney): cases all fall between 2021-08-04 and 2021-08-06
+        add_boxes("Blue Mountains LGA (Greater Sydney)", "B", "Blue Mountains LGA (Greater Sydney)<p>2 cases on 2021-08-04 and 2021-08-06:<p>2021-08-04: 1<br>2021-08-06: 1<br>", -33.69614073,150.45725406, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0 ], "#ff8800");
 
         // Broken Hill LGA is at -29.4330519,142.0107687 
         // Broken Hill LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Burwood LGA is at -33.8813997,151.10828145 
         // Burwood LGA (Greater Sydney) is #ff8800 hard locked down
-        // Burwood LGA (Greater Sydney) cases:  1 0 2 0 0 0 0 0 0 0 1 0 2 0, total 6 ( 3 : 3) 
-        // Burwood LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-08-04
-        add_boxes("Burwood LGA (Greater Sydney)", "B", "Burwood LGA (Greater Sydney)<p>6 cases between 2021-07-23 and 2021-08-04:<p>2021-07-23: 1<br>2021-07-25: 2<br>2021-08-02: 1<br>2021-08-04: 2<br><p>Week to week Reff=1", -33.8813997,151.10828145, [ 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0 ], "#ff8800");
+        // Burwood LGA (Greater Sydney) cases:  2 0 0 0 0 0 0 0 1 0 2 0 3 1, total 9 ( 2 : 7) 
+        // Burwood LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-08-07
+        add_boxes("Burwood LGA (Greater Sydney)", "B", "Burwood LGA (Greater Sydney)<p>9 cases between 2021-07-25 and 2021-08-07:<p>2021-07-25: 2<br>2021-08-02: 1<br>2021-08-04: 2<br>2021-08-06: 3<br>2021-08-07: 1<br><p>Week to week Reff=3.5", -33.8813997,151.10828145, [ 2, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 3, 1 ], "#ff8800");
 
         // Byron LGA is at -28.5781998,153.512177275 
         // Byron LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
@@ -205,33 +209,33 @@
         // Cabonne LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Camden LGA is at -33.9797333333333,150.703743333333 
         // Camden LGA (Greater Sydney) is #ff8800 hard locked down
-        // Camden LGA (Greater Sydney) cases:  1 0 1 3 3 3 1 1 1 2 8 2 2 3, total 31 ( 12 : 19) 
-        // Camden LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-08-05
-        add_boxes("Camden LGA (Greater Sydney)", "C", "Camden LGA (Greater Sydney)<p>31 cases between 2021-07-23 and 2021-08-05:<p>2021-07-23: 1<br>2021-07-25: 1<br>2021-07-26: 3<br>2021-07-27: 3<br>2021-07-28: 3<br>2021-07-29: 1<br>2021-07-30: 1<br>2021-07-31: 1<br>2021-08-01: 2<br>2021-08-02: 8<br>2021-08-03: 2<br>2021-08-04: 2<br>2021-08-05: 3<br><p>Week to week Reff=1.6", -33.9797333333333,150.703743333333, [ 1, 0, 1, 3, 3, 3, 1, 1, 1, 2, 8, 2, 2, 3 ], "#ff8800");
+        // Camden LGA (Greater Sydney) cases:  1 3 3 3 1 1 1 2 8 2 2 3 2 3, total 35 ( 13 : 22) 
+        // Camden LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-08-07
+        add_boxes("Camden LGA (Greater Sydney)", "C", "Camden LGA (Greater Sydney)<p>35 cases between 2021-07-25 and 2021-08-07:<p>2021-07-25: 1<br>2021-07-26: 3<br>2021-07-27: 3<br>2021-07-28: 3<br>2021-07-29: 1<br>2021-07-30: 1<br>2021-07-31: 1<br>2021-08-01: 2<br>2021-08-02: 8<br>2021-08-03: 2<br>2021-08-04: 2<br>2021-08-05: 3<br>2021-08-06: 2<br>2021-08-07: 3<br><p>Week to week Reff=1.7", -33.9797333333333,150.703743333333, [ 1, 3, 3, 3, 1, 1, 1, 2, 8, 2, 2, 3, 2, 3 ], "#ff8800");
 
         // Campbelltown LGA is at -34.0100789142857,150.8435925 
         // Campbelltown LGA (Western Sydney) is #ff0000 hard locked down
-        // Campbelltown LGA (Western Sydney) cases:  2 2 6 12 9 11 17 8 13 19 13 16 9 12, total 149 ( 59 : 90) 
-        // Campbelltown LGA (Western Sydney): cases all fall between 2021-07-23 and 2021-08-05
-        add_boxes("Campbelltown LGA (Western Sydney)", "C", "Campbelltown LGA (Western Sydney)<p>149 cases between 2021-07-23 and 2021-08-05:<p>2021-07-23: 2<br>2021-07-24: 2<br>2021-07-25: 6<br>2021-07-26: 12<br>2021-07-27: 9<br>2021-07-28: 11<br>2021-07-29: 17<br>2021-07-30: 8<br>2021-07-31: 13<br>2021-08-01: 19<br>2021-08-02: 13<br>2021-08-03: 16<br>2021-08-04: 9<br>2021-08-05: 12<br><p>Week to week Reff=1.5", -34.0100789142857,150.8435925, [ 2, 2, 6, 12, 9, 11, 17, 8, 13, 19, 13, 16, 9, 12 ], "#ff0000");
+        // Campbelltown LGA (Western Sydney) cases:  6 12 9 11 17 8 14 19 13 16 9 17 11 8, total 170 ( 77 : 93) 
+        // Campbelltown LGA (Western Sydney): cases all fall between 2021-07-25 and 2021-08-07
+        add_boxes("Campbelltown LGA (Western Sydney)", "C", "Campbelltown LGA (Western Sydney)<p>170 cases between 2021-07-25 and 2021-08-07:<p>2021-07-25: 6<br>2021-07-26: 12<br>2021-07-27: 9<br>2021-07-28: 11<br>2021-07-29: 17<br>2021-07-30: 8<br>2021-07-31: 14<br>2021-08-01: 19<br>2021-08-02: 13<br>2021-08-03: 16<br>2021-08-04: 9<br>2021-08-05: 17<br>2021-08-06: 11<br>2021-08-07: 8<br><p>Week to week Reff=1.2", -34.0100789142857,150.8435925, [ 6, 12, 9, 11, 17, 8, 14, 19, 13, 16, 9, 17, 11, 8 ], "#ff0000");
 
         // Canada Bay LGA is at -33.84962105,151.115361025 
         // Canada Bay LGA (Greater Sydney) is #ff8800 hard locked down
-        // Canada Bay LGA (Greater Sydney) cases:  0 0 0 0 1 0 0 0 1 2 2 1 1 0, total 8 ( 1 : 7) 
-        // Canada Bay LGA (Greater Sydney): cases all fall between 2021-07-27 and 2021-08-04
-        add_boxes("Canada Bay LGA (Greater Sydney)", "C", "Canada Bay LGA (Greater Sydney)<p>8 cases between 2021-07-27 and 2021-08-04:<p>2021-07-27: 1<br>2021-07-31: 1<br>2021-08-01: 2<br>2021-08-02: 2<br>2021-08-03: 1<br>2021-08-04: 1<br><p>Week to week Reff=7", -33.84962105,151.115361025, [ 0, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2, 1, 1, 0 ], "#ff8800");
+        // Canada Bay LGA (Greater Sydney) cases:  0 0 1 0 0 0 1 2 1 1 1 0 0 2, total 9 ( 2 : 7) 
+        // Canada Bay LGA (Greater Sydney): cases all fall between 2021-07-27 and 2021-08-07
+        add_boxes("Canada Bay LGA (Greater Sydney)", "C", "Canada Bay LGA (Greater Sydney)<p>9 cases between 2021-07-27 and 2021-08-07:<p>2021-07-27: 1<br>2021-07-31: 1<br>2021-08-01: 2<br>2021-08-02: 1<br>2021-08-03: 1<br>2021-08-04: 1<br>2021-08-07: 2<br><p>Week to week Reff=3.5", -33.84962105,151.115361025, [ 0, 0, 1, 0, 0, 0, 1, 2, 1, 1, 1, 0, 0, 2 ], "#ff8800");
 
         // Canterbury-Bankstown LGA is at -33.9198386052632,151.056098710526 
         // Canterbury-Bankstown LGA (Western Sydney) is #ff0000 hard locked down
-        // Canterbury-Bankstown LGA (Western Sydney) cases:  30 36 48 29 32 68 43 50 82 50 65 77 51 72, total 733 ( 286 : 447) 
-        // Canterbury-Bankstown LGA (Western Sydney): cases all fall between 2021-07-23 and 2021-08-05
-        add_boxes("Canterbury-Bankstown LGA (Western Sydney)", "C", "Canterbury-Bankstown LGA (Western Sydney)<p>733 cases between 2021-07-23 and 2021-08-05:<p>2021-07-23: 30<br>2021-07-24: 36<br>2021-07-25: 48<br>2021-07-26: 29<br>2021-07-27: 32<br>2021-07-28: 68<br>2021-07-29: 43<br>2021-07-30: 50<br>2021-07-31: 82<br>2021-08-01: 50<br>2021-08-02: 65<br>2021-08-03: 77<br>2021-08-04: 51<br>2021-08-05: 72<br><p>Week to week Reff=1.6", -33.9198386052632,151.056098710526, [ 30, 36, 48, 29, 32, 68, 43, 50, 82, 50, 65, 77, 51, 72 ], "#ff0000");
+        // Canterbury-Bankstown LGA (Western Sydney) cases:  48 28 32 68 43 50 81 50 66 78 51 99 71 38, total 803 ( 350 : 453) 
+        // Canterbury-Bankstown LGA (Western Sydney): cases all fall between 2021-07-25 and 2021-08-07
+        add_boxes("Canterbury-Bankstown LGA (Western Sydney)", "C", "Canterbury-Bankstown LGA (Western Sydney)<p>803 cases between 2021-07-25 and 2021-08-07:<p>2021-07-25: 48<br>2021-07-26: 28<br>2021-07-27: 32<br>2021-07-28: 68<br>2021-07-29: 43<br>2021-07-30: 50<br>2021-07-31: 81<br>2021-08-01: 50<br>2021-08-02: 66<br>2021-08-03: 78<br>2021-08-04: 51<br>2021-08-05: 99<br>2021-08-06: 71<br>2021-08-07: 38<br><p>Week to week Reff=1.3", -33.9198386052632,151.056098710526, [ 48, 28, 32, 68, 43, 50, 81, 50, 66, 78, 51, 99, 71, 38 ], "#ff0000");
 
         // Central Coast LGA is at -33.36994909,151.39903139 
         // Central Coast LGA (Greater Sydney) is #ff8800 hard locked down
-        // Central Coast LGA (Greater Sydney) cases:  4 0 1 0 0 0 0 1 0 0 0 0 8 1, total 15 ( 5 : 10) 
-        // Central Coast LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-08-05
-        add_boxes("Central Coast LGA (Greater Sydney)", "C", "Central Coast LGA (Greater Sydney)<p>15 cases between 2021-07-23 and 2021-08-05:<p>2021-07-23: 4<br>2021-07-25: 1<br>2021-07-30: 1<br>2021-08-04: 8<br>2021-08-05: 1<br><p>Week to week Reff=2", -33.36994909,151.39903139, [ 4, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 8, 1 ], "#ff8800");
+        // Central Coast LGA (Greater Sydney) cases:  1 0 0 0 0 1 0 0 0 0 8 1 0 2, total 13 ( 2 : 11) 
+        // Central Coast LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-08-07
+        add_boxes("Central Coast LGA (Greater Sydney)", "C", "Central Coast LGA (Greater Sydney)<p>13 cases between 2021-07-25 and 2021-08-07:<p>2021-07-25: 1<br>2021-07-30: 1<br>2021-08-04: 8<br>2021-08-05: 1<br>2021-08-07: 2<br><p>Week to week Reff=5.5", -33.36994909,151.39903139, [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 8, 1, 0, 2 ], "#ff8800");
 
         // Cessnock LGA is at -32.8534976666667,151.2662724 
         // Cessnock LGA (NewCastle and Hunter) is #aaaa00 hard locked down
@@ -246,37 +250,40 @@
         // Cootamundra-Gundagai Regional LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Cumberland LGA is at -33.84794475,151.00183505 
         // Cumberland LGA (Western Sydney) is #ff0000 hard locked down
-        // Cumberland LGA (Western Sydney) cases:  29 22 32 15 8 34 24 37 27 29 40 43 45 38, total 423 ( 164 : 259) 
-        // Cumberland LGA (Western Sydney): cases all fall between 2021-07-23 and 2021-08-05
-        add_boxes("Cumberland LGA (Western Sydney)", "C", "Cumberland LGA (Western Sydney)<p>423 cases between 2021-07-23 and 2021-08-05:<p>2021-07-23: 29<br>2021-07-24: 22<br>2021-07-25: 32<br>2021-07-26: 15<br>2021-07-27: 8<br>2021-07-28: 34<br>2021-07-29: 24<br>2021-07-30: 37<br>2021-07-31: 27<br>2021-08-01: 29<br>2021-08-02: 40<br>2021-08-03: 43<br>2021-08-04: 45<br>2021-08-05: 38<br><p>Week to week Reff=1.6", -33.84794475,151.00183505, [ 29, 22, 32, 15, 8, 34, 24, 37, 27, 29, 40, 43, 45, 38 ], "#ff0000");
+        // Cumberland LGA (Western Sydney) cases:  32 15 8 34 24 37 27 29 40 43 45 43 40 33, total 450 ( 177 : 273) 
+        // Cumberland LGA (Western Sydney): cases all fall between 2021-07-25 and 2021-08-07
+        add_boxes("Cumberland LGA (Western Sydney)", "C", "Cumberland LGA (Western Sydney)<p>450 cases between 2021-07-25 and 2021-08-07:<p>2021-07-25: 32<br>2021-07-26: 15<br>2021-07-27: 8<br>2021-07-28: 34<br>2021-07-29: 24<br>2021-07-30: 37<br>2021-07-31: 27<br>2021-08-01: 29<br>2021-08-02: 40<br>2021-08-03: 43<br>2021-08-04: 45<br>2021-08-05: 43<br>2021-08-06: 40<br>2021-08-07: 33<br><p>Week to week Reff=1.5", -33.84794475,151.00183505, [ 32, 15, 8, 34, 24, 37, 27, 29, 40, 43, 45, 43, 40, 33 ], "#ff0000");
 
         // Dubbo Regional LGA is at -32.3933922,148.80566595 
         // Dubbo Regional LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
-        // Dungog LGA is at -32.5392315,151.61543065 
+        // Dungog LGA is at -32.4155318333333,151.577694133333 
         // Dungog LGA (NewCastle and Hunter) is #aaaa00 hard locked down
-        // Dungog LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Dungog LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 1 0 0, total 1 ( 0 : 1) 
+        // Dungog LGA (NewCastle and Hunter): cases all fall between 2021-08-05 and 2021-08-05
+        add_boxes("Dungog LGA (NewCastle and Hunter)", "D", "Dungog LGA (NewCastle and Hunter)<p>1 case on 2021-08-05<p>2021-08-05: 1<br>", -32.4155318333333,151.577694133333, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ], "#aaaa00");
+
         // Eurobodalla LGA is at -36.0478497333333,150.091382833333 
         // Eurobodalla LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Fairfield LGA is at -33.8648115714286,150.953582 
         // Fairfield LGA (Western Sydney) is #ff0000 hard locked down
-        // Fairfield LGA (Western Sydney) cases:  37 33 16 26 37 49 21 22 43 15 14 17 25 14, total 369 ( 219 : 150) 
-        // Fairfield LGA (Western Sydney): cases all fall between 2021-07-23 and 2021-08-05
-        add_boxes("Fairfield LGA (Western Sydney)", "F", "Fairfield LGA (Western Sydney)<p>369 cases between 2021-07-23 and 2021-08-05:<p>2021-07-23: 37<br>2021-07-24: 33<br>2021-07-25: 16<br>2021-07-26: 26<br>2021-07-27: 37<br>2021-07-28: 49<br>2021-07-29: 21<br>2021-07-30: 22<br>2021-07-31: 43<br>2021-08-01: 15<br>2021-08-02: 14<br>2021-08-03: 17<br>2021-08-04: 25<br>2021-08-05: 14<br><p>Week to week Reff=0.68", -33.8648115714286,150.953582, [ 37, 33, 16, 26, 37, 49, 21, 22, 43, 15, 14, 17, 25, 14 ], "#ff0000");
+        // Fairfield LGA (Western Sydney) cases:  16 26 37 48 21 22 43 15 14 16 25 21 29 16, total 349 ( 213 : 136) 
+        // Fairfield LGA (Western Sydney): cases all fall between 2021-07-25 and 2021-08-07
+        add_boxes("Fairfield LGA (Western Sydney)", "F", "Fairfield LGA (Western Sydney)<p>349 cases between 2021-07-25 and 2021-08-07:<p>2021-07-25: 16<br>2021-07-26: 26<br>2021-07-27: 37<br>2021-07-28: 48<br>2021-07-29: 21<br>2021-07-30: 22<br>2021-07-31: 43<br>2021-08-01: 15<br>2021-08-02: 14<br>2021-08-03: 16<br>2021-08-04: 25<br>2021-08-05: 21<br>2021-08-06: 29<br>2021-08-07: 16<br><p>Week to week Reff=0.64", -33.8648115714286,150.953582, [ 16, 26, 37, 48, 21, 22, 43, 15, 14, 16, 25, 21, 29, 16 ], "#ff0000");
 
         // Federation LGA is at -35.9042029,146.216216233333 
         // Federation LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Georges River LGA is at -33.9651990857143,151.088022642857 
         // Georges River LGA (Western Sydney) is #ff0000 hard locked down
-        // Georges River LGA (Western Sydney) cases:  6 3 6 3 5 3 7 5 4 8 2 4 4 5, total 65 ( 33 : 32) 
-        // Georges River LGA (Western Sydney): cases all fall between 2021-07-23 and 2021-08-05
-        add_boxes("Georges River LGA (Western Sydney)", "G", "Georges River LGA (Western Sydney)<p>65 cases between 2021-07-23 and 2021-08-05:<p>2021-07-23: 6<br>2021-07-24: 3<br>2021-07-25: 6<br>2021-07-26: 3<br>2021-07-27: 5<br>2021-07-28: 3<br>2021-07-29: 7<br>2021-07-30: 5<br>2021-07-31: 4<br>2021-08-01: 8<br>2021-08-02: 2<br>2021-08-03: 4<br>2021-08-04: 4<br>2021-08-05: 5<br><p>Week to week Reff=0.97", -33.9651990857143,151.088022642857, [ 6, 3, 6, 3, 5, 3, 7, 5, 4, 8, 2, 4, 4, 5 ], "#ff0000");
+        // Georges River LGA (Western Sydney) cases:  6 3 5 3 7 5 4 8 2 3 4 10 11 4, total 75 ( 33 : 42) 
+        // Georges River LGA (Western Sydney): cases all fall between 2021-07-25 and 2021-08-07
+        add_boxes("Georges River LGA (Western Sydney)", "G", "Georges River LGA (Western Sydney)<p>75 cases between 2021-07-25 and 2021-08-07:<p>2021-07-25: 6<br>2021-07-26: 3<br>2021-07-27: 5<br>2021-07-28: 3<br>2021-07-29: 7<br>2021-07-30: 5<br>2021-07-31: 4<br>2021-08-01: 8<br>2021-08-02: 2<br>2021-08-03: 3<br>2021-08-04: 4<br>2021-08-05: 10<br>2021-08-06: 11<br>2021-08-07: 4<br><p>Week to week Reff=1.3", -33.9651990857143,151.088022642857, [ 6, 3, 5, 3, 7, 5, 4, 8, 2, 3, 4, 10, 11, 4 ], "#ff0000");
 
         // Glen Innes Severn LGA is at -29.3927362,151.3926336 
         // Glen Innes Severn LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Goulburn Mulwaree LGA is at -34.7971566,149.6014865 
-        // Goulburn Mulwaree LGA cases:  0 0 0 1 0 0 0 0 0 0 0 0 0 0, total 1 ( 1 : 0) 
+        // Goulburn Mulwaree LGA cases:  0 1 0 0 0 0 0 0 0 0 0 0 0 0, total 1 ( 1 : 0) 
         // Goulburn Mulwaree LGA: cases all fall between 2021-07-26 and 2021-07-26
-        add_boxes("Goulburn Mulwaree LGA", "G", "Goulburn Mulwaree LGA<p>1 case on 2021-07-26<p>2021-07-26: 1<br><p>Week to week Reff=0", -34.7971566,149.6014865, [ 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#990099");
+        add_boxes("Goulburn Mulwaree LGA", "G", "Goulburn Mulwaree LGA<p>1 case on 2021-07-26<p>2021-07-26: 1<br><p>Week to week Reff=0", -34.7971566,149.6014865, [ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#990099");
 
         // Greater Hume Shire LGA is at -35.5889128,147.277927166667 
         // Greater Hume Shire LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
@@ -292,17 +299,17 @@
         // Hilltops LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Hornsby LGA is at -33.6546077181818,151.096936318182 
         // Hornsby LGA (Greater Sydney) is #ff8800 hard locked down
-        // Hornsby LGA (Greater Sydney) cases:  0 0 0 2 0 0 0 0 0 0 0 0 0 0, total 2 ( 2 : 0) 
+        // Hornsby LGA (Greater Sydney) cases:  0 2 0 0 0 0 0 0 0 0 0 0 0 0, total 2 ( 2 : 0) 
         // Hornsby LGA (Greater Sydney): cases all fall between 2021-07-26 and 2021-07-26
-        add_boxes("Hornsby LGA (Greater Sydney)", "H", "Hornsby LGA (Greater Sydney)<p>2 cases on 2021-07-26<p>2021-07-26: 2<br><p>Week to week Reff=0", -33.6546077181818,151.096936318182, [ 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff8800");
+        add_boxes("Hornsby LGA (Greater Sydney)", "H", "Hornsby LGA (Greater Sydney)<p>2 cases on 2021-07-26<p>2021-07-26: 2<br><p>Week to week Reff=0", -33.6546077181818,151.096936318182, [ 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff8800");
 
         // Hunters Hill LGA is at -33.8370675,151.143309 
         // Hunters Hill LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Inner West LGA is at -33.8877074333333,151.155072408333 
         // Inner West LGA (Greater Sydney) is #ff8800 hard locked down
-        // Inner West LGA (Greater Sydney) cases:  0 0 0 3 3 5 1 6 10 4 4 5 7 2, total 50 ( 12 : 38) 
-        // Inner West LGA (Greater Sydney): cases all fall between 2021-07-26 and 2021-08-05
-        add_boxes("Inner West LGA (Greater Sydney)", "I", "Inner West LGA (Greater Sydney)<p>50 cases between 2021-07-26 and 2021-08-05:<p>2021-07-26: 3<br>2021-07-27: 3<br>2021-07-28: 5<br>2021-07-29: 1<br>2021-07-30: 6<br>2021-07-31: 10<br>2021-08-01: 4<br>2021-08-02: 4<br>2021-08-03: 5<br>2021-08-04: 7<br>2021-08-05: 2<br><p>Week to week Reff=3.2", -33.8877074333333,151.155072408333, [ 0, 0, 0, 3, 3, 5, 1, 6, 10, 4, 4, 5, 7, 2 ], "#ff8800");
+        // Inner West LGA (Greater Sydney) cases:  0 3 3 5 1 6 10 4 4 5 7 5 6 0, total 59 ( 28 : 31) 
+        // Inner West LGA (Greater Sydney): cases all fall between 2021-07-26 and 2021-08-06
+        add_boxes("Inner West LGA (Greater Sydney)", "I", "Inner West LGA (Greater Sydney)<p>59 cases between 2021-07-26 and 2021-08-06:<p>2021-07-26: 3<br>2021-07-27: 3<br>2021-07-28: 5<br>2021-07-29: 1<br>2021-07-30: 6<br>2021-07-31: 10<br>2021-08-01: 4<br>2021-08-02: 4<br>2021-08-03: 5<br>2021-08-04: 7<br>2021-08-05: 5<br>2021-08-06: 6<br><p>Week to week Reff=1.1", -33.8877074333333,151.155072408333, [ 0, 3, 3, 5, 1, 6, 10, 4, 4, 5, 7, 5, 6, 0 ], "#ff8800");
 
         // Inverell LGA is at -29.7543888,151.3206565 
         // Inverell LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
@@ -314,21 +321,21 @@
         // Kiama LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Ku-ring-gai LGA is at -33.750195425,151.1484078875 
         // Ku-ring-gai LGA (Greater Sydney) is #ff8800 hard locked down
-        // Ku-ring-gai LGA (Greater Sydney) cases:  1 0 0 0 0 0 0 0 0 0 0 0 0 0, total 1 ( 1 : 0) 
-        // Ku-ring-gai LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-07-23
-        add_boxes("Ku-ring-gai LGA (Greater Sydney)", "K", "Ku-ring-gai LGA (Greater Sydney)<p>1 case on 2021-07-23<p>2021-07-23: 1<br><p>Week to week Reff=0", -33.750195425,151.1484078875, [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff8800");
+        // Ku-ring-gai LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 1 0, total 1 ( 0 : 1) 
+        // Ku-ring-gai LGA (Greater Sydney): cases all fall between 2021-08-06 and 2021-08-06
+        add_boxes("Ku-ring-gai LGA (Greater Sydney)", "K", "Ku-ring-gai LGA (Greater Sydney)<p>1 case on 2021-08-06<p>2021-08-06: 1<br>", -33.750195425,151.1484078875, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 ], "#ff8800");
 
         // Lake Macquarie LGA is at -33.0017202916667,151.606046325 
         // Lake Macquarie LGA (NewCastle and Hunter) is #aaaa00 hard locked down
-        // Lake Macquarie LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 1 0 0 0 0 0 0, total 1 ( 0 : 1) 
-        // Lake Macquarie LGA (NewCastle and Hunter): cases all fall between 2021-07-30 and 2021-07-30
-        add_boxes("Lake Macquarie LGA (NewCastle and Hunter)", "L", "Lake Macquarie LGA (NewCastle and Hunter)<p>1 case on 2021-07-30<p>2021-07-30: 1<br>", -33.0017202916667,151.606046325, [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 ], "#aaaa00");
+        // Lake Macquarie LGA (NewCastle and Hunter) cases:  0 0 0 0 0 1 0 0 0 0 0 1 0 2, total 4 ( 1 : 3) 
+        // Lake Macquarie LGA (NewCastle and Hunter): cases all fall between 2021-07-30 and 2021-08-07
+        add_boxes("Lake Macquarie LGA (NewCastle and Hunter)", "L", "Lake Macquarie LGA (NewCastle and Hunter)<p>4 cases between 2021-07-30 and 2021-08-07:<p>2021-07-30: 1<br>2021-08-05: 1<br>2021-08-07: 2<br><p>Week to week Reff=3", -33.0017202916667,151.606046325, [ 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 2 ], "#aaaa00");
 
         // Lane Cove LGA is at -33.82911,151.17674 
         // Lane Cove LGA (Greater Sydney) is #ff8800 hard locked down
-        // Lane Cove LGA (Greater Sydney) cases:  0 1 0 0 0 0 1 0 0 1 0 0 0 0, total 3 ( 2 : 1) 
-        // Lane Cove LGA (Greater Sydney): cases all fall between 2021-07-24 and 2021-08-01
-        add_boxes("Lane Cove LGA (Greater Sydney)", "L", "Lane Cove LGA (Greater Sydney)<p>3 cases between 2021-07-24 and 2021-08-01:<p>2021-07-24: 1<br>2021-07-29: 1<br>2021-08-01: 1<br><p>Week to week Reff=0.5", -33.82911,151.17674, [ 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0 ], "#ff8800");
+        // Lane Cove LGA (Greater Sydney) cases:  0 0 0 0 1 0 0 1 0 0 0 0 0 0, total 2 ( 1 : 1) 
+        // Lane Cove LGA (Greater Sydney): cases all fall between 2021-07-29 and 2021-08-01
+        add_boxes("Lane Cove LGA (Greater Sydney)", "L", "Lane Cove LGA (Greater Sydney)<p>2 cases on 2021-07-29 and 2021-08-01:<p>2021-07-29: 1<br>2021-08-01: 1<br><p>Week to week Reff=1", -33.82911,151.17674, [ 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0 ], "#ff8800");
 
         // Lismore LGA is at -28.9,153.3 
         // Lismore LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
@@ -336,18 +343,18 @@
         // Lithgow LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Liverpool LGA is at -33.9469423625,150.87273705 
         // Liverpool LGA (Western Sydney) is #ff0000 hard locked down
-        // Liverpool LGA (Western Sydney) cases:  7 14 11 9 15 36 26 22 23 23 17 11 27 27, total 268 ( 118 : 150) 
-        // Liverpool LGA (Western Sydney): cases all fall between 2021-07-23 and 2021-08-05
-        add_boxes("Liverpool LGA (Western Sydney)", "L", "Liverpool LGA (Western Sydney)<p>268 cases between 2021-07-23 and 2021-08-05:<p>2021-07-23: 7<br>2021-07-24: 14<br>2021-07-25: 11<br>2021-07-26: 9<br>2021-07-27: 15<br>2021-07-28: 36<br>2021-07-29: 26<br>2021-07-30: 22<br>2021-07-31: 23<br>2021-08-01: 23<br>2021-08-02: 17<br>2021-08-03: 11<br>2021-08-04: 27<br>2021-08-05: 27<br><p>Week to week Reff=1.3", -33.9469423625,150.87273705, [ 7, 14, 11, 9, 15, 36, 26, 22, 23, 23, 17, 11, 27, 27 ], "#ff0000");
+        // Liverpool LGA (Western Sydney) cases:  11 9 15 36 25 22 23 23 17 11 26 35 22 12, total 287 ( 141 : 146) 
+        // Liverpool LGA (Western Sydney): cases all fall between 2021-07-25 and 2021-08-07
+        add_boxes("Liverpool LGA (Western Sydney)", "L", "Liverpool LGA (Western Sydney)<p>287 cases between 2021-07-25 and 2021-08-07:<p>2021-07-25: 11<br>2021-07-26: 9<br>2021-07-27: 15<br>2021-07-28: 36<br>2021-07-29: 25<br>2021-07-30: 22<br>2021-07-31: 23<br>2021-08-01: 23<br>2021-08-02: 17<br>2021-08-03: 11<br>2021-08-04: 26<br>2021-08-05: 35<br>2021-08-06: 22<br>2021-08-07: 12<br><p>Week to week Reff=1", -33.9469423625,150.87273705, [ 11, 9, 15, 36, 25, 22, 23, 23, 17, 11, 26, 35, 22, 12 ], "#ff0000");
 
         // Liverpool Plains LGA is at -31.6384,150.178 
         // Liverpool Plains LGA (Western Sydney) is #ff0000 hard locked down
         // Liverpool Plains LGA (Western Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Maitland LGA is at -32.726875,151.59116 
         // Maitland LGA (NewCastle and Hunter) is #aaaa00 hard locked down
-        // Maitland LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 1 3, total 4 ( 0 : 4) 
-        // Maitland LGA (NewCastle and Hunter): cases all fall between 2021-08-04 and 2021-08-05
-        add_boxes("Maitland LGA (NewCastle and Hunter)", "M", "Maitland LGA (NewCastle and Hunter)<p>4 cases between 2021-08-04 and 2021-08-05:<p>2021-08-04: 1<br>2021-08-05: 3<br>", -32.726875,151.59116, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3 ], "#aaaa00");
+        // Maitland LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 1 3 3 0, total 7 ( 0 : 7) 
+        // Maitland LGA (NewCastle and Hunter): cases all fall between 2021-08-04 and 2021-08-06
+        add_boxes("Maitland LGA (NewCastle and Hunter)", "M", "Maitland LGA (NewCastle and Hunter)<p>7 cases between 2021-08-04 and 2021-08-06:<p>2021-08-04: 1<br>2021-08-05: 3<br>2021-08-06: 3<br>", -32.726875,151.59116, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 3, 0 ], "#aaaa00");
 
         // Mid-Coast LGA is at -32.13453365,152.315377833333 
         // Mid-Coast LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
@@ -369,20 +376,20 @@
         // Narrandera LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Narromine LGA is at -32.4567,148.131 
         // Narromine LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
-        // Newcastle LGA is at -32.91842595,151.726587716667 
+        // Newcastle LGA is at -32.9138345857143,151.722501907143 
         // Newcastle LGA (NewCastle and Hunter) is #aaaa00 hard locked down
-        // Newcastle LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 1, total 1 ( 0 : 1) 
-        // Newcastle LGA (NewCastle and Hunter): cases all fall between 2021-08-05 and 2021-08-05
-        add_boxes("Newcastle LGA (NewCastle and Hunter)", "N", "Newcastle LGA (NewCastle and Hunter)<p>1 case on 2021-08-05<p>2021-08-05: 1<br>", -32.91842595,151.726587716667, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ], "#aaaa00");
+        // Newcastle LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 1 2 2, total 5 ( 0 : 5) 
+        // Newcastle LGA (NewCastle and Hunter): cases all fall between 2021-08-05 and 2021-08-07
+        add_boxes("Newcastle LGA (NewCastle and Hunter)", "N", "Newcastle LGA (NewCastle and Hunter)<p>5 cases between 2021-08-05 and 2021-08-07:<p>2021-08-05: 1<br>2021-08-06: 2<br>2021-08-07: 2<br>", -32.9138345857143,151.722501907143, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 2 ], "#aaaa00");
 
         // North Sydney LGA is at -33.83650426,151.21452892 
         // North Sydney LGA (Greater Sydney) is #ff8800 hard locked down
         // North Sydney LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Northern Beaches LGA is at -33.7249783473684,151.272234184211 
         // Northern Beaches LGA (Greater Sydney) is #ff8800 hard locked down
-        // Northern Beaches LGA (Greater Sydney) cases:  0 2 9 2 1 1 2 1 1 2 0 1 1 1, total 24 ( 17 : 7) 
-        // Northern Beaches LGA (Greater Sydney): cases all fall between 2021-07-24 and 2021-08-05
-        add_boxes("Northern Beaches LGA (Greater Sydney)", "N", "Northern Beaches LGA (Greater Sydney)<p>24 cases between 2021-07-24 and 2021-08-05:<p>2021-07-24: 2<br>2021-07-25: 9<br>2021-07-26: 2<br>2021-07-27: 1<br>2021-07-28: 1<br>2021-07-29: 2<br>2021-07-30: 1<br>2021-07-31: 1<br>2021-08-01: 2<br>2021-08-03: 1<br>2021-08-04: 1<br>2021-08-05: 1<br><p>Week to week Reff=0.41", -33.7249783473684,151.272234184211, [ 0, 2, 9, 2, 1, 1, 2, 1, 1, 2, 0, 1, 1, 1 ], "#ff8800");
+        // Northern Beaches LGA (Greater Sydney) cases:  9 2 1 1 2 1 1 1 0 1 1 6 0 2, total 28 ( 17 : 11) 
+        // Northern Beaches LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-08-07
+        add_boxes("Northern Beaches LGA (Greater Sydney)", "N", "Northern Beaches LGA (Greater Sydney)<p>28 cases between 2021-07-25 and 2021-08-07:<p>2021-07-25: 9<br>2021-07-26: 2<br>2021-07-27: 1<br>2021-07-28: 1<br>2021-07-29: 2<br>2021-07-30: 1<br>2021-07-31: 1<br>2021-08-01: 1<br>2021-08-03: 1<br>2021-08-04: 1<br>2021-08-05: 6<br>2021-08-07: 2<br><p>Week to week Reff=0.65", -33.7249783473684,151.272234184211, [ 9, 2, 1, 1, 2, 1, 1, 1, 0, 1, 1, 6, 0, 2 ], "#ff8800");
 
         // Orange LGA is at -33.2055023,149.0209719 
         // Orange LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
@@ -390,36 +397,39 @@
         // Parkes LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Parramatta LGA is at -33.7995485181818,151.032813490909 
         // Parramatta LGA (Western Sydney) is #ff0000 hard locked down
-        // Parramatta LGA (Western Sydney) cases:  2 3 10 9 2 9 5 11 3 8 3 15 14 9, total 103 ( 40 : 63) 
-        // Parramatta LGA (Western Sydney): cases all fall between 2021-07-23 and 2021-08-05
-        add_boxes("Parramatta LGA (Western Sydney)", "P", "Parramatta LGA (Western Sydney)<p>103 cases between 2021-07-23 and 2021-08-05:<p>2021-07-23: 2<br>2021-07-24: 3<br>2021-07-25: 10<br>2021-07-26: 9<br>2021-07-27: 2<br>2021-07-28: 9<br>2021-07-29: 5<br>2021-07-30: 11<br>2021-07-31: 3<br>2021-08-01: 8<br>2021-08-02: 3<br>2021-08-03: 15<br>2021-08-04: 14<br>2021-08-05: 9<br><p>Week to week Reff=1.6", -33.7995485181818,151.032813490909, [ 2, 3, 10, 9, 2, 9, 5, 11, 3, 8, 3, 15, 14, 9 ], "#ff0000");
+        // Parramatta LGA (Western Sydney) cases:  10 9 2 9 5 11 3 8 3 15 14 17 20 5, total 131 ( 49 : 82) 
+        // Parramatta LGA (Western Sydney): cases all fall between 2021-07-25 and 2021-08-07
+        add_boxes("Parramatta LGA (Western Sydney)", "P", "Parramatta LGA (Western Sydney)<p>131 cases between 2021-07-25 and 2021-08-07:<p>2021-07-25: 10<br>2021-07-26: 9<br>2021-07-27: 2<br>2021-07-28: 9<br>2021-07-29: 5<br>2021-07-30: 11<br>2021-07-31: 3<br>2021-08-01: 8<br>2021-08-02: 3<br>2021-08-03: 15<br>2021-08-04: 14<br>2021-08-05: 17<br>2021-08-06: 20<br>2021-08-07: 5<br><p>Week to week Reff=1.7", -33.7995485181818,151.032813490909, [ 10, 9, 2, 9, 5, 11, 3, 8, 3, 15, 14, 17, 20, 5 ], "#ff0000");
 
         // Penrith LGA is at -33.792528925,150.7350421375 
-        // Penrith LGA (Greater Sydney) is #ff8800 hard locked down
-        // Penrith LGA (Greater Sydney) cases:  0 1 0 1 3 6 3 1 1 1 12 10 14 16, total 69 ( 14 : 55) 
-        // Penrith LGA (Greater Sydney): cases all fall between 2021-07-24 and 2021-08-05
-        add_boxes("Penrith LGA (Greater Sydney)", "P", "Penrith LGA (Greater Sydney)<p>69 cases between 2021-07-24 and 2021-08-05:<p>2021-07-24: 1<br>2021-07-26: 1<br>2021-07-27: 3<br>2021-07-28: 6<br>2021-07-29: 3<br>2021-07-30: 1<br>2021-07-31: 1<br>2021-08-01: 1<br>2021-08-02: 12<br>2021-08-03: 10<br>2021-08-04: 14<br>2021-08-05: 16<br><p>Week to week Reff=3.9", -33.792528925,150.7350421375, [ 0, 1, 0, 1, 3, 6, 3, 1, 1, 1, 12, 10, 14, 16 ], "#ff8800");
+        // Penrith LGA (Western Sydney) is #ff0000 hard locked down
+        // Penrith LGA (Western Sydney) cases:  0 1 3 6 3 1 1 1 12 10 15 22 27 19, total 121 ( 15 : 106) 
+        // Penrith LGA (Western Sydney): cases all fall between 2021-07-26 and 2021-08-07
+        add_boxes("Penrith LGA (Western Sydney)", "P", "Penrith LGA (Western Sydney)<p>121 cases between 2021-07-26 and 2021-08-07:<p>2021-07-26: 1<br>2021-07-27: 3<br>2021-07-28: 6<br>2021-07-29: 3<br>2021-07-30: 1<br>2021-07-31: 1<br>2021-08-01: 1<br>2021-08-02: 12<br>2021-08-03: 10<br>2021-08-04: 15<br>2021-08-05: 22<br>2021-08-06: 27<br>2021-08-07: 19<br><p>Week to week Reff=7.1", -33.792528925,150.7350421375, [ 0, 1, 3, 6, 3, 1, 1, 1, 12, 10, 15, 22, 27, 19 ], "#ff0000");
 
         // Port Macquarie-Hastings LGA is at -31.54351656,152.76155816 
         // Port Macquarie-Hastings LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Port Stephens LGA is at -33.1518188833333,151.525056 
         // Port Stephens LGA (NewCastle and Hunter) is #aaaa00 hard locked down
-        // Port Stephens LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
+        // Port Stephens LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 2, total 2 ( 0 : 2) 
+        // Port Stephens LGA (NewCastle and Hunter): cases all fall between 2021-08-07 and 2021-08-07
+        add_boxes("Port Stephens LGA (NewCastle and Hunter)", "P", "Port Stephens LGA (NewCastle and Hunter)<p>2 cases on 2021-08-07<p>2021-08-07: 2<br>", -33.1518188833333,151.525056, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2 ], "#aaaa00");
+
         // Queanbeyan-Palerang Regional LGA is at -35.4139523666667,149.333724433333 
         // Queanbeyan-Palerang Regional LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Randwick LGA is at -33.93403655,151.230495783333 
         // Randwick LGA (Greater Sydney) is #ff8800 hard locked down
-        // Randwick LGA (Greater Sydney) cases:  0 0 1 2 1 0 2 1 0 0 0 0 0 0, total 7 ( 6 : 1) 
-        // Randwick LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-07-30
-        add_boxes("Randwick LGA (Greater Sydney)", "R", "Randwick LGA (Greater Sydney)<p>7 cases between 2021-07-25 and 2021-07-30:<p>2021-07-25: 1<br>2021-07-26: 2<br>2021-07-27: 1<br>2021-07-29: 2<br>2021-07-30: 1<br><p>Week to week Reff=0.17", -33.93403655,151.230495783333, [ 0, 0, 1, 2, 1, 0, 2, 1, 0, 0, 0, 0, 0, 0 ], "#ff8800");
+        // Randwick LGA (Greater Sydney) cases:  1 2 1 0 2 1 0 0 0 0 0 0 1 0, total 8 ( 7 : 1) 
+        // Randwick LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-08-06
+        add_boxes("Randwick LGA (Greater Sydney)", "R", "Randwick LGA (Greater Sydney)<p>8 cases between 2021-07-25 and 2021-08-06:<p>2021-07-25: 1<br>2021-07-26: 2<br>2021-07-27: 1<br>2021-07-29: 2<br>2021-07-30: 1<br>2021-08-06: 1<br><p>Week to week Reff=0.14", -33.93403655,151.230495783333, [ 1, 2, 1, 0, 2, 1, 0, 0, 0, 0, 0, 0, 1, 0 ], "#ff8800");
 
         // Richmond Valley LGA is at -28.9535888,153.0603846 
         // Richmond Valley LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Ryde LGA is at -33.79894555,151.10204455 
         // Ryde LGA (Greater Sydney) is #ff8800 hard locked down
-        // Ryde LGA (Greater Sydney) cases:  3 0 1 1 0 0 3 3 2 1 0 1 1 3, total 19 ( 8 : 11) 
-        // Ryde LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-08-05
-        add_boxes("Ryde LGA (Greater Sydney)", "R", "Ryde LGA (Greater Sydney)<p>19 cases between 2021-07-23 and 2021-08-05:<p>2021-07-23: 3<br>2021-07-25: 1<br>2021-07-26: 1<br>2021-07-29: 3<br>2021-07-30: 3<br>2021-07-31: 2<br>2021-08-01: 1<br>2021-08-03: 1<br>2021-08-04: 1<br>2021-08-05: 3<br><p>Week to week Reff=1.4", -33.79894555,151.10204455, [ 3, 0, 1, 1, 0, 0, 3, 3, 2, 1, 0, 1, 1, 3 ], "#ff8800");
+        // Ryde LGA (Greater Sydney) cases:  1 1 0 0 3 3 2 1 0 1 1 3 1 2, total 19 ( 10 : 9) 
+        // Ryde LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-08-07
+        add_boxes("Ryde LGA (Greater Sydney)", "R", "Ryde LGA (Greater Sydney)<p>19 cases between 2021-07-25 and 2021-08-07:<p>2021-07-25: 1<br>2021-07-26: 1<br>2021-07-29: 3<br>2021-07-30: 3<br>2021-07-31: 2<br>2021-08-01: 1<br>2021-08-03: 1<br>2021-08-04: 1<br>2021-08-05: 3<br>2021-08-06: 1<br>2021-08-07: 2<br><p>Week to week Reff=0.9", -33.79894555,151.10204455, [ 1, 1, 0, 0, 3, 3, 2, 1, 0, 1, 1, 3, 1, 2 ], "#ff8800");
 
         // Shellharbour LGA is at -34.5663650333333,150.817295666667 
         // Shellharbour LGA (Greater Sydney) is #ff8800 hard locked down
@@ -432,27 +442,27 @@
         // Snowy Monaro Regional LGA is at -36.1993025,148.91628868 
         // Snowy Monaro Regional LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Snowy Valleys LGA is at -35.6716393,148.2605154 
-        // Snowy Valleys LGA cases:  0 0 0 0 0 0 0 0 0 0 1 0 0 0, total 1 ( 0 : 1) 
+        // Snowy Valleys LGA cases:  0 0 0 0 0 0 0 0 1 0 0 0 0 0, total 1 ( 0 : 1) 
         // Snowy Valleys LGA: cases all fall between 2021-08-02 and 2021-08-02
-        add_boxes("Snowy Valleys LGA", "S", "Snowy Valleys LGA<p>1 case on 2021-08-02<p>2021-08-02: 1<br>", -35.6716393,148.2605154, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 ], "#990099");
+        add_boxes("Snowy Valleys LGA", "S", "Snowy Valleys LGA<p>1 case on 2021-08-02<p>2021-08-02: 1<br>", -35.6716393,148.2605154, [ 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 ], "#990099");
 
         // Strathfield LGA is at -33.8779364333333,151.079473 
         // Strathfield LGA (Greater Sydney) is #ff8800 hard locked down
-        // Strathfield LGA (Greater Sydney) cases:  0 2 2 2 3 3 6 4 5 7 5 3 2 0, total 44 ( 18 : 26) 
-        // Strathfield LGA (Greater Sydney): cases all fall between 2021-07-24 and 2021-08-04
-        add_boxes("Strathfield LGA (Greater Sydney)", "S", "Strathfield LGA (Greater Sydney)<p>44 cases between 2021-07-24 and 2021-08-04:<p>2021-07-24: 2<br>2021-07-25: 2<br>2021-07-26: 2<br>2021-07-27: 3<br>2021-07-28: 3<br>2021-07-29: 6<br>2021-07-30: 4<br>2021-07-31: 5<br>2021-08-01: 7<br>2021-08-02: 5<br>2021-08-03: 3<br>2021-08-04: 2<br><p>Week to week Reff=1.4", -33.8779364333333,151.079473, [ 0, 2, 2, 2, 3, 3, 6, 4, 5, 7, 5, 3, 2, 0 ], "#ff8800");
+        // Strathfield LGA (Greater Sydney) cases:  2 2 3 3 6 4 5 7 5 3 2 0 3 1, total 46 ( 25 : 21) 
+        // Strathfield LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-08-07
+        add_boxes("Strathfield LGA (Greater Sydney)", "S", "Strathfield LGA (Greater Sydney)<p>46 cases between 2021-07-25 and 2021-08-07:<p>2021-07-25: 2<br>2021-07-26: 2<br>2021-07-27: 3<br>2021-07-28: 3<br>2021-07-29: 6<br>2021-07-30: 4<br>2021-07-31: 5<br>2021-08-01: 7<br>2021-08-02: 5<br>2021-08-03: 3<br>2021-08-04: 2<br>2021-08-06: 3<br>2021-08-07: 1<br><p>Week to week Reff=0.84", -33.8779364333333,151.079473, [ 2, 2, 3, 3, 6, 4, 5, 7, 5, 3, 2, 0, 3, 1 ], "#ff8800");
 
         // Sutherland Shire LGA is at -34.0322142,151.090315027273 
         // Sutherland Shire LGA (Greater Sydney) is #ff8800 hard locked down
-        // Sutherland Shire LGA (Greater Sydney) cases:  3 4 2 0 1 0 0 0 0 1 2 0 1 0, total 14 ( 10 : 4) 
-        // Sutherland Shire LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-08-04
-        add_boxes("Sutherland Shire LGA (Greater Sydney)", "S", "Sutherland Shire LGA (Greater Sydney)<p>14 cases between 2021-07-23 and 2021-08-04:<p>2021-07-23: 3<br>2021-07-24: 4<br>2021-07-25: 2<br>2021-07-27: 1<br>2021-08-01: 1<br>2021-08-02: 2<br>2021-08-04: 1<br><p>Week to week Reff=0.4", -34.0322142,151.090315027273, [ 3, 4, 2, 0, 1, 0, 0, 0, 0, 1, 2, 0, 1, 0 ], "#ff8800");
+        // Sutherland Shire LGA (Greater Sydney) cases:  2 0 1 0 0 0 0 1 2 0 1 0 2 1, total 10 ( 3 : 7) 
+        // Sutherland Shire LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-08-07
+        add_boxes("Sutherland Shire LGA (Greater Sydney)", "S", "Sutherland Shire LGA (Greater Sydney)<p>10 cases between 2021-07-25 and 2021-08-07:<p>2021-07-25: 2<br>2021-07-27: 1<br>2021-08-01: 1<br>2021-08-02: 2<br>2021-08-04: 1<br>2021-08-06: 2<br>2021-08-07: 1<br><p>Week to week Reff=2.3", -34.0322142,151.090315027273, [ 2, 0, 1, 0, 0, 0, 0, 1, 2, 0, 1, 0, 2, 1 ], "#ff8800");
 
         // Sydney LGA is at -33.8887632785714,151.1979153 
         // Sydney LGA (Greater Sydney) is #ff8800 hard locked down
-        // Sydney LGA (Greater Sydney) cases:  1 1 1 2 4 1 0 2 0 1 2 1 3 6, total 25 ( 10 : 15) 
-        // Sydney LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-08-05
-        add_boxes("Sydney LGA (Greater Sydney)", "S", "Sydney LGA (Greater Sydney)<p>25 cases between 2021-07-23 and 2021-08-05:<p>2021-07-23: 1<br>2021-07-24: 1<br>2021-07-25: 1<br>2021-07-26: 2<br>2021-07-27: 4<br>2021-07-28: 1<br>2021-07-30: 2<br>2021-08-01: 1<br>2021-08-02: 2<br>2021-08-03: 1<br>2021-08-04: 3<br>2021-08-05: 6<br><p>Week to week Reff=1.5", -33.8887632785714,151.1979153, [ 1, 1, 1, 2, 4, 1, 0, 2, 0, 1, 2, 1, 3, 6 ], "#ff8800");
+        // Sydney LGA (Greater Sydney) cases:  1 2 4 1 0 2 0 1 2 1 3 5 5 2, total 29 ( 10 : 19) 
+        // Sydney LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-08-07
+        add_boxes("Sydney LGA (Greater Sydney)", "S", "Sydney LGA (Greater Sydney)<p>29 cases between 2021-07-25 and 2021-08-07:<p>2021-07-25: 1<br>2021-07-26: 2<br>2021-07-27: 4<br>2021-07-28: 1<br>2021-07-30: 2<br>2021-08-01: 1<br>2021-08-02: 2<br>2021-08-03: 1<br>2021-08-04: 3<br>2021-08-05: 5<br>2021-08-06: 5<br>2021-08-07: 2<br><p>Week to week Reff=1.9", -33.8887632785714,151.1979153, [ 1, 2, 4, 1, 0, 2, 0, 1, 2, 1, 3, 5, 5, 2 ], "#ff8800");
 
         // Tamworth Regional LGA is at -31.0796586,151.02691445 
         // Tamworth Regional LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
@@ -462,9 +472,9 @@
         // Tenterfield LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // The Hills Shire LGA is at -33.7155671833333,150.98929965 
         // The Hills Shire LGA (Greater Sydney) is #ff8800 hard locked down
-        // The Hills Shire LGA (Greater Sydney) cases:  0 0 5 1 0 2 2 5 1 2 1 4 1 1, total 25 ( 10 : 15) 
-        // The Hills Shire LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-08-05
-        add_boxes("The Hills Shire LGA (Greater Sydney)", "T", "The Hills Shire LGA (Greater Sydney)<p>25 cases between 2021-07-25 and 2021-08-05:<p>2021-07-25: 5<br>2021-07-26: 1<br>2021-07-28: 2<br>2021-07-29: 2<br>2021-07-30: 5<br>2021-07-31: 1<br>2021-08-01: 2<br>2021-08-02: 1<br>2021-08-03: 4<br>2021-08-04: 1<br>2021-08-05: 1<br><p>Week to week Reff=1.5", -33.7155671833333,150.98929965, [ 0, 0, 5, 1, 0, 2, 2, 5, 1, 2, 1, 4, 1, 1 ], "#ff8800");
+        // The Hills Shire LGA (Greater Sydney) cases:  5 1 0 2 2 5 1 2 1 4 1 1 2 3, total 30 ( 16 : 14) 
+        // The Hills Shire LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-08-07
+        add_boxes("The Hills Shire LGA (Greater Sydney)", "T", "The Hills Shire LGA (Greater Sydney)<p>30 cases between 2021-07-25 and 2021-08-07:<p>2021-07-25: 5<br>2021-07-26: 1<br>2021-07-28: 2<br>2021-07-29: 2<br>2021-07-30: 5<br>2021-07-31: 1<br>2021-08-01: 2<br>2021-08-02: 1<br>2021-08-03: 4<br>2021-08-04: 1<br>2021-08-05: 1<br>2021-08-06: 2<br>2021-08-07: 3<br><p>Week to week Reff=0.88", -33.7155671833333,150.98929965, [ 5, 1, 0, 2, 2, 5, 1, 2, 1, 4, 1, 1, 2, 3 ], "#ff8800");
 
         // Tweed LGA is at -28.26468364,153.43723048 
         // Tweed LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
@@ -482,39 +492,39 @@
         // Warrumbungle Shire LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Waverley LGA is at -33.884627825,151.263269375 
         // Waverley LGA (Greater Sydney) is #ff8800 hard locked down
-        // Waverley LGA (Greater Sydney) cases:  1 3 0 0 1 0 0 0 0 1 2 1 0 1, total 10 ( 5 : 5) 
-        // Waverley LGA (Greater Sydney): cases all fall between 2021-07-23 and 2021-08-05
-        add_boxes("Waverley LGA (Greater Sydney)", "W", "Waverley LGA (Greater Sydney)<p>10 cases between 2021-07-23 and 2021-08-05:<p>2021-07-23: 1<br>2021-07-24: 3<br>2021-07-27: 1<br>2021-08-01: 1<br>2021-08-02: 2<br>2021-08-03: 1<br>2021-08-05: 1<br><p>Week to week Reff=1", -33.884627825,151.263269375, [ 1, 3, 0, 0, 1, 0, 0, 0, 0, 1, 2, 1, 0, 1 ], "#ff8800");
+        // Waverley LGA (Greater Sydney) cases:  0 0 1 0 0 0 0 1 2 1 0 1 1 1, total 8 ( 1 : 7) 
+        // Waverley LGA (Greater Sydney): cases all fall between 2021-07-27 and 2021-08-07
+        add_boxes("Waverley LGA (Greater Sydney)", "W", "Waverley LGA (Greater Sydney)<p>8 cases between 2021-07-27 and 2021-08-07:<p>2021-07-27: 1<br>2021-08-01: 1<br>2021-08-02: 2<br>2021-08-03: 1<br>2021-08-05: 1<br>2021-08-06: 1<br>2021-08-07: 1<br><p>Week to week Reff=7", -33.884627825,151.263269375, [ 0, 0, 1, 0, 0, 0, 0, 1, 2, 1, 0, 1, 1, 1 ], "#ff8800");
 
         // Weddin LGA is at -33.6532115,148.3285577 
         // Weddin LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 
         // Willoughby LGA is at -33.80317625,151.19229335 
         // Willoughby LGA (Greater Sydney) is #ff8800 hard locked down
-        // Willoughby LGA (Greater Sydney) cases:  0 0 0 1 0 2 0 0 0 1 2 3 0 0, total 9 ( 3 : 6) 
-        // Willoughby LGA (Greater Sydney): cases all fall between 2021-07-26 and 2021-08-03
-        add_boxes("Willoughby LGA (Greater Sydney)", "W", "Willoughby LGA (Greater Sydney)<p>9 cases between 2021-07-26 and 2021-08-03:<p>2021-07-26: 1<br>2021-07-28: 2<br>2021-08-01: 1<br>2021-08-02: 2<br>2021-08-03: 3<br><p>Week to week Reff=2", -33.80317625,151.19229335, [ 0, 0, 0, 1, 0, 2, 0, 0, 0, 1, 2, 3, 0, 0 ], "#ff8800");
+        // Willoughby LGA (Greater Sydney) cases:  0 1 0 2 0 0 0 1 2 3 0 0 1 0, total 10 ( 3 : 7) 
+        // Willoughby LGA (Greater Sydney): cases all fall between 2021-07-26 and 2021-08-06
+        add_boxes("Willoughby LGA (Greater Sydney)", "W", "Willoughby LGA (Greater Sydney)<p>10 cases between 2021-07-26 and 2021-08-06:<p>2021-07-26: 1<br>2021-07-28: 2<br>2021-08-01: 1<br>2021-08-02: 2<br>2021-08-03: 3<br>2021-08-06: 1<br><p>Week to week Reff=2.3", -33.80317625,151.19229335, [ 0, 1, 0, 2, 0, 0, 0, 1, 2, 3, 0, 0, 1, 0 ], "#ff8800");
 
         // Wingecarribee LGA is at -34.539150975,150.449383 
-        // Wingecarribee LGA cases:  1 0 0 0 0 0 0 0 1 0 0 0 0 1, total 3 ( 1 : 2) 
-        // Wingecarribee LGA: cases all fall between 2021-07-23 and 2021-08-05
-        add_boxes("Wingecarribee LGA", "W", "Wingecarribee LGA<p>3 cases between 2021-07-23 and 2021-08-05:<p>2021-07-23: 1<br>2021-07-31: 1<br>2021-08-05: 1<br><p>Week to week Reff=2", -34.539150975,150.449383, [ 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ], "#990099");
+        // Wingecarribee LGA cases:  0 0 0 0 0 0 1 0 0 0 0 1 0 0, total 2 ( 1 : 1) 
+        // Wingecarribee LGA: cases all fall between 2021-07-31 and 2021-08-05
+        add_boxes("Wingecarribee LGA", "W", "Wingecarribee LGA<p>2 cases on 2021-07-31 and 2021-08-05:<p>2021-07-31: 1<br>2021-08-05: 1<br><p>Week to week Reff=1", -34.539150975,150.449383, [ 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0 ], "#990099");
 
         // Wollondilly LGA is at -34.15444248,150.656765 
-        // Wollondilly LGA cases:  0 0 1 0 0 0 2 0 1 0 0 0 0 0, total 4 ( 3 : 1) 
+        // Wollondilly LGA cases:  1 0 0 0 2 0 1 0 0 0 0 0 0 0, total 4 ( 4 : 0) 
         // Wollondilly LGA: cases all fall between 2021-07-25 and 2021-07-31
-        add_boxes("Wollondilly LGA", "W", "Wollondilly LGA<p>4 cases between 2021-07-25 and 2021-07-31:<p>2021-07-25: 1<br>2021-07-29: 2<br>2021-07-31: 1<br><p>Week to week Reff=0.33", -34.15444248,150.656765, [ 0, 0, 1, 0, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0 ], "#990099");
+        add_boxes("Wollondilly LGA", "W", "Wollondilly LGA<p>4 cases between 2021-07-25 and 2021-07-31:<p>2021-07-25: 1<br>2021-07-29: 2<br>2021-07-31: 1<br><p>Week to week Reff=0", -34.15444248,150.656765, [ 1, 0, 0, 0, 2, 0, 1, 0, 0, 0, 0, 0, 0, 0 ], "#990099");
 
         // Wollongong LGA is at -34.3947210076923,150.885311746154 
         // Wollongong LGA (Greater Sydney) is #ff8800 hard locked down
-        // Wollongong LGA (Greater Sydney) cases:  0 0 2 0 2 3 0 0 0 0 0 3 0 0, total 10 ( 7 : 3) 
+        // Wollongong LGA (Greater Sydney) cases:  2 0 2 3 0 0 0 0 0 3 0 0 0 0, total 10 ( 7 : 3) 
         // Wollongong LGA (Greater Sydney): cases all fall between 2021-07-25 and 2021-08-03
-        add_boxes("Wollongong LGA (Greater Sydney)", "W", "Wollongong LGA (Greater Sydney)<p>10 cases between 2021-07-25 and 2021-08-03:<p>2021-07-25: 2<br>2021-07-27: 2<br>2021-07-28: 3<br>2021-08-03: 3<br><p>Week to week Reff=0.43", -34.3947210076923,150.885311746154, [ 0, 0, 2, 0, 2, 3, 0, 0, 0, 0, 0, 3, 0, 0 ], "#ff8800");
+        add_boxes("Wollongong LGA (Greater Sydney)", "W", "Wollongong LGA (Greater Sydney)<p>10 cases between 2021-07-25 and 2021-08-03:<p>2021-07-25: 2<br>2021-07-27: 2<br>2021-07-28: 3<br>2021-08-03: 3<br><p>Week to week Reff=0.43", -34.3947210076923,150.885311746154, [ 2, 0, 2, 3, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0 ], "#ff8800");
 
         // Woollahra LGA is at -33.8795980166667,151.2469586 
         // Woollahra LGA (Greater Sydney) is #ff8800 hard locked down
-        // Woollahra LGA (Greater Sydney) cases:  0 0 0 0 1 1 0 0 0 0 0 0 0 0, total 2 ( 2 : 0) 
+        // Woollahra LGA (Greater Sydney) cases:  0 0 1 1 0 0 0 0 0 0 0 0 0 0, total 2 ( 2 : 0) 
         // Woollahra LGA (Greater Sydney): cases all fall between 2021-07-27 and 2021-07-28
-        add_boxes("Woollahra LGA (Greater Sydney)", "W", "Woollahra LGA (Greater Sydney)<p>2 cases on 2021-07-27 and 2021-07-28:<p>2021-07-27: 1<br>2021-07-28: 1<br><p>Week to week Reff=0", -33.8795980166667,151.2469586, [ 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff8800");
+        add_boxes("Woollahra LGA (Greater Sydney)", "W", "Woollahra LGA (Greater Sydney)<p>2 cases on 2021-07-27 and 2021-07-28:<p>2021-07-27: 1<br>2021-07-28: 1<br><p>Week to week Reff=0", -33.8795980166667,151.2469586, [ 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], "#ff8800");
 
         // Yass Valley LGA is at -34.9816248,149.1946165 
         // Yass Valley LGA cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0) 

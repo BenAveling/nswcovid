@@ -53,6 +53,10 @@ Georges River
 Liverpool
 Parramatta
 
+# As of 2021-08-08, add Penrith (strictly, only part of it, but will ignore that)
+
+Penrith
+
 # As of 5/8, also NewCastle and Hunter restrictions
 https://www.nsw.gov.au/covid-19/rules/affected-regions
 colour: yellow
