@@ -169,6 +169,8 @@ sub read_postcodes($){
     # my $lng=$fields[4];
     $postcodes{$postcode}{lat}=$lat;
     $postcodes{$postcode}{lng}=$lng;
+    $suburb=~s/([A-Z])([A-Z]+)/$1.lc($2)/ge;
+    $postcodes{$postcode}{suburbs}{$suburb}=1;
   }
   return 1;
 }
@@ -243,7 +245,7 @@ print qq[<!DOCTYPE html>
     <script type="text/javascript">
       var map;
       var displaying;
-      var boxes=[]; <!-- FIXME this is just BFI - try to be smarter -->
+      var decorations=[]; <!-- FIXME this is just BFI - try to be smarter -->
       function init_map() {
         map = new google.maps.Map(
           document.getElementById("map"),
@@ -282,7 +284,7 @@ print qq[<!DOCTYPE html>
             }
           }
         );
-        boxes.push(box);
+        decorations.push(box);
       }
 
       function add_circle(lat,lng,size,c) {
@@ -330,6 +332,7 @@ print qq[<!DOCTYPE html>
             infowindow.close();
           }
         );
+        decorations.push(marker);
       }
       function add_boxes(name,label,text,lat,lng,cases,colour) {
         add_text(lat,lng,name,label,text);
@@ -351,15 +354,15 @@ print qq[<!DOCTYPE html>
         }
         // No one should let me choose colours - help needed here please!
       }
-      function undisplay_all_boxes(){
-        // remove box from map
-        boxes.forEach(box => box.setMap(null));
-        // delete box from map
-        // TODO: better to hide/unhide
-        boxes=[];
+      function undisplay_all_decorations(){
+        // TODO: better to hide/unhide than delete/recreate
+        // remove boxes and markers from map
+        decorations.forEach(decoration => decoration.setMap(null));
+        // delete all decorations
+        decorations=[];
       }
       function toggle_display(){
-        undisplay_all_boxes()
+        undisplay_all_decorations()
         if(displaying == 'lgas'){
           // TODO: better to hide/unhide
           print_postcodes();
@@ -460,10 +463,12 @@ print qq[
     my @lga_names=sort keys %{$postcode->{lgas}};
     my $num_lgas = @lga_names or next;
     warn "postcode $postcode_number has: @lga_names LGAs\n" if $num_lgas>1;
+    my @suburbs=sort keys %{$postcode->{suburbs}};
+    my $suburbs=join ", ", @suburbs;
     my $lga_names=join "/", @lga_names;
     print_barchart(
       my $cases=$postcode->{cases},
-      my $title="Postcode $postcode_number, $lga_names LGA",
+      my $title="Postcode $postcode_number - $suburbs.<br>$lga_names LGA",
       my $lat=$postcode->{lat},
       my $lng=$postcode->{lng},
     );
