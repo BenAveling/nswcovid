@@ -45,7 +45,7 @@
     <script type="text/javascript">
       var map;
       var displaying;
-      var boxes=[]; <!-- FIXME this is just BFI - try to be smarter -->
+      var decorations=[]; <!-- FIXME this is just BFI - try to be smarter -->
       function init_map() {
         map = new google.maps.Map(
           document.getElementById("map"),
@@ -84,7 +84,7 @@
             }
           }
         );
-        boxes.push(box);
+        decorations.push(box);
       }
 
       function add_circle(lat,lng,size,c) {
@@ -132,6 +132,7 @@
             infowindow.close();
           }
         );
+        decorations.push(marker);
       }
       function add_boxes(name,label,text,lat,lng,cases,colour) {
         add_text(lat,lng,name,label,text);
@@ -153,15 +154,15 @@
         }
         // No one should let me choose colours - help needed here please!
       }
-      function undisplay_all_boxes(){
-        // remove box from map
-        boxes.forEach(box => box.setMap(null));
-        // delete box from map
-        // TODO: better to hide/unhide
-        boxes=[];
+      function undisplay_all_decorations(){
+        // TODO: better to hide/unhide than delete/recreate
+        // remove boxes and markers from map
+        decorations.forEach(decoration => decoration.setMap(null));
+        // delete all decorations
+        decorations=[];
       }
       function toggle_display(){
-        undisplay_all_boxes()
+        undisplay_all_decorations()
         if(displaying == 'lgas'){
           // TODO: better to hide/unhide
           print_postcodes();
@@ -1030,10 +1031,10 @@
         // Postcode 2126 - Cherrybrook.<br>Hornsby LGA (Greater Sydney) is #ff8800 hard locked down
         // Postcode 2126 - Cherrybrook.<br>Hornsby LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 0, total 0 ( 0 : 0)
         // Postcode 2127 - Homebush Bay, Newington, Sydney Olympic Park, Wentworth Point.<br>Parramatta LGA is at -33.828,151.077
-        // Postcode 2127 - Homebush Bay, Newington, Sydney Olympic Park, Wentworth Point.<br>Parramatta LGA (Greater Sydney) is #ff8800 hard locked down
-        // Postcode 2127 - Homebush Bay, Newington, Sydney Olympic Park, Wentworth Point.<br>Parramatta LGA (Greater Sydney) cases:  1 0 0 2 0 0 0 0 2 1 1 3 0 1, total 11 ( 3 : 8)
-        // Postcode 2127 - Homebush Bay, Newington, Sydney Olympic Park, Wentworth Point.<br>Parramatta LGA (Greater Sydney): cases all fall between 2021-07-26 and 2021-08-08
-        add_boxes("Postcode 2127 - Homebush Bay, Newington, Sydney Olympic Park, Wentworth Point.<br>Parramatta LGA (Greater Sydney)", "P", "Postcode 2127 - Homebush Bay, Newington, Sydney Olympic Park, Wentworth Point.<br>Parramatta LGA (Greater Sydney)<p>11 cases between 2021-07-26 and 2021-08-08:<p>2021-07-26: 1<br>2021-07-29: 2<br>2021-08-03: 2<br>2021-08-04: 1<br>2021-08-05: 1<br>2021-08-06: 3<br>2021-08-08: 1<br><p>Week to week Reff=2.7", -33.828,151.077, [ 1, 0, 0, 2, 0, 0, 0, 0, 2, 1, 1, 3, 0, 1 ], "#ff8800");
+        // Postcode 2127 - Homebush Bay, Newington, Sydney Olympic Park, Wentworth Point.<br>Parramatta LGA (Western Sydney) is #ff0000 hard locked down
+        // Postcode 2127 - Homebush Bay, Newington, Sydney Olympic Park, Wentworth Point.<br>Parramatta LGA (Western Sydney) cases:  1 0 0 2 0 0 0 0 2 1 1 3 0 1, total 11 ( 3 : 8)
+        // Postcode 2127 - Homebush Bay, Newington, Sydney Olympic Park, Wentworth Point.<br>Parramatta LGA (Western Sydney): cases all fall between 2021-07-26 and 2021-08-08
+        add_boxes("Postcode 2127 - Homebush Bay, Newington, Sydney Olympic Park, Wentworth Point.<br>Parramatta LGA (Western Sydney)", "P", "Postcode 2127 - Homebush Bay, Newington, Sydney Olympic Park, Wentworth Point.<br>Parramatta LGA (Western Sydney)<p>11 cases between 2021-07-26 and 2021-08-08:<p>2021-07-26: 1<br>2021-07-29: 2<br>2021-08-03: 2<br>2021-08-04: 1<br>2021-08-05: 1<br>2021-08-06: 3<br>2021-08-08: 1<br><p>Week to week Reff=2.7", -33.828,151.077, [ 1, 0, 0, 2, 0, 0, 0, 0, 2, 1, 1, 3, 0, 1 ], "#ff0000");
 
         // Postcode 2128 - Silverwater.<br>Parramatta LGA is at -33.8343506,151.0442244
         // Postcode 2128 - Silverwater.<br>Parramatta LGA (Western Sydney) is #ff0000 hard locked down
@@ -1717,10 +1718,10 @@
         add_boxes("Postcode 2322 - Beresfield, Black Hill, Chisholm, Hexham, Lenaghan, Stockrington, Tarro, Thornton, Tomago, Woodberry.<br>Maitland LGA (NewCastle and Hunter)", "P", "Postcode 2322 - Beresfield, Black Hill, Chisholm, Hexham, Lenaghan, Stockrington, Tarro, Thornton, Tomago, Woodberry.<br>Maitland LGA (NewCastle and Hunter)<p>2 cases on 2021-08-06 and 2021-08-08:<p>2021-08-06: 1<br>2021-08-08: 1<br>", -32.79,151.667778, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1 ], "#aaaa00");
 
         // Postcode 2323 - Ashtonfield, Brunkerville, Buchanan, Buttai, East Maitland, Four Mile Creek, Freemans Waterhole, Green Hills, Greenhills, Metford, Metford Dc, Mount Vincent, Mulbring, Pitnacree, Richmond Vale, Tenambit.<br>Maitland LGA is at -32.742778,151.606667
-        // Postcode 2323 - Ashtonfield, Brunkerville, Buchanan, Buttai, East Maitland, Four Mile Creek, Freemans Waterhole, Green Hills, Greenhills, Metford, Metford Dc, Mount Vincent, Mulbring, Pitnacree, Richmond Vale, Tenambit.<br>Maitland LGA (Greater Sydney) is #ff8800 hard locked down
-        // Postcode 2323 - Ashtonfield, Brunkerville, Buchanan, Buttai, East Maitland, Four Mile Creek, Freemans Waterhole, Green Hills, Greenhills, Metford, Metford Dc, Mount Vincent, Mulbring, Pitnacree, Richmond Vale, Tenambit.<br>Maitland LGA (Greater Sydney) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 1, total 1 ( 0 : 1)
-        // Postcode 2323 - Ashtonfield, Brunkerville, Buchanan, Buttai, East Maitland, Four Mile Creek, Freemans Waterhole, Green Hills, Greenhills, Metford, Metford Dc, Mount Vincent, Mulbring, Pitnacree, Richmond Vale, Tenambit.<br>Maitland LGA (Greater Sydney): cases all fall between 2021-08-08 and 2021-08-08
-        add_boxes("Postcode 2323 - Ashtonfield, Brunkerville, Buchanan, Buttai, East Maitland, Four Mile Creek, Freemans Waterhole, Green Hills, Greenhills, Metford, Metford Dc, Mount Vincent, Mulbring, Pitnacree, Richmond Vale, Tenambit.<br>Maitland LGA (Greater Sydney)", "P", "Postcode 2323 - Ashtonfield, Brunkerville, Buchanan, Buttai, East Maitland, Four Mile Creek, Freemans Waterhole, Green Hills, Greenhills, Metford, Metford Dc, Mount Vincent, Mulbring, Pitnacree, Richmond Vale, Tenambit.<br>Maitland LGA (Greater Sydney)<p>1 case on 2021-08-08<p>2021-08-08: 1<br>", -32.742778,151.606667, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ], "#ff8800");
+        // Postcode 2323 - Ashtonfield, Brunkerville, Buchanan, Buttai, East Maitland, Four Mile Creek, Freemans Waterhole, Green Hills, Greenhills, Metford, Metford Dc, Mount Vincent, Mulbring, Pitnacree, Richmond Vale, Tenambit.<br>Maitland LGA (NewCastle and Hunter) is #aaaa00 hard locked down
+        // Postcode 2323 - Ashtonfield, Brunkerville, Buchanan, Buttai, East Maitland, Four Mile Creek, Freemans Waterhole, Green Hills, Greenhills, Metford, Metford Dc, Mount Vincent, Mulbring, Pitnacree, Richmond Vale, Tenambit.<br>Maitland LGA (NewCastle and Hunter) cases:  0 0 0 0 0 0 0 0 0 0 0 0 0 1, total 1 ( 0 : 1)
+        // Postcode 2323 - Ashtonfield, Brunkerville, Buchanan, Buttai, East Maitland, Four Mile Creek, Freemans Waterhole, Green Hills, Greenhills, Metford, Metford Dc, Mount Vincent, Mulbring, Pitnacree, Richmond Vale, Tenambit.<br>Maitland LGA (NewCastle and Hunter): cases all fall between 2021-08-08 and 2021-08-08
+        add_boxes("Postcode 2323 - Ashtonfield, Brunkerville, Buchanan, Buttai, East Maitland, Four Mile Creek, Freemans Waterhole, Green Hills, Greenhills, Metford, Metford Dc, Mount Vincent, Mulbring, Pitnacree, Richmond Vale, Tenambit.<br>Maitland LGA (NewCastle and Hunter)", "P", "Postcode 2323 - Ashtonfield, Brunkerville, Buchanan, Buttai, East Maitland, Four Mile Creek, Freemans Waterhole, Green Hills, Greenhills, Metford, Metford Dc, Mount Vincent, Mulbring, Pitnacree, Richmond Vale, Tenambit.<br>Maitland LGA (NewCastle and Hunter)<p>1 case on 2021-08-08<p>2021-08-08: 1<br>", -32.742778,151.606667, [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ], "#aaaa00");
 
         // Postcode 2324 - Balickera, Brandy Hill, Bundabah, Carrington, Cells River, Eagleton, East Seaham, Hawks Nest, Heatherbrae, Karuah, Kings Hill, Limeburners Creek, Millers Forest, Motto Farm, Nelsons Plains, North Arm Cove, Osterley, Pindimar, Raymond Terrace, Raymond Terrace East, Seaham, Swan Bay, Tahlee, Tea Gardens, Twelve Mile Creek, Wallaroo.<br>Port Stephens LGA is at -35.153,149.007
         // Postcode 2324 - Balickera, Brandy Hill, Bundabah, Carrington, Cells River, Eagleton, East Seaham, Hawks Nest, Heatherbrae, Karuah, Kings Hill, Limeburners Creek, Millers Forest, Motto Farm, Nelsons Plains, North Arm Cove, Osterley, Pindimar, Raymond Terrace, Raymond Terrace East, Seaham, Swan Bay, Tahlee, Tea Gardens, Twelve Mile Creek, Wallaroo.<br>Port Stephens LGA (NewCastle and Hunter) is #aaaa00 hard locked down
