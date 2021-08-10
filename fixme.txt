@@ -1,0 +1,9 @@
+2021-08-10 17:36:39
+
+By postcode is splitting by LGA in bad ways.
+
+Should either combine both LGA, or put them somewhere different on Map.
+
+At least, that's what appears to be happening.
+
+See, e.g. postcode 2020
