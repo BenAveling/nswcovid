@@ -167,6 +167,7 @@ sub read_postcodes($){
     my $lng=$fields[15];
     # my $lat=$fields[5]; # Approx - to the postcode?
     # my $lng=$fields[4];
+    next if $suburb=~m/ DC$/; # Ignore? Or just strip the DC?
     $postcodes{$postcode}{lat}=$lat;
     $postcodes{$postcode}{lng}=$lng;
     $suburb=~s/([A-Z])([A-Z]+)/$1.lc($2)/ge;
@@ -427,6 +428,7 @@ sub print_barchart($$$$)
     my $r=$weekly_cases[1]/$weekly_cases[0];
     $text.=sprintf("<p>Week to week Reff=%0.2g",$r);
   }
+  $title=~s/<br>/ /gi;
   print qq{        add_boxes("$title", "$initial", "$text", $lat,$lng, [ };
   print join(", ",map {$cases->{$_}||0} @dates);
   print qq{ ], "$colour");\n};
