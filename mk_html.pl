@@ -376,25 +376,25 @@ print qq[<!DOCTYPE html>
 ];
 }
 
-sub print_barchart($$$$)
+sub print_barchart($$$$@)
 {
   my $cases=shift;
   my $title=shift;
   my $lat=shift or die "no lat for $title?";
   my $lng=shift or die "no lng for $title?";
+  my @lgas=@_;
   print "        // $title is at $lat,$lng\n";
-  my $locked_down=0;
   my $colour=$colours{purple};
   my $url=undef;
-  foreach my $lockeddown_lga (keys %lockdowns) {
-    next unless $title =~ m/\b$lockeddown_lga (Regional|Shire)? ?LGA/i; # FIXME: some LGA names are substrings of another LGAs. regex probably not reliable
-    unless($locked_down++){
-      my $lockdown_details=$lockdowns{$lockeddown_lga};
-      $title .= " ($lockdown_details->{region})";
-      $colour=$lockdown_details->{colour};
-      # $url=$lockdown_details->{url};
-      print "        // $title is $colour hard locked down\n";
-    }
+  foreach my $lga (@lgas){
+    $lga =~ s/^The //i;
+    $lga =~ s/ Shire$//i;
+    $lga =~ s/ Regional$//i;
+    my $lockdown_details=$lockdowns{$lga} or next;
+    $title .= " ($lockdown_details->{region})";
+    $colour=$lockdown_details->{colour};
+    print "        // $title is $colour hard locked down\n";
+    last;
   }
   print "        // $title cases: ";
   my $t_cases=0;
@@ -449,6 +449,7 @@ print qq[
       my $title="$lga_name LGA",
       my $lat=$lga_lat,
       my $lng=$lga_lng,
+      $lga_name
     );
   }
 print qq[        displaying = 'lgas';
@@ -474,6 +475,7 @@ print qq[
       my $title="Postcode $postcode_number - $suburbs.<br>$lga_names LGA",
       my $lat=$postcode->{lat},
       my $lng=$postcode->{lng},
+      @lga_names
     );
   }
 print qq[        displaying = 'postcodes';
