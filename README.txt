@@ -26,8 +26,19 @@ When ready to upload
   git commit -m "update data to <date>"
   git push
 
+Wait a minute, then sanity check at
+
+  https://benaveling.github.io/nswcovid/map/
+
+Look for the date to be updated.
+
+===============================================================
 You can get a new google api key from:
 
   https://developers.google.com/maps/documentation/places/web-service/get-api-key
 
 More than a certain number of requests a month starts to cost money. It's a fairly large number, perhaps 28,000?
+
+To monitor, visit the console:
+
+  https://console.cloud.google.com/

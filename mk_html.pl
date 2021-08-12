@@ -147,7 +147,8 @@ sub read_cases($){
     $postcodes{$postcode}{cases}{$date}++;
     $postcodes{$postcode}{lgas}{$lga}=1;
   }
-  @dates = reverse @dates[0..13];
+  # Pick the last 14 full days - ignore the latest day, is probably partial
+  @dates = reverse @dates[1..14];
   $from=$dates[0];
   $to=$dates[$#dates];
   die "expected > two weeks of data!\n" if !$to;
