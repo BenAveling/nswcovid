@@ -53,7 +53,7 @@ require 5.022; # lower would probably work, but has not been tested
 
 # No one should let me choose colours. Yet here we are
 my %colours=(
-    red=>"#ff0000",    # western sydney
+    red=>"#ff0000",    # area of concern (was: western sydney)
     orange=>"#ff8800", # greater sydney and nearby
     yellow=>"#aaaa00", # hunter (so far)
     purple=>"#990099", # default
@@ -231,7 +231,7 @@ print qq[<!DOCTYPE html>
       <BR>Each little barchart represents cases/day between $from and $to.
 
       <strong>Restrictions</strong> <!-- no one should have let me choose colours. Sorry. -->
-      <div style="color: $colours{red}">Red: <A href="https://www.nsw.gov.au/covid-19/rules/affected-area">Western Sydney</A></div>
+      <div style="color: $colours{red}">Red: <A href="https://www.nsw.gov.au/covid-19/rules/affected-area">Area of Concern</A></div>
       <div style="color: $colours{orange}">Orange: <A href="https://www.nsw.gov.au/covid-19/rules/greater-sydney">Greater Sydney and nearby</A></div>
       <div style="color: $colours{yellow}">Yellow: <A href="https://www.nsw.gov.au/covid-19/rules/affected-regions">Newcastle and Hunter</A></div>
       <div style="color: $colours{purple}">Purple: No restrictions.</div>

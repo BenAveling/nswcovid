@@ -46,7 +46,7 @@ Shellharbour
 # As at 2021-08-04, what was 3 locked down LGA is now 8
 https://www.nsw.gov.au/covid-19/rules/affected-area
 colour: red
-region: Western Sydney
+region: Area of concern
 
 Blacktown
 Campbelltown
@@ -60,6 +60,12 @@ Parramatta
 # As of 2021-08-08, add Penrith (strictly, only part of it, but will ignore that)
 
 Penrith
+
+# 2021-08-12 Add 
+
+Burwood
+Strathfield
+Bayside
 
 # #####################################################
 # As of 5/8, also NewCastle and Hunter restrictions
