@@ -47,6 +47,7 @@ Shellharbour
 https://www.nsw.gov.au/covid-19/rules/affected-area
 colour: red
 region: Western Sydney
+
 Blacktown
 Campbelltown
 Canterbury-Bankstown

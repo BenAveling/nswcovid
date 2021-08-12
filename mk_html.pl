@@ -387,7 +387,7 @@ sub print_barchart($$$$)
   my $colour=$colours{purple};
   my $url=undef;
   foreach my $lockeddown_lga (keys %lockdowns) {
-    next unless $title =~ m/\b$lockeddown_lga\b/; # FIXME: if any LGA is a substring of another LGA, bad stuff may happen.
+    next unless $title =~ m/\b$lockeddown_lga (Regional|Shire)? ?LGA/i; # FIXME: some LGA names are substrings of another LGAs. regex probably not reliable
     unless($locked_down++){
       my $lockdown_details=$lockdowns{$lockeddown_lga};
       $title .= " ($lockdown_details->{region})";
