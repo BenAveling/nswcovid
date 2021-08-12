@@ -1,3 +1,6 @@
+# FIXME: if any LGA's name is a substring of another LGA, bad stuff may happen.
+
+# #####################################################
 # Greater Sydney (Note: Some of these LGA are overriden by entries later in this file)
 https://www.nsw.gov.au/covid-19/rules/greater-sydney
 colour: orange
@@ -43,6 +46,7 @@ Armidale
 # 2021-08-09 + Tamworth
 Tamworth
 
+# #####################################################
 # As at 2021-08-04, what was 3 locked down LGA is now 8
 https://www.nsw.gov.au/covid-19/rules/affected-area
 colour: red
@@ -60,10 +64,14 @@ Parramatta
 
 Penrith
 
+# #####################################################
 # As of 5/8, also NewCastle and Hunter restrictions
 https://www.nsw.gov.au/covid-19/rules/affected-regions
 colour: yellow
-region: NewCastle and Hunter
+region: Regional and rural
+
+# Newcastle & Hunter
+
 Newcastle
 Cessnock
 Dungog
@@ -73,4 +81,28 @@ Muswellbrook
 Port Stephens
 Singleton
 
-# FIXME: if any LGA is a substring of another LGA, bad stuff may happen.
+# As of 12/8, added
+
+Armidale
+
+Dubbo
+
+# Northern Rivers
+
+Ballina
+Byron
+Lismore
+Richmond Valley
+
+# FN NSW
+
+Bogan
+Bourke
+Brewarrina
+Coonamble
+Gilgandra
+Narromine
+Walgett
+Warren
+
+Tamworth
