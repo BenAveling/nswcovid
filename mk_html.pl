@@ -18,12 +18,12 @@
 #   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # ######################################################################
-# This script creates a google maps html page that shows 
+# This script creates a google maps html page that shows
 # the past 2 weeks in each LGA or Postcode (but not both, not yet)
 #
 my $usage = qq{Usage:
   perl mk_html.pl [-l] [-p]
-  
+
   -l output is for local use only
   -p output by postcode, instead of LGA (temporary feature)
 
@@ -31,7 +31,7 @@ Note: Input and output files are currently hardcoded.
 };
 # ######################################################################
 # History:
-# 2021-08-01 Created. 
+# 2021-08-01 Created.
 # ######################################################################
 
 # ####
@@ -49,7 +49,7 @@ require 5.022; # lower would probably work, but has not been tested
 # use FindBin;
 # use lib "$FindBin::Bin/libs";
 # use Time::HiRes qw (sleep);
-# alarm 10; 
+# alarm 10;
 
 # No one should let me choose colours. Yet here we are
 my %colours=(
@@ -215,7 +215,7 @@ print qq[<!DOCTYPE html>
   </head>
   <body>
     <noscript>
-      <P><font color="red">Sorry, but this page requires javascript.</font> 
+      <P><font color="red">Sorry, but this page requires javascript.</font>
     </noscript>
     <div id="map"></div>
     <div id="legend"
@@ -237,25 +237,28 @@ print qq[<!DOCTYPE html>
       <!-- <BR>Hover the mouse over them for more detail.can comment this out for screenshots -->
       <!-- TODO Add buttons to choose between LGA and Postcodes -->
       <!-- TODO Move more of the locked down details into lockeddown.txt and read it from there -->
-      </div>
-    </div>
+     <button id="toggle_display" onclick="toggle_display()">Toggle display</button> <!-- FIXME Smaller font please -->
+      </div> <!-- end legend -->
+    </div> <!-- end map -->
     <script type="text/javascript">
       var map;
+      var displaying;
+      var boxes=[]; <!-- FIXME this is just BFI - try to be smarter -->
       function init_map() {
         map = new google.maps.Map(
           document.getElementById("map"),
           {
             center: {
               // Fairfield
-              // lat: -33.887203, 
-              // lng: 150.979458 
+              // lat: -33.887203,
+              // lng: 150.979458
               // Parramatta
               // lat: -33.7995485181818,
               // lng: 151.0328134909090
-              lat: -33.887203, 
+              lat: -33.887203,
               lng: 151.0328134909090
             },
-            zoom: 11 // higher number = more zoomed in 
+            zoom: 11 // higher number = more zoomed in
           }
         );
         const legend = document.getElementById("legend");
@@ -279,6 +282,7 @@ print qq[<!DOCTYPE html>
             }
           }
         );
+        boxes.push(box);
       }
 
       function add_circle(lat,lng,size,c) {
@@ -347,10 +351,23 @@ print qq[<!DOCTYPE html>
         }
         // No one should let me choose colours - help needed here please!
       }
-    </script>
-    <script type="text/javascript">
-      function init(){
-        init_map();
+      function undisplay_all_boxes(){
+        // remove box from map
+        boxes.forEach(box => box.setMap(null));
+        // delete box from map
+        // TODO: better to hide/unhide
+        boxes=[];
+      }
+      function toggle_display(){
+        undisplay_all_boxes()
+        if(displaying == 'lgas'){
+          // TODO: better to hide/unhide
+          print_postcodes();
+        }else{
+          // TODO: better to hide/unhide
+          print_lgas();
+        }
+      }
 ];
 }
 
@@ -414,6 +431,9 @@ sub print_barchart($$$$)
 }
 
 sub print_lgas(){
+print qq[
+      function print_lgas(){
+];
   foreach my $lga_name (sort keys %lgas){
     my $lga=$lgas{$lga_name};
     my $lga_lat=$lga->{lat};
@@ -425,9 +445,15 @@ sub print_lgas(){
       my $lng=$lga_lng,
     );
   }
+print qq[        displaying = 'lgas';
+      }
+];
 }
 
 sub print_postcodes(){
+print qq[
+      function print_postcodes(){
+];
   foreach my $postcode_number (sort keys %postcodes){
     next if $postcode_number eq "Masked"; # Could guess based on LGA...
     my $postcode=$postcodes{$postcode_number};
@@ -442,14 +468,18 @@ sub print_postcodes(){
       my $lng=$postcode->{lng},
     );
   }
+print qq[        displaying = 'postcodes';
+      }
+];
 }
 
 sub print_tail(){
-print q[
+print qq[
+      function init(){
+        init_map();
+        print_lgas();
       }
     </script>
-];
-print qq[
     <script src="https://maps.googleapis.com/maps/api/js?key=$api_key&libraries=drawing&callback=init" async defer></script>
 
   </body>
@@ -506,14 +536,14 @@ select $OUT;
 print_header();
 
 # TODO Make the choice of postcode or LGA dynamically controllable via click buttons or something.
-if($by_lga){
+# if($by_lga){
   print STDOUT "Printing LGAs.\n";
   print_lgas();
-}
-if($by_postcode){
+# }
+# if($by_postcode){
   print STDOUT "Printing postcodes.\n";
   print_postcodes();
-}
+# }
 
 print_tail();
 
