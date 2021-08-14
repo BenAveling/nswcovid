@@ -196,8 +196,7 @@ sub locate_lgas(){
 
 sub print_header()
 {
-print qq[
-<!DOCTYPE html>
+print qq[<!DOCTYPE html>
 <html>
   <head>
     <title>NSW Covid Map</title>
