@@ -169,8 +169,12 @@ sub read_postcodes($){
     # my $lat=$fields[5]; # Approx - to the postcode?
     # my $lng=$fields[4];
     next if $suburb=~m/ DC$/; # Ignore? Or just strip the DC?
-    $postcodes{$postcode}{lat}=$lat;
-    $postcodes{$postcode}{lng}=$lng;
+    if(!$lat || !$lng){
+      warn "Skipping $postcode/$suburb\n";
+      next;
+    }
+    $postcodes{$postcode}{lat}=sprintf("%.10g",$lat);
+    $postcodes{$postcode}{lng}=sprintf("%.10g",$lng);
     $suburb=~s/([A-Z])([A-Z]+)/$1.lc($2)/ge;
     $postcodes{$postcode}{suburbs}{$suburb}=1;
   }
@@ -193,8 +197,8 @@ sub locate_lgas(){
       $avg_lat+=$postcode->{lat};
       $avg_lng+=$postcode->{lng};
     }
-    $lgas{$lga_name}{lat}=$avg_lat/$num_postcodes;
-    $lgas{$lga_name}{lng}=$avg_lng/$num_postcodes;
+    $lgas{$lga_name}{lat}=sprintf("%.15g",$avg_lat/$num_postcodes);
+    $lgas{$lga_name}{lng}=sprintf("%.15g",$avg_lng/$num_postcodes);
   }
 }
 
@@ -234,7 +238,7 @@ print qq[<!DOCTYPE html>
       <div style="color: $colours{red}">Red: <A href="https://www.nsw.gov.au/covid-19/rules/affected-area">Area of Concern</A></div>
       <div style="color: $colours{orange}">Orange: <A href="https://www.nsw.gov.au/covid-19/rules/greater-sydney">Greater Sydney and nearby</A></div>
       <div style="color: $colours{yellow}">Yellow: <A href="https://www.nsw.gov.au/covid-19/rules/affected-regions">Newcastle and Hunter</A></div>
-      <div style="color: $colours{purple}">Purple: No restrictions.</div>
+      <div style="color: $colours{purple}">Purple: <A href="https://www.nsw.gov.au/covid-19/rules/what-you-can-do-nsw">Other Rural and Regional</A></div>
 
       <BR><strong>Data from:</strong> <A href="https://data.nsw.gov.au/data/dataset/covid-19-cases-by-location/resource/21304414-1ff1-4243-a5d2-f52778048b29">data.nsw.gov.au</A>
 
