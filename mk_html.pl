@@ -295,7 +295,7 @@ print qq[<!DOCTYPE html>
 
       function add_circle(lat,lng,size,c) {
         var radius=50*Math.sqrt(size)
-        var box = new google.maps.Circle(
+        var circle = new google.maps.Circle(
           {
             strokeColor: c,
             strokeOpacity: 0.8,
@@ -308,6 +308,7 @@ print qq[<!DOCTYPE html>
             // e.g. radius: Math.sqrt(citymap[city].population) * 100,
           }
         );
+        decorations.push(circle);
       }
 
       function add_text(lat,lng,title,label,details) {
@@ -357,6 +358,9 @@ print qq[<!DOCTYPE html>
             // add_circle(s,w,cases[day],"#ff0000");
             w+=wide;
           }
+        }
+        if(first){
+          add_circle(s,w,3,colour);
         }
         // No one should let me choose colours - help needed here please!
       }
@@ -415,24 +419,26 @@ sub print_barchart($$$$@)
     $last=$date if $cases;
   }
   print ", total $t_cases ( $weekly_cases[0] : $weekly_cases[1])\n";
+  my $text="$title<p>";
   if(!$t_cases){
-    return;
+    $text .= "No cases in past two weeks";
+  }else{
+    print "        // $title: cases all fall between $first and $last\n";
+    $text.=case_s($t_cases). ($first eq $last ? " on $first" : (" ".($t_cases==2? "on":"between"). " $first and $last").":");
+    $text.="<p>";
+    foreach my $day (0..13) {
+      my $date=$dates[$day];
+      my $cases=$cases->{$date};
+      next unless $cases;
+      $text.="$date: $cases<br>"
+    }
+    if($weekly_cases[0]){
+      my $r=$weekly_cases[1]/$weekly_cases[0];
+      $text.=sprintf("<p>Week to week Reff=%0.2g",$r);
+    }
   }
-  print "        // $title: cases all fall between $first and $last\n";
   $title=~m/^[a-z0-9]/i or die;
   my $initial=$&;
-  my $text="$title<p>".case_s($t_cases). ($first eq $last ? " on $first" : (" ".($t_cases==2? "on":"between"). " $first and $last").":");
-  $text.="<p>";
-  foreach my $day (0..13) {
-    my $date=$dates[$day];
-    my $cases=$cases->{$date};
-    next unless $cases;
-    $text.="$date: $cases<br>"
-  }
-  if($weekly_cases[0]){
-    my $r=$weekly_cases[1]/$weekly_cases[0];
-    $text.=sprintf("<p>Week to week Reff=%0.2g",$r);
-  }
   $title=~s/<br>/ /gi;
   print qq{        add_boxes("$title", "$initial", "$text", $lat,$lng, [ };
   print join(", ",map {$cases->{$_}||0} @dates);
