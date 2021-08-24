@@ -1,6 +1,7 @@
 2021-08-20
 
 ToDo: remove 'pegman' button.
+ToDo: add ability to search
 
 2021-08-10 17:36:39
 
