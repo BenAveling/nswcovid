@@ -22,10 +22,10 @@
 # the past 2 weeks in each LGA or Postcode (but not both, not yet)
 #
 my $usage = qq{Usage:
-  perl mk_html.pl [-l] [-p]
+  perl mk_html.pl [-l] [-d num_days]
 
   -l output is for local use only
-  -p output by postcode, instead of LGA (temporary feature)
+  -d show num_days worth of days [instead of the default 14]
 
 Note: Input and output files are currently hardcoded.
 };
@@ -58,6 +58,10 @@ my %colours=(
     yellow=>"#aaaa00", # hunter (so far)
     purple=>"#990099", # default
 );
+
+my $pp_num_days=14;
+my $pp_oldest_day;
+my $pp_box_size;
 
 # ####
 # SUBS
@@ -147,11 +151,11 @@ sub read_cases($){
     $postcodes{$postcode}{cases}{$date}++;
     $postcodes{$postcode}{lgas}{$lga}=1;
   }
-  # Pick the last 14 full days - ignore the latest day, is probably partial
-  @dates = reverse @dates[1..14];
+  # Pick the last 14 or whatever full days - ignore the latest day, it is probably only a part day (TODO, print latest day, but with dashed lines)
+  @dates = reverse @dates[1..$pp_num_days];
   $from=$dates[0];
   $to=$dates[$#dates];
-  die "expected > two weeks of data!\n" if !$to;
+  die "expected > more data!\n" if !$to;
   return 1;
 }
 
@@ -343,13 +347,13 @@ print qq[<!DOCTYPE html>
       }
       function add_boxes(name,label,text,lat,lng,cases,colour) {
         add_text(lat,lng,name,label,text);
-        var high=0.002;
-        var wide=0.002; // For a single case to be a square, keep wide=high
+        var high=$pp_box_size;
+        var wide=$pp_box_size; // For a single case to be a square, keep wide=high
         var s=lat;
         var w=lng;
         var first=1;
         // add_circle(s,w,10,colour);
-        for (let day = 0; day < 14; day++) {
+        for (let day = 0; day < $pp_num_days; day++) {
           if(cases[day]>0 || !first){
             first=0;
             // n, w, s, e, colour
@@ -409,7 +413,7 @@ sub print_barchart($$$$@)
   my @weekly_cases=();
   my $first;
   my $last;
-  foreach my $day (0..13) {
+  foreach my $day (0 .. $pp_oldest_day) {
     my $date=$dates[$day];
     my $cases=$cases->{$date}||=0;
     $t_cases+=$cases;
@@ -421,12 +425,12 @@ sub print_barchart($$$$@)
   print ", total $t_cases ( $weekly_cases[0] : $weekly_cases[1])\n";
   my $text="$title<p>";
   if(!$t_cases){
-    $text .= "No cases in past two weeks";
+    $text .= "No recent cases";
   }else{
     print "        // $title: cases all fall between $first and $last\n";
     $text.=case_s($t_cases). ($first eq $last ? " on $first" : (" ".($t_cases==2? "on":"between"). " $first and $last").":");
     $text.="<p>";
-    foreach my $day (0..13) {
+    foreach my $day (0..$pp_oldest_day) {
       my $date=$dates[$day];
       my $cases=$cases->{$date};
       next unless $cases;
@@ -528,20 +532,19 @@ my $local_api_key_file='local_google_maps_api_key.txt';
 my $out_file="nsw_covid_map.html";
 my $local_out_file="local_nsw_covid_map.html";
 
-my $by_lga=1;
-my $by_postcode=0;
-
-foreach my $argv (@ARGV) {
+while (my $argv = shift @ARGV) {
   if($argv eq '-l'){
     $out_file=$local_out_file;
     $api_key_file=$local_api_key_file;
-  }elsif($argv eq '-p'){
-    $by_lga=0;
-    $by_postcode=1;
+  }elsif($argv eq '-d'){
+    $pp_num_days=shift or die $usage;
   }else{
     die $usage;
   }
 }
+
+$pp_oldest_day=$pp_num_days-1;
+$pp_box_size=0.002*14/$pp_num_days;
 
 read_cases($case_file) or die;
 read_postcodes($postcode_file) or die;
@@ -555,15 +558,10 @@ select $OUT;
 
 print_header();
 
-# TODO Make the choice of postcode or LGA dynamically controllable via click buttons or something.
-# if($by_lga){
-  print STDOUT "Printing LGAs.\n";
-  print_lgas();
-# }
-# if($by_postcode){
-  print STDOUT "Printing postcodes.\n";
-  print_postcodes();
-# }
+print STDOUT "Printing LGAs.\n";
+print_lgas();
+print STDOUT "Printing postcodes.\n";
+print_postcodes();
 
 print_tail();
 
