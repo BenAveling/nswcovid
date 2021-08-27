@@ -376,6 +376,10 @@ print qq[<!DOCTYPE html>
         decorations=[];
       }
       function toggle_display(){
+        // FIXME This code almost but not quite works - it changes the cursor, but after the work is done (at least on firefox)
+        // commenting it out for now
+        // document.body.style.cursor = 'wait';
+        // map.setOptions({draggableCursor:'wait'});
         undisplay_all_decorations()
         if(displaying == 'lgas'){
           // TODO: better to hide/unhide
@@ -384,6 +388,8 @@ print qq[<!DOCTYPE html>
           // TODO: better to hide/unhide
           print_lgas();
         }
+        // document.body.style.cursor = '';
+        // map.setOptions({draggableCursor:''});
       }
 ];
 }
