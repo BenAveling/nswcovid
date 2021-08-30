@@ -410,36 +410,37 @@ sub print_barchart($$$$@)
   }
   print "        // $title cases: ";
   my $t_cases=0;
-  my @weekly_cases=();
+  # my @weekly_cases=();
   my $first;
   my $last;
   foreach my $day (0 .. $pp_oldest_day) {
     my $date=$dates[$day];
     my $cases=$cases->{$date}||=0;
     $t_cases+=$cases;
-    $weekly_cases[$day<7 ? 0 : 1] += $cases;
+    # $weekly_cases[$day<7 ? 0 : 1] += $cases;
     print " $cases";
     $first||=$date if $cases;
     $last=$date if $cases;
   }
-  print ", total $t_cases ( $weekly_cases[0] : $weekly_cases[1])\n";
+  # print ", total $t_cases ( $weekly_cases[0] : $weekly_cases[1])\n";
+  print ", total $t_cases\n";
   my $text="$title<p>";
   if(!$t_cases){
     $text .= "No recent cases";
   }else{
     print "        // $title: cases all fall between $first and $last\n";
     $text.=case_s($t_cases). ($first eq $last ? " on $first" : (" ".($t_cases==2? "on":"between"). " $first and $last").":");
-    $text.="<p>";
-    foreach my $day (0..$pp_oldest_day) {
-      my $date=$dates[$day];
-      my $cases=$cases->{$date};
-      next unless $cases;
-      $text.="$date: $cases<br>"
-    }
-    if($weekly_cases[0]){
-      my $r=$weekly_cases[1]/$weekly_cases[0];
-      $text.=sprintf("<p>Week to week Reff=%0.2g",$r);
-    }
+    # $text.="<p>";
+    # foreach my $day (0..$pp_oldest_day) {
+    #   my $date=$dates[$day];
+    #   my $cases=$cases->{$date};
+    #   next unless $cases;
+    #   $text.="$date: $cases<br>";
+    # }
+    # if($weekly_cases[0]){
+    #  my $r=$weekly_cases[1]/$weekly_cases[0];
+    #  $text.=sprintf("<p>Week to week Reff=%0.2g",$r);
+    # }
   }
   $title=~m/^[a-z0-9]/i or die;
   my $initial=$&;
