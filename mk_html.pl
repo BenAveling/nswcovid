@@ -19,8 +19,16 @@
 
 # ######################################################################
 # This script creates a google maps html page that shows
-# the past 2 weeks in each LGA or Postcode (but not both, not yet)
+# recent cases in each LGA or Postcode
 #
+# FIXME: One of our 'LGAs' is the collective correctional system.
+# This possibly breaks multiple unconscious assumptions.
+# But (except briefly), the cases in Justice Health don't have an LGA
+# e.g. 2020-07-29,,,Justice Health,,
+# One option might be to put Justice Health at
+# -33.98968356474387, 151.319736391778 (i.e. Botany Bay)
+# ######################################################################
+
 my $usage = qq{Usage:
   perl mk_html.pl [-l] [-d num_days]
 
@@ -135,6 +143,7 @@ sub read_cases($){
   while(<CSV>){
     next if m/,,,,$/;
     chomp;
+    # fields are: notification_date,postcode,lhd_2010_code,lhd_2010_name,lga_code19,lga_name19
     my @fields=split /,/;
     my $date=$fields[0];
     my $postcode=$fields[1];
@@ -142,6 +151,11 @@ sub read_cases($){
     my $lga=$fields[5];
     if(!@dates || $date ne $dates[0]){
       unshift @dates, $date;
+    }
+    if(!$lga){
+      die unless $suburb=~/Justice Health/;
+      $lga='Correction Centre';
+      $postcode='Correction Centre';
     }
     $lga=~s/ \([AC]\)//;
     $lga=~s/ \(NSW\)//;
@@ -182,13 +196,18 @@ sub read_postcodes($){
     $suburb=~s/([A-Z])([A-Z]+)/$1.lc($2)/ge;
     $postcodes{$postcode}{suburbs}{$suburb}=1;
   }
+  $postcodes{'Correction Centre'}{lat}='-33.98968356474387';
+  $postcodes{'Correction Centre'}{lng}='151.319736391778';
   return 1;
 }
 
 sub locate_lgas(){
+  # Arbitrarily locate 'Correctional Centre' off Botany Bay.
+  $lgas{'Correction Centre'}{lat}='-33.98968356474387';
+  $lgas{'Correction Centre'}{lng}='151.319736391778';
   foreach my $lga_name (keys %lgas){
     my $lga=$lgas{$lga_name};
-    my $lga_postcodes=$lga->{postcodes};
+    my $lga_postcodes=$lga->{postcodes} or next;
     my $num_postcodes=%$lga_postcodes;
     my $avg_lat=0;
     my $avg_lng=0;
@@ -392,8 +411,8 @@ sub print_barchart($$$$@)
 {
   my $cases=shift;
   my $title=shift;
-  my $lat=shift or die "no lat for $title?";
-  my $lng=shift or die "no lng for $title?";
+  my $lat=shift or die "no lat for '$title'";
+  my $lng=shift or die "no lng for '$title'";
   my @lgas=@_;
   print "        // $title is at $lat,$lng\n";
   my $colour=$colours{purple};
@@ -459,9 +478,11 @@ print qq[
     my $lga=$lgas{$lga_name};
     my $lga_lat=$lga->{lat};
     my $lga_lng=$lga->{lng};
+    my $title=$lga_name;
+    $title.=" LGA" unless $lga_name =~ m/Correction Centre/;
     print_barchart(
       my $cases=$lga->{cases},
-      my $title="$lga_name LGA",
+      $title,
       my $lat=$lga_lat,
       my $lng=$lga_lng,
       $lga_name
@@ -477,17 +498,17 @@ print qq[
       function print_postcodes(){
 ];
   foreach my $postcode_number (sort keys %postcodes){
-    next if $postcode_number eq "Masked"; # Could guess based on LGA...
-    my $postcode=$postcodes{$postcode_number};
+    next if !$postcode_number || $postcode_number eq "Masked"; # Could guess based on LGA...
+    my $postcode=$postcodes{$postcode_number}; # could be a Correction Centre
     my @lga_names=sort keys %{$postcode->{lgas}};
     my $num_lgas = @lga_names or next;
-    warn "postcode $postcode_number has: @lga_names LGAs\n" if $num_lgas>1;
+    warn "postcode $postcode_number has multiple LGA: @lga_names\n" if $num_lgas!=1;
     my @suburbs=sort keys %{$postcode->{suburbs}};
     my $suburbs=join ", ", @suburbs;
     my $lga_names=join "/", @lga_names;
     print_barchart(
       my $cases=$postcode->{cases},
-      my $title="Postcode $postcode_number - $suburbs.<br>$lga_names LGA",
+      my $title="Postcode '$postcode_number' - $suburbs.<br>$lga_names LGA",
       my $lat=$postcode->{lat},
       my $lng=$postcode->{lng},
       @lga_names
