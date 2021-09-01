@@ -154,8 +154,8 @@ sub read_cases($){
     }
     if(!$lga){
       die unless $suburb=~/Justice Health/;
-      $lga='Correction Centre';
-      $postcode='Correction Centre';
+      $lga='Correctional settings';
+      $postcode='Correctional settings';
     }
     $lga=~s/ \([AC]\)//;
     $lga=~s/ \(NSW\)//;
@@ -196,15 +196,15 @@ sub read_postcodes($){
     $suburb=~s/([A-Z])([A-Z]+)/$1.lc($2)/ge;
     $postcodes{$postcode}{suburbs}{$suburb}=1;
   }
-  $postcodes{'Correction Centre'}{lat}='-33.98968356474387';
-  $postcodes{'Correction Centre'}{lng}='151.319736391778';
+  $postcodes{'Correctional settings'}{lat}='-33.98968356474387';
+  $postcodes{'Correctional settings'}{lng}='151.319736391778';
   return 1;
 }
 
 sub locate_lgas(){
   # Arbitrarily locate 'Correctional Centre' off Botany Bay.
-  $lgas{'Correction Centre'}{lat}='-33.98968356474387';
-  $lgas{'Correction Centre'}{lng}='151.319736391778';
+  $lgas{'Correctional settings'}{lat}='-33.98968356474387';
+  $lgas{'Correctional settings'}{lng}='151.319736391778';
   foreach my $lga_name (keys %lgas){
     my $lga=$lgas{$lga_name};
     my $lga_postcodes=$lga->{postcodes} or next;
@@ -485,7 +485,7 @@ print qq[
     my $lga_lat=$lga->{lat};
     my $lga_lng=$lga->{lng};
     my $title=$lga_name;
-    $title.=" LGA" unless $lga_name =~ m/Correction Centre/;
+    $title.=" LGA" unless $lga_name =~ m/Correctional settings/;
     print_barchart(
       my $cases=$lga->{cases},
       $title,
