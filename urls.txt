@@ -1,9 +1,18 @@
-# updated daily, m-f
+# Covid cases (updated daily, m-f. mostly)
 
 https://data.nsw.gov.au/data/dataset/covid-19-cases-by-location/resource/21304414-1ff1-4243-a5d2-f52778048b29
 
 https://data.nsw.gov.au/data/dataset/aefcde60-3b0c-4bc0-9af1-6fe652944ec2/resource/21304414-1ff1-4243-a5d2-f52778048b29/download/confirmed_cases_table1_location.csv
 
+# Rules (probably time I reviewed these)
+
 https://www.nsw.gov.au/covid-19/rules/affected-area#map-local-government-areas-of-concern
 
+# The latte line - though outback steakhouse is probably a better match
+
 http://honisoit.com/2017/09/food-fault-lines-mapping-class-division-through-food-chains/
+
+# vax'ns - not updated as often as the cases
+
+https://www.health.gov.au/resources/publications/covid-19-vaccination-geographic-vaccination-rates-local-government-area-lga
+https://www.health.gov.au/sites/default/files/documents/2021/08/covid-19-vaccination-geographic-vaccination-rates---local-government-area-lga.xlsx

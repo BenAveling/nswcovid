@@ -40,6 +40,9 @@ Note: Input and output files are currently hardcoded.
 # ######################################################################
 # History:
 # 2021-08-01 Created.
+# 2021-07-25 new option: -d
+# 2021-09-04 Added vax % 
+#            Removed one popup - leaving only the 'marker'
 # ######################################################################
 
 # ####
@@ -52,7 +55,7 @@ use autodie;
 require 5.022; # lower would probably work, but has not been tested
 
 # use Carp;
-# use Data::Dumper;
+use Data::Dumper;
 # print Dumper $data;
 # use FindBin;
 # use lib "$FindBin::Bin/libs";
@@ -116,6 +119,36 @@ sub read_lockdowns($)
   }
 }
 
+sub read_vaccination($)
+{
+  my $vaccination_file=shift or die;
+  open(my $IN,$vaccination_file) or die;
+  my $extracted_at;
+  while(<$IN>){
+    if(m/Data extracted from AIR - as at 2359hrs on (.*),,,,,/){
+      $extracted_at=$1;
+    }
+    last if(m/LGA Name,Jurisdiction,Remoteness,Dose 1 % coverage of 15\+,Dose 2 % coverage of 15\+,Population aged 15\+/);
+  }
+  die unless $extracted_at;
+  while(<$IN>){
+    chomp;
+    my @fields=split /,/;
+    #warn Dumper @fields;
+    my $lga_name=$fields[0];
+    my $dose1=$fields[3];
+    my $dose2=$fields[4];
+    my $population=$fields[5];
+    $population.=$fields[6] if $fields[6];
+    $population=~s/"//g;
+    $lga_name=clean_lga_name($lga_name);
+    my $lga=$lgas{$lga_name} || next;
+    $lga->{dose1}=$dose1;
+    $lga->{dose2}=$dose2;
+    $lga->{population}=$population;
+  }
+}
+
 sub read_api_key($)
 {
   my $file=shift;
@@ -136,34 +169,40 @@ sub read_api_key($)
   die "Didn't find an api key in aip key file '$file'";
 }
 
+sub clean_lga_name($) {
+  my $lga_name=shift;
+  $lga_name=~s/ \(.+\)//g;
+  $lga_name=~s/ \(NSW\)//;
+  return $lga_name;
+}
+
 sub read_cases($){
   my $file=shift;
   open(CSV,$file) or die;
   my $ignore_header=<CSV>;
   while(<CSV>){
-    next if m/,,,,$/;
+    next if m/,,,,$/; # These seem to represent a non-disclosed case, e.g one in corrective services
     chomp;
     # fields are: notification_date,postcode,lhd_2010_code,lhd_2010_name,lga_code19,lga_name19
     my @fields=split /,/;
     my $date=$fields[0];
     my $postcode=$fields[1];
     my $suburb=$fields[3];
-    my $lga=$fields[5];
+    my $lga_name=$fields[5];
     if(!@dates || $date ne $dates[0]){
       unshift @dates, $date;
     }
-    if(!$lga){
+    if(!$lga_name){
       die unless $suburb=~/Justice Health/;
-      $lga='Correctional settings';
+      $lga_name='Correctional settings';
       $postcode='Correctional settings';
     }
-    $lga=~s/ \([AC]\)//;
-    $lga=~s/ \(NSW\)//;
-    $lgas{$lga}{cases}{$date}++;
-    $lgas{$lga}{postcodes}{$postcode}++;
+    $lga_name=clean_lga_name($lga_name);
+    $lgas{$lga_name}{cases}{$date}++;
+    $lgas{$lga_name}{postcodes}{$postcode}++;
     # $suburbs{$suburb}{$date}++;
     $postcodes{$postcode}{cases}{$date}++;
-    $postcodes{$postcode}{lgas}{$lga}=1;
+    $postcodes{$postcode}{lgas}{$lga_name}=1;
   }
   # Pick the last 14 or whatever full days - ignore the latest day, it is probably only a part day (TODO, print latest day, but with dashed lines)
   @dates = reverse @dates[1..$pp_num_days];
@@ -196,15 +235,15 @@ sub read_postcodes($){
     $suburb=~s/([A-Z])([A-Z]+)/$1.lc($2)/ge;
     $postcodes{$postcode}{suburbs}{$suburb}=1;
   }
-  $postcodes{'Correctional settings'}{lat}='-33.98968356474387';
-  $postcodes{'Correctional settings'}{lng}='151.319736391778';
+  #$postcodes{'Correctional settings'}{lat}='-33.98968356474387';
+  #$postcodes{'Correctional settings'}{lng}='151.319736391778';
   return 1;
 }
 
 sub locate_lgas(){
   # Arbitrarily locate 'Correctional Centre' off Botany Bay.
-  $lgas{'Correctional settings'}{lat}='-33.98968356474387';
-  $lgas{'Correctional settings'}{lng}='151.319736391778';
+  #$lgas{'Correctional settings'}{lat}='-33.98968356474387';
+  #$lgas{'Correctional settings'}{lng}='151.319736391778';
   foreach my $lga_name (keys %lgas){
     my $lga=$lgas{$lga_name};
     my $lga_postcodes=$lga->{postcodes} or next;
@@ -256,8 +295,8 @@ print qq[<!DOCTYPE html>
            width: 100px;">
       <strong>Barcharts</strong>
       <BR>Each little barchart represents cases/day between $from and $to.
-
-      <strong>Restrictions</strong> <!-- no one should have let me choose colours. Sorry. -->
+      <!-- <strong>Restrictions</strong> -->
+      <!-- no one should have let me choose colours. Sorry. -->
       <div style="color: $colours{red}">Red: <A href="https://www.nsw.gov.au/covid-19/rules/affected-area">Area of Concern</A></div>
       <div style="color: $colours{orange}">Orange: <A href="https://www.nsw.gov.au/covid-19/rules/greater-sydney">Greater Sydney and nearby</A></div>
       <div style="color: $colours{yellow}">Yellow: <A href="https://www.nsw.gov.au/covid-19/rules/affected-regions">Newcastle and Hunter</A></div>
@@ -341,27 +380,27 @@ print qq[<!DOCTYPE html>
             position: myLatLng,
             map: map,
             label: label,
-            title: title,
+            title: details,
             opacity: 0
           }
         );
-        const infowindow = new google.maps.InfoWindow({ content: details });
-        marker.addListener(
-          "mouseover", () => {
-            infowindow.open(
-              {
-                anchor: marker,
-                map,
-                shouldFocus: false,
-              }
-            );
-          }
-        );
-        marker.addListener(
-          "mouseout", () => {
-            infowindow.close();
-          }
-        );
+//        const infowindow = new google.maps.InfoWindow({ content: details });
+//        marker.addListener(
+//          "mouseover", () => {
+//            infowindow.open(
+//              {
+//                anchor: marker,
+//                map,
+//                shouldFocus: false,
+//              }
+//            );
+//          }
+//        );
+//        marker.addListener(
+//          "mouseout", () => {
+//            infowindow.close();
+//          }
+//        );
         decorations.push(marker);
       }
       function add_boxes(name,label,text,lat,lng,cases,colour) {
@@ -413,27 +452,29 @@ print qq[<!DOCTYPE html>
 ];
 }
 
-sub print_barchart($$$$@)
+sub print_histogram($$$$$@)
 {
+  my $name=shift;
+  my $text=shift;
   my $cases=shift;
-  my $title=shift;
-  my $lat=shift or die "no lat for '$title'";
-  my $lng=shift or die "no lng for '$title'";
-  my @lgas=@_;
-  print "        // $title is at $lat,$lng\n";
+  my $lat=shift or die "no lat for '$name'";
+  my $lng=shift or die "no lng for '$name'";
+  my @lga_names=@_;
+  print "        // $name is at $lat,$lng\n";
+  my $lockdown_details="";
   my $colour=$colours{purple};
   my $url=undef;
-  foreach my $lga (@lgas){
-    $lga =~ s/^The //i;
-    $lga =~ s/ Shire$//i;
-    $lga =~ s/ Regional$//i;
-    my $lockdown_details=$lockdowns{$lga} or next;
-    $title .= " ($lockdown_details->{region})";
+  foreach my $lga_name (@lga_names){
+    $lga_name =~ s/^The //i;
+    $lga_name =~ s/ Shire$//i;
+    $lga_name =~ s/ Regional$//i;
+    $lockdown_details=$lockdowns{$lga_name} or next;
+    #$name .= " ($lockdown_details->{region})";
     $colour=$lockdown_details->{colour};
-    print "        // $title is $colour hard locked down\n";
+    print "        // $name is $colour hard locked down\n";
     last;
   }
-  print "        // $title cases: ";
+  print "        // $name cases: ";
   my $t_cases=0;
   # my @weekly_cases=();
   my $first;
@@ -449,12 +490,13 @@ sub print_barchart($$$$@)
   }
   # print ", total $t_cases ( $weekly_cases[0] : $weekly_cases[1])\n";
   print ", total $t_cases\n";
-  my $text="$title<p>";
+  #my $text="$name<p>";
+  $text.="\\n";
   if(!$t_cases){
     $text .= "No recent cases";
   }else{
-    print "        // $title: cases all fall between $first and $last\n";
-    $text.=case_s($t_cases). ($first eq $last ? " on $first" : (" ".($t_cases==2? "on":"between"). " $first and $last").":");
+    print "        // $name: cases all fall between $first and $last\n";
+    $text.=case_s($t_cases). ($first eq $last ? " on $first" : (" ".($t_cases==2? "on":"between"). " $first and $last"));
     # $text.="<p>";
     # foreach my $day (0..$pp_oldest_day) {
     #   my $date=$dates[$day];
@@ -467,10 +509,10 @@ sub print_barchart($$$$@)
     #  $text.=sprintf("<p>Week to week Reff=%0.2g",$r);
     # }
   }
-  $title=~m/^[a-z0-9]/i or die;
+  $name=~m/^[a-z0-9]/i or die;
   my $initial=$&;
-  $title=~s/<br>/ /gi;
-  print qq{        add_boxes("$title", "$initial", "$text", $lat,$lng, [ };
+  $name=~s/<br>/ /gi;
+  print qq{        add_boxes("$name", "$initial", "$name\\n$text", $lat,$lng, [ };
   print join(", ",map {$cases->{$_}||0} @dates);
   print qq{ ], "$colour");\n};
   print "\n";
@@ -486,9 +528,12 @@ print qq[
     my $lga_lng=$lga->{lng};
     my $title=$lga_name;
     $title.=" LGA" unless $lga_name =~ m/Correctional settings/;
-    print_barchart(
-      my $cases=$lga->{cases},
+    my $text="Population $lga->{population}, $lga->{dose1} 1st dosed and $lga->{dose2} double dosed";
+    warn "bad lga: $lga_name" if $text =~ /  /;
+    print_histogram(
       $title,
+      $text,
+      my $cases=$lga->{cases},
       my $lat=$lga_lat,
       my $lng=$lga_lng,
       $lga_name
@@ -512,9 +557,10 @@ print qq[
     my @suburbs=sort keys %{$postcode->{suburbs}};
     my $suburbs=join ", ", @suburbs;
     my $lga_names=join "/", @lga_names;
-    print_barchart(
+    print_histogram(
+      my $title="Postcode $postcode_number",
+      my $text="$suburbs.\\n$lga_names LGA",
       my $cases=$postcode->{cases},
-      my $title="Postcode '$postcode_number' - $suburbs.<br>$lga_names LGA",
       my $lat=$postcode->{lat},
       my $lng=$postcode->{lng},
       @lga_names
@@ -554,6 +600,7 @@ sub case_s($)
 my $case_file='confirmed_cases_table1_location.csv';
 my $postcode_file='australian_postcodes.csv';
 my $lockdown_file='lockdowns.txt';
+my $vaccination_file='covid-19-vaccination-geographic-vaccination-rates-local-government-area-lga.csv';
 my $api_key_file='google_maps_api_key.txt';
 my $local_api_key_file='local_google_maps_api_key.txt';
 
@@ -578,6 +625,7 @@ read_cases($case_file) or die;
 read_postcodes($postcode_file) or die;
 locate_lgas();
 read_lockdowns($lockdown_file);
+read_vaccination($vaccination_file);
 read_api_key($api_key_file);
 
 open(my $OUT,">",$out_file) or die "Can't write '$out_file': $!\n";
