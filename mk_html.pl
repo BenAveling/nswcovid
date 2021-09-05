@@ -73,6 +73,7 @@ my %colours=(
 my $pp_num_days=14;
 my $pp_oldest_day;
 my $pp_box_size;
+my $pp_vax_wide;
 
 # ####
 # SUBS
@@ -235,15 +236,12 @@ sub read_postcodes($){
     $suburb=~s/([A-Z])([A-Z]+)/$1.lc($2)/ge;
     $postcodes{$postcode}{suburbs}{$suburb}=1;
   }
-  #$postcodes{'Correctional settings'}{lat}='-33.98968356474387';
-  #$postcodes{'Correctional settings'}{lng}='151.319736391778';
+  $postcodes{'Correctional settings'}{lat}='-33.98968356474387';
+  $postcodes{'Correctional settings'}{lng}='151.319736391778';
   return 1;
 }
 
 sub locate_lgas(){
-  # Arbitrarily locate 'Correctional Centre' off Botany Bay.
-  #$lgas{'Correctional settings'}{lat}='-33.98968356474387';
-  #$lgas{'Correctional settings'}{lng}='151.319736391778';
   foreach my $lga_name (keys %lgas){
     my $lga=$lgas{$lga_name};
     my $lga_postcodes=$lga->{postcodes} or next;
@@ -251,17 +249,21 @@ sub locate_lgas(){
     my $avg_lat=0;
     my $avg_lng=0;
     foreach my $postcode_num (keys %$lga_postcodes){
-      if($postcode_num eq 'Masked'){
+      if($postcode_num eq 'Masked' || !$postcode_num){
         --$num_postcodes;
         next;
       }
-      my $postcode=$postcodes{$postcode_num};
+      my $postcode=$postcodes{$postcode_num} or warn "no postcode: $postcode_num";
+      die "postcode $postcode_num has no lat" if ! $postcode->{lat};
       $avg_lat+=$postcode->{lat};
       $avg_lng+=$postcode->{lng};
     }
     $lgas{$lga_name}{lat}=sprintf("%.15g",$avg_lat/$num_postcodes);
     $lgas{$lga_name}{lng}=sprintf("%.15g",$avg_lng/$num_postcodes);
   }
+  # Arbitrarily relocate 'Correctional Centre' to off Botany Bay.
+  $lgas{'Correctional settings'}{lat}='-33.98968356474387';
+  $lgas{'Correctional settings'}{lng}='151.319736391778';
 }
 
 sub print_header()
@@ -294,7 +296,8 @@ print qq[<!DOCTYPE html>
            margin: 10px;
            width: 100px;">
       <strong>Barcharts</strong>
-      <BR>Each little barchart represents cases/day between $from and $to.
+      <BR>Vertical bars represents cases/day between $from and $to.
+      <BR>Horizontal bars represents % of 1st & 2nd vaxed.
       <!-- <strong>Restrictions</strong> -->
       <!-- no one should have let me choose colours. Sorry. -->
       <div style="color: $colours{red}">Red: <A href="https://www.nsw.gov.au/covid-19/rules/affected-area">Area of Concern</A></div>
@@ -452,7 +455,25 @@ print qq[<!DOCTYPE html>
 ];
 }
 
-sub print_histogram($$$$$@)
+sub pick_colour(@)
+{
+  my @lga_names=@_;
+  my $lockdown_details="";
+  my $colour=$colours{purple};
+  # my $url=undef;
+  foreach my $lga_name (@lga_names){
+    $lga_name =~ s/^The //i;
+    $lga_name =~ s/ Shire$//i;
+    $lga_name =~ s/ Regional$//i;
+    $lockdown_details=$lockdowns{$lga_name} or next;
+    #$name .= " ($lockdown_details->{region})";
+    $colour=$lockdown_details->{colour};
+    last;
+  }
+  return qq{"$colour"};
+}
+
+sub print_cases($$$$$@)
 {
   my $name=shift;
   my $text=shift;
@@ -461,19 +482,8 @@ sub print_histogram($$$$$@)
   my $lng=shift or die "no lng for '$name'";
   my @lga_names=@_;
   print "        // $name is at $lat,$lng\n";
-  my $lockdown_details="";
-  my $colour=$colours{purple};
-  my $url=undef;
-  foreach my $lga_name (@lga_names){
-    $lga_name =~ s/^The //i;
-    $lga_name =~ s/ Shire$//i;
-    $lga_name =~ s/ Regional$//i;
-    $lockdown_details=$lockdowns{$lga_name} or next;
-    #$name .= " ($lockdown_details->{region})";
-    $colour=$lockdown_details->{colour};
-    print "        // $name is $colour hard locked down\n";
-    last;
-  }
+  my $colour=pick_colour(@lga_names);
+  print "        // $name is $colour hard locked down\n";
   print "        // $name cases: ";
   my $t_cases=0;
   # my @weekly_cases=();
@@ -514,8 +524,29 @@ sub print_histogram($$$$$@)
   $name=~s/<br>/ /gi;
   print qq{        add_boxes("$name", "$initial", "$name\\n$text", $lat,$lng, [ };
   print join(", ",map {$cases->{$_}||0} @dates);
-  print qq{ ], "$colour");\n};
+  print qq{ ], $colour);\n};
   print "\n";
+}
+
+sub print_vaxed($$$$$){
+  my $dose1=shift or die;
+  my $dose2=shift or die;
+  my $lat=shift or die;
+  my $lng=shift or die;
+  my $colour=shift or die;
+  my $high=$pp_box_size;
+  return if $dose1 eq "N/A" || $dose2 eq "N/A";
+  $dose1=~s/%//;
+  $dose2=~s/%//;
+  my $wide1=$pp_vax_wide*$dose1/100;
+  my $wide2=$pp_vax_wide*$dose2/100;
+  my $n=$lat; my $s=$n-$high; my $w=$lng; my $e=$w+$wide1;
+  print qq{        add_box($n,$w,$s,$e,$colour);\n};
+  $n=$s;$s-=$high;$e=$w+$wide2;
+  print qq{        add_box($n,$w,$s,$e,$colour);\n};
+  # TODO: Wrap these in a function, for readability?
+  $n=$lat;$s=$n-2*$high;$w=$lng;$e=$w+$pp_vax_wide;
+  print qq{        add_box($n,$w,$s,$e,$colour);\n};
 }
 
 sub print_lgas(){
@@ -528,15 +559,23 @@ print qq[
     my $lga_lng=$lga->{lng};
     my $title=$lga_name;
     $title.=" LGA" unless $lga_name =~ m/Correctional settings/;
-    my $text="Population $lga->{population}, $lga->{dose1} 1st dosed and $lga->{dose2} double dosed";
+    my $text=$lga->{population} ? "Population $lga->{population}, $lga->{dose1} 1st dosed and $lga->{dose2} double dosed" : "";
     warn "bad lga: $lga_name" if $text =~ /  /;
-    print_histogram(
+    print_cases(
       $title,
       $text,
       my $cases=$lga->{cases},
       my $lat=$lga_lat,
       my $lng=$lga_lng,
-      $lga_name
+      $lga_name,
+    );
+    next if $lga_name =~ m/correctional settings/i;
+    print_vaxed(
+      $lga->{dose1},
+      $lga->{dose2},
+      $lga->{lat},
+      $lga->{lng},
+      my $colour=pick_colour($lga_name)
     );
   }
 print qq[        displaying = 'lgas';
@@ -557,7 +596,7 @@ print qq[
     my @suburbs=sort keys %{$postcode->{suburbs}};
     my $suburbs=join ", ", @suburbs;
     my $lga_names=join "/", @lga_names;
-    print_histogram(
+    print_cases(
       my $title="Postcode $postcode_number",
       my $text="$suburbs.\\n$lga_names LGA",
       my $cases=$postcode->{cases},
@@ -620,6 +659,7 @@ while (my $argv = shift @ARGV) {
 
 $pp_oldest_day=$pp_num_days-1;
 $pp_box_size=0.002*14/$pp_num_days;
+$pp_vax_wide=0.002*14;
 
 read_cases($case_file) or die;
 read_postcodes($postcode_file) or die;
