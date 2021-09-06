@@ -415,14 +415,14 @@ print qq[<!DOCTYPE html>
         var first=1;
         // add_circle(s,w,10,colour);
         for (let day = 0; day < $pp_num_days; day++) {
-          if(cases[day]>0 || !first){
+          if(cases[day]>0){
             first=0;
             // n, w, s, e, colour
             add_box(s+cases[day]*high,w,s,w+wide,colour);
             // lat,lng,size
             // add_circle(s,w,cases[day],"#ff0000");
-            w+=wide;
           }
+          w+=wide;
         }
         if(first){
           add_circle(s,w,3,colour);
@@ -528,6 +528,16 @@ sub print_cases($$$$$@)
   print "\n";
 }
 
+sub print_hline($$$){
+  my $lat=shift or die;
+  my $lng=shift or die;
+  my $colour=shift or die;
+  my $high=$pp_box_size;
+  my $wide=$pp_vax_wide;
+  my $n=$lat; my $s=$lat; my $w=$lng; my $e=$w+$wide;
+  print qq{        add_box($n,$w,$s,$e,$colour);\n};
+}
+
 sub print_vaxed($$$$$){
   my $dose1=shift or die;
   my $dose2=shift or die;
@@ -535,7 +545,10 @@ sub print_vaxed($$$$$){
   my $lng=shift or die;
   my $colour=shift or die;
   my $high=$pp_box_size;
-  return if $dose1 eq "N/A" || $dose2 eq "N/A";
+  if($dose1 eq "N/A" || $dose2 eq "N/A"){
+    print_hline($lat,$lng,$colour);
+    return;
+  }
   $dose1=~s/%//;
   $dose2=~s/%//;
   my $wide1=$pp_vax_wide*$dose1/100;
@@ -604,6 +617,8 @@ print qq[
       my $lng=$postcode->{lng},
       @lga_names
     );
+    my $colour=pick_colour(@lga_names);
+    print_hline($lat,$lng,$colour);
   }
 print qq[        displaying = 'postcodes';
       }
