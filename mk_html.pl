@@ -33,7 +33,7 @@ my $usage = qq{Usage:
   perl mk_html.pl [-l] [-d num_days]
 
   -l output is for local use only
-  -d show num_days worth of days [instead of the default 14]
+  -d show num_days worth of days [instead of the default 90]
 
 Note: Input and output files are currently hardcoded.
 };
@@ -70,7 +70,7 @@ my %colours=(
     purple=>"#990099", # default
 );
 
-my $pp_num_days=14;
+my $pp_num_days=90;
 my $pp_oldest_day;
 my $pp_box_size;
 my $pp_vax_wide;
@@ -205,7 +205,7 @@ sub read_cases($){
     $postcodes{$postcode}{cases}{$date}++;
     $postcodes{$postcode}{lgas}{$lga_name}=1;
   }
-  # Pick the last 14 or whatever full days - ignore the latest day, it is probably only a part day (TODO, print latest day, but with dashed lines)
+  # Pick the last however many full days, ignoring the latest day which is probably only a part day (TODO, print latest day, but with dashed lines?)
   @dates = reverse @dates[1..$pp_num_days];
   $from=$dates[0];
   $to=$dates[$#dates];
@@ -356,6 +356,7 @@ print qq[<!DOCTYPE html>
           }
         );
         decorations.push(box);
+        return box;
       }
 
       function add_circle(lat,lng,size,c) {
@@ -559,7 +560,8 @@ sub print_vaxed($$$$$){
   print qq{        add_box($n,$w,$s,$e,$colour);\n};
   # TODO: Wrap these in a function, for readability?
   $n=$lat;$s=$n-2*$high;$w=$lng;$e=$w+$pp_vax_wide;
-  print qq{        add_box($n,$w,$s,$e,$colour);\n};
+  print qq{        var box=add_box($n,$w,$s,$e,$colour);\n};
+  print qq{        box.fillOpacity=0;\n};
 }
 
 sub print_lgas(){
