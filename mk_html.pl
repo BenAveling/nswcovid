@@ -540,13 +540,13 @@ sub print_hline($$$){
 }
 
 sub print_vaxed($$$$$){
-  my $dose1=shift or die;
-  my $dose2=shift or die;
+  my $dose1=shift;
+  my $dose2=shift;
   my $lat=shift or die;
   my $lng=shift or die;
   my $colour=shift or die;
   my $high=$pp_box_size;
-  if($dose1 eq "N/A" || $dose2 eq "N/A"){
+  if(!$dose1 || !$dose2 || $dose1 eq "N/A" || $dose2 eq "N/A"){
     print_hline($lat,$lng,$colour);
     return;
   }
@@ -584,7 +584,7 @@ print qq[
       my $lng=$lga_lng,
       $lga_name,
     );
-    next if $lga_name =~ m/correctional settings/i;
+    # next if $lga_name =~ m/correctional settings/i;
     print_vaxed(
       $lga->{dose1},
       $lga->{dose2},
