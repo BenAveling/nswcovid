@@ -656,7 +656,7 @@ sub case_s($)
 my $case_file='confirmed_cases_table1_location.csv';
 my $postcode_file='australian_postcodes.csv';
 my $lockdown_file='lockdowns.txt';
-my $vaccination_file='covid-19-vaccination-geographic-vaccination-rates-local-government-area-lga.csv';
+my $vaccination_file='covid-19-vaccination-local-government-area-lga-6-september-2021-covid-19-vaccination-local-government-area-lga.csv';
 my $api_key_file='google_maps_api_key.txt';
 my $local_api_key_file='local_google_maps_api_key.txt';
 
