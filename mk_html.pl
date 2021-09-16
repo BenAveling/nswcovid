@@ -490,6 +490,8 @@ sub print_cases($$$$$@)
   # my @weekly_cases=();
   my $first;
   my $last;
+  my $highest_cases=0;
+  my $highest_msg="";
   foreach my $day (0 .. $pp_oldest_day) {
     my $date=$dates[$day];
     my $cases=$cases->{$date}||=0;
@@ -498,6 +500,10 @@ sub print_cases($$$$$@)
     print " $cases";
     $first||=$date if $cases;
     $last=$date if $cases;
+    if($cases>$highest_cases){
+      $highest_cases = $cases;
+      $highest_msg = "\\nPeak of ".case_s($cases)." on $date";
+    }
   }
   # print ", total $t_cases ( $weekly_cases[0] : $weekly_cases[1])\n";
   print ", total $t_cases\n";
@@ -508,6 +514,7 @@ sub print_cases($$$$$@)
   }else{
     print "        // $name: cases all fall between $first and $last\n";
     $text.=case_s($t_cases). ($first eq $last ? " on $first" : (" ".($t_cases==2? "on":"between"). " $first and $last"));
+    $text.=$highest_msg if $highest_msg;
     # $text.="<p>";
     # foreach my $day (0..$pp_oldest_day) {
     #   my $date=$dates[$day];
