@@ -554,12 +554,12 @@ sub print_vaxed($$$$$){
   $dose2=~s/%//;
   my $wide1=$pp_vax_wide*$dose1/100;
   my $wide2=$pp_vax_wide*$dose2/100;
-  my $n=$lat; my $s=$n-$high; my $w=$lng; my $e=$w+$wide1;
+  my $n=$lat-$high; my $s=$n-$high; my $w=$lng; my $e=$w+$wide1;
   print qq{        add_box($n,$w,$s,$e,$colour);\n};
   $n=$s;$s-=$high;$e=$w+$wide2;
   print qq{        add_box($n,$w,$s,$e,$colour);\n};
   # TODO: Wrap these in a function, for readability?
-  $n=$lat;$s=$n-2*$high;$w=$lng;$e=$w+$pp_vax_wide;
+  $n=$n+$high;$e=$w+$pp_vax_wide;
   print qq{        var box=add_box($n,$w,$s,$e,$colour);\n};
   print qq{        box.fillOpacity=0;\n};
 }
