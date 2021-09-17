@@ -241,6 +241,12 @@ sub read_postcodes($){
   return 1;
 }
 
+sub masked_postcode($)
+{
+  my $postcode_num=shift;
+  return $postcode_num =~ m/Masked$|None$/ || !$postcode_num;
+}
+
 sub locate_lgas(){
   foreach my $lga_name (keys %lgas){
     my $lga=$lgas{$lga_name};
@@ -249,7 +255,7 @@ sub locate_lgas(){
     my $avg_lat=0;
     my $avg_lng=0;
     foreach my $postcode_num (keys %$lga_postcodes){
-      if($postcode_num eq 'Masked' || !$postcode_num){
+      if(masked_postcode($postcode_num)){
         --$num_postcodes;
         next;
       }
@@ -610,7 +616,7 @@ print qq[
       function print_postcodes(){
 ];
   foreach my $postcode_number (sort keys %postcodes){
-    next if !$postcode_number || $postcode_number eq "Masked"; # Could guess based on LGA...
+    next if masked_postcode($postcode_number); # Could guess based on LGA?
     my $postcode=$postcodes{$postcode_number}; # could be a Correction Centre
     my @lga_names=sort keys %{$postcode->{lgas}};
     my $num_lgas = @lga_names or next;
