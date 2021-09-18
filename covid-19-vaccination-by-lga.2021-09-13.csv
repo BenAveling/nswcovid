@@ -1,0 +1,558 @@
+﻿"Local Government Area data:
+Local Government areas range in population size between <100 to >1 million people. LGAs often have varying age and other demographic profiles affecting their coverage rates. LGA population estimates are taken from the latest ABS LGA by age release. 
+Note on areas with large remote and very remote populations:
+The  process of geocoding addresses in very remote areas and remote areas can lead to artificially low vaccine dose count records in those areas (as addresses cannot be ‘pinpointed’ to a specific client location, and therefore LGA). For vaccine rates relevant to these areas, please consult the weekly SA4 data release from Operation COVIDShield.  SA4 data is generally of larger population regions, so undercounting of doses has less impact on overall coverage rates. 
+Methodology underpinning LGA Remoteness classification: 
+LGA ‘remoteness’ is calculated by a assigning a modal remoteness value for each LGA, based on where the majority of the population in each LGA live - using 2016 Census meshblock population counts. Remote and Very Remote classifications accord with the same values if using the Modified Monash Model of remoteness.",,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+Data extracted from AIR - as at 2359hrs on 12 September 2021,,,,,
+LGA Name,Jurisdiction,Remoteness,Dose 1 % coverage of 15+,Dose 2 % coverage of 15+,Population aged 15+
+Albury (C),New South Wales,Inner Regional Australia,69.8%,40.2%,"43,782"
+Armidale Regional (A),New South Wales,Inner Regional Australia,68.9%,42.6%,"25,368"
+Ballina (A),New South Wales,Inner Regional Australia,73.2%,45.3%,"37,124"
+Balranald (A),New South Wales,Outer Regional Australia,58.4%,32.5%,"1,859"
+Bathurst Regional (A),New South Wales,Inner Regional Australia,77.9%,39.8%,"35,111"
+Bayside (A),New South Wales,Major Cities of Australia,78.7%,42.1%,"150,746"
+Bega Valley (A),New South Wales,Outer Regional Australia,80.3%,53.5%,"28,912"
+Bellingen (A),New South Wales,Outer Regional Australia,73.2%,43.9%,"10,692"
+Berrigan (A),New South Wales,Inner Regional Australia,78.1%,52.9%,"7,307"
+Blacktown (C),New South Wales,Major Cities of Australia,89.5%,48.7%,"289,214"
+Bland (A),New South Wales,Outer Regional Australia,74.2%,45.5%,"4,773"
+Blayney (A),New South Wales,Inner Regional Australia,80.1%,41.3%,"5,867"
+Blue Mountains (C),New South Wales,Major Cities of Australia,82.5%,53.2%,"64,784"
+Bogan (A),New South Wales,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Bourke (A),New South Wales,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Brewarrina (A),New South Wales,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Broken Hill (C),New South Wales,Outer Regional Australia,73.4%,43.1%,"14,532"
+Burwood (A),New South Wales,Major Cities of Australia,81.9%,43.6%,"35,639"
+Byron (A),New South Wales,Inner Regional Australia,55.9%,31.8%,"29,052"
+Cabonne (A),New South Wales,Inner Regional Australia,80.4%,42.5%,"10,765"
+Camden (A),New South Wales,Major Cities of Australia,91.5%,49.4%,"76,539"
+Campbelltown (C) (NSW),New South Wales,Major Cities of Australia,87.1%,47.9%,"133,449"
+Canada Bay (A),New South Wales,Major Cities of Australia,77.0%,48.5%,"80,727"
+Canterbury-Bankstown (A),New South Wales,Major Cities of Australia,81.0%,43.6%,"301,492"
+Carrathool (A),New South Wales,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Central Coast (C) (NSW),New South Wales,Major Cities of Australia,77.6%,45.5%,"279,484"
+Central Darling (A),New South Wales,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Cessnock (C),New South Wales,Inner Regional Australia,63.4%,31.9%,"47,375"
+Clarence Valley (A),New South Wales,Inner Regional Australia,69.1%,37.1%,"42,953"
+Cobar (A),New South Wales,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Coffs Harbour (C),New South Wales,Inner Regional Australia,67.4%,37.4%,"62,689"
+Coolamon (A),New South Wales,Inner Regional Australia,75.6%,45.2%,"3,477"
+Coonamble (A),New South Wales,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Cootamundra-Gundagai Regional (A),New South Wales,Inner Regional Australia,83.5%,54.0%,"9,187"
+Cowra (A),New South Wales,Inner Regional Australia,80.2%,43.9%,"10,456"
+Cumberland (A),New South Wales,Major Cities of Australia,81.8%,40.9%,"192,534"
+Dubbo Regional (A),New South Wales,Inner Regional Australia,84.4%,40.0%,"42,195"
+Dungog (A),New South Wales,Inner Regional Australia,73.3%,43.3%,"7,623"
+Edward River (A),New South Wales,Inner Regional Australia,51.9%,34.7%,"7,426"
+Eurobodalla (A),New South Wales,Inner Regional Australia,85.0%,52.7%,"32,891"
+Fairfield (C),New South Wales,Major Cities of Australia,80.9%,42.1%,"172,126"
+Federation (A),New South Wales,Inner Regional Australia,80.0%,44.5%,"10,325"
+Forbes (A),New South Wales,Outer Regional Australia,82.9%,43.1%,"7,865"
+Georges River (A),New South Wales,Major Cities of Australia,79.9%,44.8%,"133,798"
+Gilgandra (A),New South Wales,Outer Regional Australia,90.4%,49.0%,"3,346"
+Glen Innes Severn (A),New South Wales,Outer Regional Australia,73.4%,43.3%,"7,359"
+Goulburn Mulwaree (A),New South Wales,Inner Regional Australia,69.6%,39.8%,"25,395"
+Greater Hume Shire (A),New South Wales,Inner Regional Australia,68.6%,37.3%,"8,458"
+Griffith (C),New South Wales,Outer Regional Australia,72.0%,43.6%,"21,512"
+Gunnedah (A),New South Wales,Outer Regional Australia,67.7%,32.6%,"9,949"
+Gwydir (A),New South Wales,Outer Regional Australia,65.7%,35.8%,"4,307"
+Hawkesbury (C),New South Wales,Major Cities of Australia,80.2%,45.1%,"54,071"
+Hay (A),New South Wales,Outer Regional Australia,84.8%,54.3%,"2,422"
+Hilltops (A),New South Wales,Inner Regional Australia,78.3%,46.4%,"14,962"
+Hornsby (A),New South Wales,Major Cities of Australia,88.9%,59.7%,"122,259"
+Hunters Hill (A),New South Wales,Major Cities of Australia,81.0%,59.0%,"12,189"
+Inner West (A),New South Wales,Major Cities of Australia,75.6%,50.6%,"171,244"
+Inverell (A),New South Wales,Outer Regional Australia,65.8%,32.7%,"13,454"
+Junee (A),New South Wales,Inner Regional Australia,63.3%,38.0%,"5,520"
+Kempsey (A),New South Wales,Inner Regional Australia,69.5%,36.6%,"24,440"
+Kiama (A),New South Wales,Inner Regional Australia,80.2%,55.4%,"19,363"
+Ku-ring-gai (A),New South Wales,Major Cities of Australia,90.6%,64.5%,"101,869"
+Kyogle (A),New South Wales,Inner Regional Australia,67.1%,34.3%,"7,285"
+Lachlan (A),New South Wales,Outer Regional Australia,87.9%,47.8%,"4,668"
+Lake Macquarie (C),New South Wales,Major Cities of Australia,74.2%,43.7%,"167,047"
+Lane Cove (A),New South Wales,Major Cities of Australia,83.2%,57.1%,"32,784"
+Leeton (A),New South Wales,Outer Regional Australia,65.2%,39.9%,"9,024"
+Lismore (C),New South Wales,Inner Regional Australia,62.6%,34.4%,"35,892"
+Lithgow (C),New South Wales,Inner Regional Australia,71.9%,37.6%,"17,865"
+Liverpool (C),New South Wales,Major Cities of Australia,80.5%,42.9%,"176,376"
+Liverpool Plains (A),New South Wales,Outer Regional Australia,67.9%,32.3%,"6,396"
+Lockhart (A),New South Wales,Outer Regional Australia,76.2%,50.7%,"2,585"
+Maitland (C),New South Wales,Major Cities of Australia,69.6%,38.6%,"66,688"
+Mid-Coast (A),New South Wales,Inner Regional Australia,73.5%,43.8%,"79,221"
+Mid-Western Regional (A),New South Wales,Inner Regional Australia,81.5%,34.2%,"19,963"
+Moree Plains (A),New South Wales,Outer Regional Australia,65.7%,38.3%,"10,216"
+Mosman (A),New South Wales,Major Cities of Australia,84.1%,60.7%,"25,604"
+Murray River (A),New South Wales,Inner Regional Australia,93.6%,62.6%,"9,910"
+Murrumbidgee (A),New South Wales,Outer Regional Australia,67.7%,39.3%,"3,114"
+Muswellbrook (A),New South Wales,Inner Regional Australia,63.0%,29.9%,"12,673"
+Nambucca (A),New South Wales,Outer Regional Australia,69.8%,42.8%,"16,485"
+Narrabri (A),New South Wales,Outer Regional Australia,67.5%,29.8%,"10,213"
+Narrandera (A),New South Wales,Outer Regional Australia,67.7%,40.7%,"4,651"
+Narromine (A),New South Wales,Outer Regional Australia,85.4%,33.3%,"5,093"
+Newcastle (C),New South Wales,Major Cities of Australia,70.2%,42.3%,"137,452"
+North Sydney (A),New South Wales,Major Cities of Australia,76.6%,52.1%,"65,324"
+Northern Beaches (A),New South Wales,Major Cities of Australia,84.7%,52.4%,"221,234"
+Oberon (A),New South Wales,Inner Regional Australia,78.0%,43.0%,"4,472"
+Orange (C),New South Wales,Inner Regional Australia,85.3%,46.4%,"33,170"
+Parkes (A),New South Wales,Outer Regional Australia,80.9%,36.1%,"11,785"
+Parramatta (C),New South Wales,Major Cities of Australia,85.2%,49.9%,"209,432"
+Penrith (C),New South Wales,Major Cities of Australia,82.8%,42.2%,"167,408"
+Port Macquarie-Hastings (A),New South Wales,Inner Regional Australia,78.4%,47.4%,"70,143"
+Port Stephens (A),New South Wales,Inner Regional Australia,75.1%,45.0%,"60,306"
+Queanbeyan-Palerang Regional (A),New South Wales,Major Cities of Australia,70.0%,42.5%,"48,845"
+Randwick (C),New South Wales,Major Cities of Australia,71.3%,45.8%,"133,377"
+Richmond Valley (A),New South Wales,Inner Regional Australia,63.1%,36.9%,"18,938"
+Ryde (C),New South Wales,Major Cities of Australia,79.8%,49.3%,"110,141"
+Shellharbour (C),New South Wales,Major Cities of Australia,73.1%,43.8%,"58,715"
+Shoalhaven (C),New South Wales,Inner Regional Australia,76.7%,49.7%,"87,725"
+Singleton (A),New South Wales,Inner Regional Australia,67.1%,33.9%,"18,334"
+Snowy Monaro Regional (A),New South Wales,Outer Regional Australia,74.1%,44.2%,"17,214"
+Snowy Valleys (A),New South Wales,Inner Regional Australia,72.1%,41.5%,"11,726"
+Strathfield (A),New South Wales,Major Cities of Australia,82.4%,46.9%,"40,017"
+Sutherland Shire (A),New South Wales,Major Cities of Australia,85.5%,55.6%,"187,018"
+Sydney (C),New South Wales,Major Cities of Australia,64.9%,40.5%,"229,059"
+Tamworth Regional (A),New South Wales,Inner Regional Australia,71.2%,39.4%,"49,648"
+Temora (A),New South Wales,Outer Regional Australia,74.2%,37.6%,"5,095"
+Tenterfield (A),New South Wales,Outer Regional Australia,67.1%,32.5%,"5,553"
+The Hills Shire (A),New South Wales,Major Cities of Australia,93.3%,59.7%,"140,271"
+Tweed (A),New South Wales,Major Cities of Australia,66.8%,41.2%,"80,193"
+Upper Hunter Shire (A),New South Wales,Inner Regional Australia,76.3%,44.7%,"11,302"
+Upper Lachlan Shire (A),New South Wales,Inner Regional Australia,76.3%,44.1%,"6,603"
+Uralla (A),New South Wales,Outer Regional Australia,73.9%,45.5%,"4,895"
+Wagga Wagga (C),New South Wales,Inner Regional Australia,72.1%,46.8%,"51,794"
+Walcha (A),New South Wales,Outer Regional Australia,85.4%,56.0%,"2,585"
+Walgett (A),New South Wales,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Warren (A),New South Wales,Outer Regional Australia,88.3%,39.6%,"2,115"
+Warrumbungle Shire (A),New South Wales,Outer Regional Australia,80.5%,35.6%,"7,566"
+Waverley (A),New South Wales,Major Cities of Australia,75.3%,51.0%,"62,490"
+Weddin (A),New South Wales,Outer Regional Australia,85.6%,45.1%,"3,030"
+Wentworth (A),New South Wales,Outer Regional Australia,64.2%,37.6%,"5,625"
+Willoughby (C),New South Wales,Major Cities of Australia,80.7%,53.2%,"65,599"
+Wingecarribee (A),New South Wales,Inner Regional Australia,81.7%,54.0%,"42,191"
+Wollondilly (A),New South Wales,Inner Regional Australia,76.6%,43.5%,"41,492"
+Wollongong (C),New South Wales,Major Cities of Australia,71.1%,45.5%,"179,317"
+Woollahra (A),New South Wales,Major Cities of Australia,82.0%,61.2%,"50,326"
+Yass Valley (A),New South Wales,Inner Regional Australia,71.7%,46.4%,"13,497"
+Unincorporated NSW,New South Wales,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Alpine (S),Victoria,Inner Regional Australia,79.0%,50.9%,"10,732"
+Ararat (RC),Victoria,Inner Regional Australia,73.7%,52.1%,"9,944"
+Ballarat (C),Victoria,Inner Regional Australia,71.0%,46.9%,"88,323"
+Banyule (C),Victoria,Major Cities of Australia,72.4%,48.9%,"107,523"
+Bass Coast (S),Victoria,Inner Regional Australia,79.9%,52.3%,"30,332"
+Baw Baw (S),Victoria,Inner Regional Australia,67.3%,43.5%,"42,887"
+Bayside (C),Victoria,Major Cities of Australia,80.7%,55.7%,"87,219"
+Benalla (RC),Victoria,Inner Regional Australia,76.9%,55.1%,"11,824"
+Boroondara (C),Victoria,Major Cities of Australia,74.9%,51.0%,"152,935"
+Brimbank (C),Victoria,Major Cities of Australia,57.9%,32.5%,"171,362"
+Buloke (S),Victoria,Outer Regional Australia,82.1%,58.3%,"5,123"
+Campaspe (S),Victoria,Inner Regional Australia,75.9%,46.3%,"30,917"
+Cardinia (S),Victoria,Major Cities of Australia,63.7%,35.5%,"86,129"
+Casey (C),Victoria,Major Cities of Australia,61.4%,34.4%,"273,232"
+Central Goldfields (S),Victoria,Inner Regional Australia,75.2%,54.4%,"11,110"
+Colac-Otway (S),Victoria,Inner Regional Australia,72.9%,47.6%,"17,696"
+Corangamite (S),Victoria,Inner Regional Australia,77.1%,49.0%,"13,141"
+Darebin (C),Victoria,Major Cities of Australia,59.3%,35.8%,"139,021"
+East Gippsland (S),Victoria,Outer Regional Australia,76.3%,52.6%,"39,596"
+Frankston (C),Victoria,Major Cities of Australia,65.9%,38.6%,"115,844"
+Gannawarra (S),Victoria,Outer Regional Australia,78.6%,44.4%,"8,756"
+Glen Eira (C),Victoria,Major Cities of Australia,71.1%,45.8%,"128,766"
+Glenelg (S),Victoria,Outer Regional Australia,75.0%,46.3%,"16,561"
+Golden Plains (S),Victoria,Inner Regional Australia,68.9%,44.2%,"18,450"
+Greater Bendigo (C),Victoria,Inner Regional Australia,73.6%,49.6%,"95,200"
+Greater Dandenong (C),Victoria,Major Cities of Australia,56.7%,30.5%,"138,053"
+Greater Geelong (C),Victoria,Major Cities of Australia,76.1%,50.2%,"211,830"
+Greater Shepparton (C),Victoria,Inner Regional Australia,73.1%,40.1%,"52,988"
+Hepburn (S),Victoria,Inner Regional Australia,74.1%,52.2%,"13,467"
+Hindmarsh (S),Victoria,Outer Regional Australia,70.7%,43.2%,"4,723"
+Hobsons Bay (C),Victoria,Major Cities of Australia,67.8%,41.1%,"79,604"
+Horsham (RC),Victoria,Outer Regional Australia,73.1%,48.4%,"16,016"
+Hume (C),Victoria,Major Cities of Australia,55.0%,28.8%,"180,782"
+Indigo (S),Victoria,Inner Regional Australia,78.9%,48.3%,"13,733"
+Kingston (C) (Vic.),Victoria,Major Cities of Australia,69.9%,43.4%,"136,655"
+Knox (C),Victoria,Major Cities of Australia,68.4%,41.7%,"135,647"
+Latrobe (C) (Vic.),Victoria,Inner Regional Australia,61.7%,39.5%,"61,811"
+Loddon (S),Victoria,Outer Regional Australia,73.7%,46.3%,"6,339"
+Macedon Ranges (S),Victoria,Inner Regional Australia,79.6%,52.0%,"39,626"
+Manningham (C),Victoria,Major Cities of Australia,70.8%,45.5%,"106,558"
+Mansfield (S),Victoria,Outer Regional Australia,78.9%,44.1%,"7,567"
+Maribyrnong (C),Victoria,Major Cities of Australia,62.6%,37.9%,"79,009"
+Maroondah (C),Victoria,Major Cities of Australia,69.4%,43.3%,"96,377"
+Melbourne (C),Victoria,Major Cities of Australia,54.2%,28.4%,"168,298"
+Melton (C),Victoria,Major Cities of Australia,59.8%,30.3%,"124,611"
+Mildura (RC),Victoria,Outer Regional Australia,64.8%,37.7%,"45,044"
+Mitchell (S),Victoria,Inner Regional Australia,64.2%,39.7%,"36,387"
+Moira (S),Victoria,Inner Regional Australia,75.7%,45.4%,"24,759"
+Monash (C),Victoria,Major Cities of Australia,65.6%,39.8%,"171,519"
+Moonee Valley (C),Victoria,Major Cities of Australia,67.6%,43.2%,"108,789"
+Moorabool (S),Victoria,Major Cities of Australia,70.9%,40.2%,"27,901"
+Moreland (C),Victoria,Major Cities of Australia,60.4%,35.5%,"156,305"
+Mornington Peninsula (S),Victoria,Major Cities of Australia,75.4%,51.6%,"138,719"
+Mount Alexander (S),Victoria,Inner Regional Australia,78.0%,54.2%,"16,789"
+Moyne (S),Victoria,Inner Regional Australia,78.6%,49.5%,"13,498"
+Murrindindi (S),Victoria,Inner Regional Australia,69.2%,44.1%,"12,242"
+Nillumbik (S),Victoria,Major Cities of Australia,76.7%,50.7%,"52,476"
+Northern Grampians (S),Victoria,Inner Regional Australia,78.5%,49.0%,"9,646"
+Port Phillip (C),Victoria,Major Cities of Australia,65.0%,41.6%,"102,175"
+Pyrenees (S),Victoria,Inner Regional Australia,71.4%,49.3%,"6,297"
+Queenscliffe (B),Victoria,Inner Regional Australia,95.9%,76.6%,"2,610"
+South Gippsland (S),Victoria,Inner Regional Australia,74.4%,46.0%,"24,475"
+Southern Grampians (S),Victoria,Inner Regional Australia,81.7%,52.2%,"13,285"
+Stonnington (C),Victoria,Major Cities of Australia,67.9%,43.9%,"103,900"
+Strathbogie (S),Victoria,Inner Regional Australia,76.7%,50.8%,"9,174"
+Surf Coast (S),Victoria,Inner Regional Australia,85.4%,59.8%,"26,584"
+Swan Hill (RC),Victoria,Outer Regional Australia,74.3%,42.6%,"16,639"
+Towong (S),Victoria,Outer Regional Australia,78.4%,48.9%,"5,068"
+Wangaratta (RC),Victoria,Inner Regional Australia,77.0%,48.8%,"23,818"
+Warrnambool (C),Victoria,Inner Regional Australia,79.8%,52.7%,"28,859"
+Wellington (S),Victoria,Inner Regional Australia,70.6%,47.9%,"36,486"
+West Wimmera (S),Victoria,Outer Regional Australia,73.5%,40.2%,"3,178"
+Whitehorse (C),Victoria,Major Cities of Australia,69.8%,43.9%,"149,611"
+Whittlesea (C),Victoria,Major Cities of Australia,56.2%,32.1%,"180,925"
+Wodonga (C),Victoria,Inner Regional Australia,70.7%,44.8%,"33,295"
+Wyndham (C),Victoria,Major Cities of Australia,66.7%,33.2%,"201,181"
+Yarra (C),Victoria,Major Cities of Australia,64.0%,39.7%,"90,535"
+Yarra Ranges (S),Victoria,Major Cities of Australia,65.7%,40.0%,"129,169"
+Yarriambiack (S),Victoria,Outer Regional Australia,76.6%,52.9%,"5,517"
+Unincorporated Vic,Victoria,Outer Regional Australia,35.8%,15.9%,768
+Aurukun (S),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Balonne (S),Queensland,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Banana (S),Queensland,Outer Regional Australia,46.2%,27.0%,"11,003"
+Barcaldine (R),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Barcoo (S),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Blackall-Tambo (R),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Boulia (S),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Brisbane (C),Queensland,Major Cities of Australia,62.7%,43.5%,"1,033,592"
+Bulloo (S),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Bundaberg (R),Queensland,Inner Regional Australia,57.9%,40.2%,"79,061"
+Burdekin (S),Queensland,Outer Regional Australia,54.4%,32.7%,"14,053"
+Burke (S),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Cairns (R),Queensland,Outer Regional Australia,59.7%,42.2%,"133,038"
+Carpentaria (S),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Cassowary Coast (R),Queensland,Outer Regional Australia,53.5%,33.8%,"24,343"
+Central Highlands (R) (Qld),Queensland,Outer Regional Australia,40.5%,25.9%,"21,430"
+Charters Towers (R),Queensland,Outer Regional Australia,40.9%,27.6%,"9,384"
+Cherbourg (S),Queensland,Inner Regional Australia,28.1%,17.7%,841
+Cloncurry (S),Queensland,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Cook (S),Queensland,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Croydon (S),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Diamantina (S),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Doomadgee (S),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Douglas (S),Queensland,Outer Regional Australia,57.6%,38.0%,"10,354"
+Etheridge (S),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Flinders (S) (Qld),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Fraser Coast (R),Queensland,Inner Regional Australia,62.0%,43.7%,"88,940"
+Gladstone (R),Queensland,Inner Regional Australia,47.9%,30.4%,"48,845"
+Gold Coast (C),Queensland,Major Cities of Australia,53.6%,35.9%,"507,632"
+Goondiwindi (R),Queensland,Outer Regional Australia,79.5%,62.9%,"8,385"
+Gympie (R),Queensland,Inner Regional Australia,55.3%,33.2%,"42,934"
+Hinchinbrook (S),Queensland,Outer Regional Australia,67.2%,48.0%,"9,092"
+Hope Vale (S),Queensland,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Ipswich (C),Queensland,Major Cities of Australia,51.0%,33.1%,"169,205"
+Isaac (R),Queensland,Outer Regional Australia,28.8%,14.7%,"15,572"
+Kowanyama (S),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Livingstone (S),Queensland,Inner Regional Australia,51.9%,33.3%,"30,952"
+Lockhart River (S),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Lockyer Valley (R),Queensland,Inner Regional Australia,49.3%,27.3%,"33,721"
+Logan (C),Queensland,Major Cities of Australia,46.6%,29.5%,"257,354"
+Longreach (R),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Mackay (R),Queensland,Inner Regional Australia,48.9%,30.9%,"92,238"
+McKinlay (S),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Mapoon (S),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Maranoa (R),Queensland,Outer Regional Australia,63.2%,49.9%,"9,851"
+Mareeba (S),Queensland,Outer Regional Australia,48.8%,34.8%,"18,704"
+Moreton Bay (R),Queensland,Major Cities of Australia,58.2%,39.2%,"372,012"
+Mornington (S),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Mount Isa (C),Queensland,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Murweh (S),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Napranum (S),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Noosa (S),Queensland,Major Cities of Australia,63.9%,42.4%,"47,060"
+North Burnett (R),Queensland,Outer Regional Australia,54.4%,38.4%,"8,782"
+Northern Peninsula Area (R),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Palm Island (S),Queensland,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Paroo (S),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Pormpuraaw (S),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Quilpie (S),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Redland (C),Queensland,Major Cities of Australia,60.8%,40.9%,"128,912"
+Richmond (S),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Rockhampton (R),Queensland,Inner Regional Australia,50.0%,33.6%,"64,482"
+Scenic Rim (R),Queensland,Inner Regional Australia,51.6%,33.8%,"35,027"
+Somerset (R),Queensland,Inner Regional Australia,54.3%,29.9%,"20,963"
+South Burnett (R),Queensland,Inner Regional Australia,51.9%,28.7%,"26,417"
+Southern Downs (R),Queensland,Inner Regional Australia,63.7%,33.7%,"28,960"
+Sunshine Coast (R),Queensland,Major Cities of Australia,60.6%,42.6%,"268,741"
+Tablelands (R),Queensland,Outer Regional Australia,60.1%,44.2%,"20,959"
+Toowoomba (R),Queensland,Inner Regional Australia,58.2%,39.6%,"134,800"
+Torres (S),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Torres Strait Island (R),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Townsville (C),Queensland,Outer Regional Australia,56.3%,40.0%,"156,137"
+Weipa (T),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Western Downs (R),Queensland,Outer Regional Australia,48.6%,29.8%,"26,827"
+Whitsunday (R),Queensland,Outer Regional Australia,45.2%,25.0%,"29,012"
+Winton (S),Queensland,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Woorabinda (S),Queensland,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Wujal Wujal (S),Queensland,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Yarrabah (S),Queensland,Outer Regional Australia,26.6%,12.4%,"1,919"
+Adelaide (C),South Australia,Major Cities of Australia,62.9%,42.5%,"24,015"
+Adelaide Hills (DC),South Australia,Major Cities of Australia,71.5%,51.1%,"32,450"
+Adelaide Plains (DC),South Australia,Inner Regional Australia,45.8%,29.1%,"7,450"
+Alexandrina (DC),South Australia,Inner Regional Australia,63.7%,46.2%,"23,281"
+Anangu Pitjantjatjara (AC),South Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Barossa (DC),South Australia,Inner Regional Australia,65.6%,48.9%,"20,392"
+Barunga West (DC),South Australia,Outer Regional Australia,68.2%,52.4%,"2,207"
+Berri and Barmera (DC),South Australia,Outer Regional Australia,57.2%,39.4%,"8,879"
+Burnside (C),South Australia,Major Cities of Australia,75.8%,55.3%,"37,949"
+Campbelltown (C) (SA),South Australia,Major Cities of Australia,60.1%,40.4%,"43,509"
+Ceduna (DC),South Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Charles Sturt (C),South Australia,Major Cities of Australia,55.4%,35.3%,"100,321"
+Clare and Gilbert Valleys (DC),South Australia,Inner Regional Australia,65.5%,44.7%,"7,775"
+Cleve (DC),South Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Coober Pedy (DC),South Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Copper Coast (DC),South Australia,Outer Regional Australia,61.2%,43.8%,"12,687"
+Elliston (DC),South Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Flinders Ranges (DC),South Australia,Outer Regional Australia,68.3%,47.3%,"1,418"
+Franklin Harbour (DC),South Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Gawler (T),South Australia,Major Cities of Australia,61.9%,43.9%,"19,974"
+Goyder (DC),South Australia,Outer Regional Australia,52.3%,33.5%,"3,524"
+Grant (DC),South Australia,Outer Regional Australia,16.9%,7.6%,"7,072"
+Holdfast Bay (C),South Australia,Major Cities of Australia,72.6%,52.0%,"32,295"
+Kangaroo Island (DC),South Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Karoonda East Murray (DC),South Australia,Outer Regional Australia,49.3%,35.7%,915
+Kimba (DC),South Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Kingston (DC) (SA),South Australia,Outer Regional Australia,67.0%,51.6%,"1,982"
+Light (RegC),South Australia,Inner Regional Australia,49.5%,35.2%,"12,222"
+Lower Eyre Peninsula (DC),South Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Loxton Waikerie (DC),South Australia,Outer Regional Australia,55.6%,36.6%,"9,682"
+Maralinga Tjarutja (AC),South Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Marion (C),South Australia,Major Cities of Australia,63.3%,43.6%,"77,742"
+Mid Murray (DC),South Australia,Inner Regional Australia,51.7%,31.4%,"7,878"
+Mitcham (C),South Australia,Major Cities of Australia,71.8%,51.3%,"55,506"
+Mount Barker (DC),South Australia,Inner Regional Australia,62.7%,43.3%,"29,194"
+Mount Gambier (C),South Australia,Inner Regional Australia,68.2%,37.0%,"21,802"
+Mount Remarkable (DC),South Australia,Outer Regional Australia,59.9%,36.8%,"2,491"
+Murray Bridge (RC),South Australia,Inner Regional Australia,50.8%,33.3%,"18,602"
+Naracoorte and Lucindale (DC),South Australia,Outer Regional Australia,65.5%,44.4%,"6,866"
+Northern Areas (DC),South Australia,Outer Regional Australia,66.7%,41.9%,"3,779"
+Norwood Payneham St Peters (C),South Australia,Major Cities of Australia,65.5%,45.3%,"31,585"
+Onkaparinga (C),South Australia,Major Cities of Australia,60.1%,43.8%,"140,961"
+Orroroo/Carrieton (DC),South Australia,Outer Regional Australia,76.8%,48.9%,699
+Peterborough (DC),South Australia,Outer Regional Australia,48.7%,24.0%,"1,470"
+Playford (C),South Australia,Major Cities of Australia,43.2%,28.5%,"72,425"
+Port Adelaide Enfield (C),South Australia,Major Cities of Australia,54.3%,34.6%,"105,880"
+Port Augusta (C),South Australia,Outer Regional Australia,59.2%,43.0%,"11,206"
+Port Lincoln (C),South Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Port Pirie City and Dists (M),South Australia,Outer Regional Australia,58.2%,39.9%,"14,441"
+Prospect (C),South Australia,Major Cities of Australia,63.4%,42.1%,"17,667"
+Renmark Paringa (DC),South Australia,Outer Regional Australia,50.5%,31.5%,"8,204"
+Robe (DC),South Australia,Outer Regional Australia,68.4%,49.6%,"1,263"
+Roxby Downs (M),South Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Salisbury (C),South Australia,Major Cities of Australia,49.3%,33.3%,"114,763"
+Southern Mallee (DC),South Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Streaky Bay (DC),South Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Tatiara (DC),South Australia,Outer Regional Australia,57.6%,38.3%,"5,557"
+Tea Tree Gully (C),South Australia,Major Cities of Australia,59.1%,41.3%,"82,506"
+The Coorong (DC),South Australia,Outer Regional Australia,58.2%,40.8%,"4,457"
+Tumby Bay (DC),South Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Unley (C),South Australia,Major Cities of Australia,71.0%,50.5%,"32,926"
+Victor Harbor (C),South Australia,Inner Regional Australia,73.5%,53.5%,"13,395"
+Wakefield (DC),South Australia,Inner Regional Australia,58.5%,37.2%,"5,537"
+Walkerville (M),South Australia,Major Cities of Australia,72.2%,51.8%,"6,778"
+Wattle Range (DC),South Australia,Outer Regional Australia,60.1%,38.4%,"9,916"
+West Torrens (C),South Australia,Major Cities of Australia,58.3%,38.6%,"51,839"
+Whyalla (C),South Australia,Outer Regional Australia,56.6%,42.0%,"17,494"
+Wudinna (DC),South Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Yankalilla (DC),South Australia,Inner Regional Australia,64.6%,42.3%,"4,774"
+Yorke Peninsula (DC),South Australia,Outer Regional Australia,65.1%,42.1%,"9,738"
+Unincorporated SA,South Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Albany (C),Western Australia,Outer Regional Australia,58.7%,40.4%,"31,107"
+Armadale (C),Western Australia,Major Cities of Australia,51.7%,32.9%,"69,570"
+Ashburton (S),Western Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Augusta-Margaret River (S),Western Australia,Inner Regional Australia,53.9%,33.8%,"12,635"
+Bassendean (T),Western Australia,Major Cities of Australia,59.4%,39.8%,"12,975"
+Bayswater (C),Western Australia,Major Cities of Australia,58.5%,38.5%,"57,472"
+Belmont (C),Western Australia,Major Cities of Australia,52.8%,33.5%,"35,165"
+Beverley (S),Western Australia,Outer Regional Australia,60.3%,35.0%,"1,498"
+Boddington (S),Western Australia,Inner Regional Australia,45.4%,24.5%,"1,453"
+Boyup Brook (S),Western Australia,Outer Regional Australia,52.3%,34.6%,"1,420"
+Bridgetown-Greenbushes (S),Western Australia,Outer Regional Australia,64.6%,42.9%,"3,882"
+Brookton (S),Western Australia,Outer Regional Australia,62.2%,44.5%,759
+Broome (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Broomehill-Tambellup (S),Western Australia,Outer Regional Australia,45.3%,29.6%,827
+Bruce Rock (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Bunbury (C),Western Australia,Inner Regional Australia,60.2%,40.8%,"25,968"
+Busselton (C),Western Australia,Inner Regional Australia,61.6%,42.7%,"31,743"
+Cambridge (T),Western Australia,Major Cities of Australia,80.5%,58.8%,"22,905"
+Canning (C),Western Australia,Major Cities of Australia,64.1%,41.8%,"76,082"
+Capel (S),Western Australia,Inner Regional Australia,54.2%,36.8%,"14,004"
+Carnamah (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Carnarvon (S),Western Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Chapman Valley (S),Western Australia,Outer Regional Australia,33.2%,19.6%,"1,179"
+Chittering (S),Western Australia,Inner Regional Australia,47.6%,30.9%,"4,799"
+Claremont (T),Western Australia,Major Cities of Australia,82.7%,62.5%,"9,016"
+Cockburn (C),Western Australia,Major Cities of Australia,56.9%,36.5%,"91,462"
+Collie (S),Western Australia,Inner Regional Australia,52.6%,33.9%,"6,971"
+Coolgardie (S),Western Australia,Outer Regional Australia,34.0%,19.7%,"2,660"
+Coorow (S),Western Australia,Outer Regional Australia,59.6%,36.4%,836
+Corrigin (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Cottesloe (T),Western Australia,Major Cities of Australia,85.4%,63.2%,"6,848"
+Cranbrook (S),Western Australia,Outer Regional Australia,54.4%,31.9%,846
+Cuballing (S),Western Australia,Outer Regional Australia,57.3%,40.3%,707
+Cue (S),Western Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Cunderdin (S),Western Australia,Outer Regional Australia,49.7%,29.8%,"1,138"
+Dalwallinu (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Dandaragan (S),Western Australia,Outer Regional Australia,65.0%,42.4%,"2,759"
+Dardanup (S),Western Australia,Inner Regional Australia,55.4%,36.8%,"11,258"
+Denmark (S),Western Australia,Outer Regional Australia,60.1%,42.3%,"5,119"
+Derby-West Kimberley (S),Western Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Donnybrook-Balingup (S),Western Australia,Inner Regional Australia,57.5%,35.0%,"4,989"
+Dowerin (S),Western Australia,Outer Regional Australia,66.1%,43.9%,508
+Dumbleyung (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Dundas (S),Western Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+East Fremantle (T),Western Australia,Major Cities of Australia,72.9%,52.3%,"6,394"
+East Pilbara (S),Western Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Esperance (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Exmouth (S),Western Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Fremantle (C),Western Australia,Major Cities of Australia,70.7%,49.4%,"26,450"
+Gingin (S),Western Australia,Inner Regional Australia,49.0%,28.7%,"4,484"
+Gnowangerup (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Goomalling (S),Western Australia,Outer Regional Australia,52.3%,31.2%,801
+Gosnells (C),Western Australia,Major Cities of Australia,51.4%,31.8%,"97,821"
+Greater Geraldton (C),Western Australia,Outer Regional Australia,52.2%,35.3%,"30,224"
+Halls Creek (S),Western Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Harvey (S),Western Australia,Inner Regional Australia,56.7%,37.0%,"21,919"
+Irwin (S),Western Australia,Outer Regional Australia,65.8%,40.3%,"2,968"
+Jerramungup (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Joondalup (C),Western Australia,Major Cities of Australia,67.9%,48.1%,"128,904"
+Kalamunda (C),Western Australia,Major Cities of Australia,57.5%,38.6%,"47,402"
+Kalgoorlie/Boulder (C),Western Australia,Outer Regional Australia,44.9%,28.6%,"22,664"
+Karratha (C),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Katanning (S),Western Australia,Outer Regional Australia,50.2%,32.6%,"3,176"
+Kellerberrin (S),Western Australia,Outer Regional Australia,57.0%,33.1%,979
+Kent (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Kojonup (S),Western Australia,Outer Regional Australia,66.9%,40.9%,"1,521"
+Kondinin (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Koorda (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Kulin (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Kwinana (C),Western Australia,Major Cities of Australia,48.2%,31.7%,"34,833"
+Lake Grace (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Laverton (S),Western Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Leonora (S),Western Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Mandurah (C),Western Australia,Major Cities of Australia,58.6%,39.7%,"70,627"
+Manjimup (S),Western Australia,Outer Regional Australia,62.7%,40.7%,"7,424"
+Meekatharra (S),Western Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Melville (C),Western Australia,Major Cities of Australia,72.2%,49.4%,"84,438"
+Menzies (S),Western Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Merredin (S),Western Australia,Outer Regional Australia,47.3%,26.3%,"2,715"
+Mingenew (S),Western Australia,Outer Regional Australia,70.3%,39.4%,330
+Moora (S),Western Australia,Outer Regional Australia,66.4%,48.3%,"1,842"
+Morawa (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Mosman Park (T),Western Australia,Major Cities of Australia,74.8%,53.8%,"7,601"
+Mount Magnet (S),Western Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Mount Marshall (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Mukinbudin (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Mundaring (S),Western Australia,Major Cities of Australia,56.5%,36.7%,"32,172"
+Murchison (S),Western Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Murray (S),Western Australia,Major Cities of Australia,50.5%,31.6%,"14,573"
+Nannup (S),Western Australia,Outer Regional Australia,64.9%,44.0%,"1,149"
+Narembeen (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Narrogin (S),Western Australia,Outer Regional Australia,59.6%,42.1%,"4,023"
+Nedlands (C),Western Australia,Major Cities of Australia,85.6%,64.3%,"18,250"
+Ngaanyatjarraku (S),Western Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Northam (S),Western Australia,Inner Regional Australia,49.7%,31.9%,"9,004"
+Northampton (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Nungarin (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Peppermint Grove (S),Western Australia,Major Cities of Australia,67.6%,49.9%,"1,470"
+Perenjori (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Perth (C),Western Australia,Major Cities of Australia,63.1%,44.2%,"26,749"
+Pingelly (S),Western Australia,Outer Regional Australia,57.1%,37.0%,919
+Plantagenet (S),Western Australia,Outer Regional Australia,57.0%,39.2%,"4,330"
+Port Hedland (T),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Quairading (S),Western Australia,Outer Regional Australia,62.0%,32.5%,808
+Ravensthorpe (S),Western Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Rockingham (C),Western Australia,Major Cities of Australia,51.5%,34.7%,"105,754"
+Sandstone (S),Western Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Serpentine-Jarrahdale (S),Western Australia,Major Cities of Australia,45.7%,28.6%,"24,591"
+Shark Bay (S),Western Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+South Perth (C),Western Australia,Major Cities of Australia,65.1%,44.9%,"37,440"
+Stirling (C),Western Australia,Major Cities of Australia,61.7%,41.5%,"183,276"
+Subiaco (C),Western Australia,Major Cities of Australia,78.2%,58.8%,"14,512"
+Swan (C),Western Australia,Major Cities of Australia,49.6%,31.7%,"114,972"
+Tammin (S),Western Australia,Outer Regional Australia,60.7%,32.7%,303
+Three Springs (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Toodyay (S),Western Australia,Inner Regional Australia,52.5%,34.8%,"3,851"
+Trayning (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Upper Gascoyne (S),Western Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Victoria Park (T),Western Australia,Major Cities of Australia,58.3%,38.8%,"31,968"
+Victoria Plains (S),Western Australia,Outer Regional Australia,56.1%,39.1%,750
+Vincent (C),Western Australia,Major Cities of Australia,61.6%,41.7%,"31,265"
+Wagin (S),Western Australia,Outer Regional Australia,61.3%,43.0%,"1,482"
+Wandering (S),Western Australia,Outer Regional Australia,57.8%,30.7%,348
+Wanneroo (C),Western Australia,Major Cities of Australia,52.1%,35.4%,"161,346"
+Waroona (S),Western Australia,Inner Regional Australia,49.9%,29.9%,"3,452"
+West Arthur (S),Western Australia,Outer Regional Australia,55.8%,31.3%,624
+Westonia (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Wickepin (S),Western Australia,Outer Regional Australia,70.5%,47.7%,556
+Williams (S),Western Australia,Outer Regional Australia,63.4%,38.9%,784
+Wiluna (S),Western Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Wongan-Ballidu (S),Western Australia,Outer Regional Australia,66.0%,48.5%,"1,002"
+Woodanilling (S),Western Australia,Outer Regional Australia,43.9%,27.5%,335
+Wyalkatchem (S),Western Australia,Outer Regional Australia,65.6%,44.3%,422
+Wyndham-East Kimberley (S),Western Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Yalgoo (S),Western Australia,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Yilgarn (S),Western Australia,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+York (S),Western Australia,Inner Regional Australia,61.1%,40.9%,"2,974"
+Break O'Day (M),Tasmania,Outer Regional Australia,63.4%,44.7%,"5,386"
+Brighton (M),Tasmania,Inner Regional Australia,54.9%,37.5%,"13,587"
+Burnie (C),Tasmania,Outer Regional Australia,56.1%,41.7%,"15,920"
+Central Coast (M) (Tas.),Tasmania,Outer Regional Australia,63.1%,46.3%,"18,315"
+Central Highlands (M) (Tas.),Tasmania,Outer Regional Australia,54.8%,31.7%,"1,767"
+Circular Head (M),Tasmania,Outer Regional Australia,55.9%,43.5%,"6,433"
+Clarence (C),Tasmania,Inner Regional Australia,74.7%,51.8%,"47,402"
+Derwent Valley (M),Tasmania,Inner Regional Australia,56.7%,38.2%,"8,478"
+Devonport (C),Tasmania,Inner Regional Australia,56.6%,42.2%,"20,988"
+Dorset (M),Tasmania,Outer Regional Australia,63.7%,38.8%,"5,525"
+Flinders (M) (Tas.),Tasmania,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+George Town (M),Tasmania,Outer Regional Australia,60.9%,47.7%,"5,764"
+Glamorgan/Spring Bay (M),Tasmania,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Glenorchy (C),Tasmania,Inner Regional Australia,65.9%,44.4%,"39,191"
+Hobart (C),Tasmania,Inner Regional Australia,77.7%,56.8%,"46,649"
+Huon Valley (M),Tasmania,Outer Regional Australia,62.6%,44.4%,"14,405"
+Kentish (M),Tasmania,Outer Regional Australia,49.9%,37.1%,"5,322"
+King Island (M),Tasmania,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Kingborough (M),Tasmania,Inner Regional Australia,76.1%,54.5%,"30,923"
+Latrobe (M) (Tas.),Tasmania,Outer Regional Australia,59.6%,44.2%,"9,713"
+Launceston (C),Tasmania,Inner Regional Australia,67.0%,52.9%,"55,869"
+Meander Valley (M),Tasmania,Inner Regional Australia,64.8%,50.4%,"16,467"
+Northern Midlands (M),Tasmania,Inner Regional Australia,65.1%,49.8%,"11,170"
+Sorell (M),Tasmania,Inner Regional Australia,65.0%,41.7%,"12,763"
+Southern Midlands (M),Tasmania,Outer Regional Australia,53.4%,36.6%,"5,144"
+Tasman (M),Tasmania,Outer Regional Australia,75.6%,53.4%,"2,135"
+Waratah/Wynyard (M),Tasmania,Outer Regional Australia,59.9%,46.1%,"11,370"
+West Coast (M),Tasmania,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+West Tamar (M),Tasmania,Inner Regional Australia,68.7%,52.0%,"19,931"
+Alice Springs (T),Northern Territory,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Barkly (R),Northern Territory,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Belyuen (S),Northern Territory,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Central Desert (R),Northern Territory,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Coomalie (S),Northern Territory,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Darwin (C),Northern Territory,Outer Regional Australia,77.8%,58.2%,"67,446"
+East Arnhem (R),Northern Territory,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Katherine (T),Northern Territory,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Litchfield (M),Northern Territory,Outer Regional Australia,39.7%,27.0%,"21,345"
+MacDonnell (R),Northern Territory,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Palmerston (C),Northern Territory,Outer Regional Australia,61.5%,42.5%,"28,583"
+Roper Gulf (R),Northern Territory,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Tiwi Islands (R),Northern Territory,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Victoria Daly (R),Northern Territory,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Wagait (S),Northern Territory,Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+West Arnhem (R),Northern Territory,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+West Daly (R),Northern Territory,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Unincorporated NT,Northern Territory,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A
+Unincorporated ACT,Australian Capital Territory,Major Cities of Australia,74.9%,51.2%,"345,325"
+Unincorp. Other Territories,Other Territories,Very Remote Australia - see note and refer to SA4 data,N/A,N/A,N/A

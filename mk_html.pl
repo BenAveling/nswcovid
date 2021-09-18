@@ -120,10 +120,11 @@ sub read_lockdowns($)
   }
 }
 
-sub read_vaccination($)
+sub read_vaccination($$)
 {
-  my $vaccination_file=shift or die;
-  open(my $IN,$vaccination_file) or die;
+  my $filename=shift or die;
+  my $period=shift or die;
+  open(my $IN,$filename) or die "Can't read '$filename': $!";
   my $extracted_at;
   while(<$IN>){
     if(m/Data extracted from AIR - as at 2359hrs on (.*),,,,,/){
@@ -141,12 +142,14 @@ sub read_vaccination($)
     my $dose2=$fields[4];
     my $population=$fields[5];
     $population.=$fields[6] if $fields[6];
+    $dose1=~s/%//;
+    $dose2=~s/%//;
     $population=~s/"//g;
     $lga_name=clean_lga_name($lga_name);
     my $lga=$lgas{$lga_name} || next;
-    $lga->{dose1}=$dose1;
-    $lga->{dose2}=$dose2;
-    $lga->{population}=$population;
+    $lga->{dose1}{$period}=$dose1;
+    $lga->{dose2}{$period}=$dose2;
+    $lga->{population}=$population; # Census data, won't change often
   }
 }
 
@@ -552,24 +555,30 @@ sub print_hline($$$){
   print qq{        add_box($n,$w,$s,$e,$colour);\n};
 }
 
-sub print_vaxed($$$$$){
-  my $dose1=shift;
-  my $dose2=shift;
+sub print_vaxed($$$$$$$){
   my $lat=shift or die;
-  my $lng=shift or die;
+  my $lng=shift or die "No lattitude";
+  my $dose1_cur=shift;
+  my $dose2_cur=shift;
+  my $dose1_prev=shift;
+  my $dose2_prev=shift;
   my $colour=shift or die;
   my $high=$pp_box_size;
-  if(!$dose1 || !$dose2 || $dose1 eq "N/A" || $dose2 eq "N/A"){
+  if(!$dose1_cur || !$dose2_cur || $dose1_cur eq "N/A" || $dose2_cur eq "N/A"){
     print_hline($lat,$lng,$colour);
     return;
   }
-  $dose1=~s/%//;
-  $dose2=~s/%//;
-  my $wide1=$pp_vax_wide*$dose1/100;
-  my $wide2=$pp_vax_wide*$dose2/100;
-  my $n=$lat-$high; my $s=$n-$high; my $w=$lng; my $e=$w+$wide1;
+  my $wide1c=$pp_vax_wide*$dose1_cur/100;
+  my $wide2c=$pp_vax_wide*$dose2_cur/100;
+  my $wide1p=$pp_vax_wide*$dose1_prev/100;
+  my $wide2p=$pp_vax_wide*$dose2_prev/100;
+  my $n=$lat-$high; my $s=$n-$high; my $w=$lng; my $e=$w+$wide1p;
   print qq{        add_box($n,$w,$s,$e,$colour);\n};
-  $n=$s;$s-=$high;$e=$w+$wide2;
+  $e=$w+$wide1c;
+  print qq{        add_box($n,$w,$s,$e,$colour);\n};
+  $n=$s;$s-=$high;$e=$w+$wide2p;
+  print qq{        add_box($n,$w,$s,$e,$colour);\n};
+  $e=$w+$wide2c;
   print qq{        add_box($n,$w,$s,$e,$colour);\n};
   # TODO: Wrap these in a function, for readability?
   $n=$n+$high;$e=$w+$pp_vax_wide;
@@ -587,8 +596,17 @@ print qq[
     my $lga_lng=$lga->{lng};
     my $title=$lga_name;
     $title.=" LGA" unless $lga_name =~ m/Correctional settings/;
-    my $text=$lga->{population} ? "Population $lga->{population}, $lga->{dose1} 1st dosed and $lga->{dose2} double dosed" : "";
-    warn "bad lga: $lga_name" if $text =~ /  /;
+    my $text="";
+    if($lga->{population}){
+      $text="Population $lga->{population}.";
+      my $dose1=$lga->{dose1}{current};
+      if($dose1 && $dose1 ne "N/A"){
+        my $delta1=$lga->{dose1}{current}-$lga->{dose1}{previous};
+        my $dose2=$lga->{dose2}{current};
+        my $delta2=$lga->{dose2}{current}-$lga->{dose2}{previous};
+        $text .= sprintf " %0.1f%% 1st dosed and %0.1f%% double dosed, up %0.1f%% and %0.1f%% respectively on previous week.", $dose1, $dose2, $delta1, $delta2;
+      }
+    }
     print_cases(
       $title,
       $text,
@@ -599,10 +617,12 @@ print qq[
     );
     # next if $lga_name =~ m/correctional settings/i;
     print_vaxed(
-      $lga->{dose1},
-      $lga->{dose2},
       $lga->{lat},
       $lga->{lng},
+      $lga->{dose1}{current},
+      $lga->{dose2}{current},
+      $lga->{dose1}{previous},
+      $lga->{dose2}{previous},
       my $colour=pick_colour($lga_name)
     );
   }
@@ -669,7 +689,8 @@ sub case_s($)
 my $case_file='confirmed_cases_table1_location.csv';
 my $postcode_file='australian_postcodes.csv';
 my $lockdown_file='lockdowns.txt';
-my $vaccination_file='covid-19-vaccination-local-government-area-lga-6-september-2021-covid-19-vaccination-local-government-area-lga.csv';
+my $current_vaccination_file='covid-19-vaccination-by-lga.2021-09-13.csv';
+my $previous_vaccination_file='covid-19-vaccination-by-lga.2021-09-06.csv';
 my $api_key_file='google_maps_api_key.txt';
 my $local_api_key_file='local_google_maps_api_key.txt';
 
@@ -695,7 +716,8 @@ read_cases($case_file) or die;
 read_postcodes($postcode_file) or die;
 locate_lgas();
 read_lockdowns($lockdown_file);
-read_vaccination($vaccination_file);
+read_vaccination($current_vaccination_file,'current');
+read_vaccination($previous_vaccination_file,'previous');
 read_api_key($api_key_file);
 
 open(my $OUT,">",$out_file) or die "Can't write '$out_file': $!\n";

@@ -14,5 +14,7 @@ http://honisoit.com/2017/09/food-fault-lines-mapping-class-division-through-food
 
 # vax'ns - not updated as often as the cases
 
+https://www.health.gov.au/resources/collections/covid-19-vaccination-geographic-vaccination-rates-lga <- this one best?
+
 https://www.health.gov.au/resources/publications/covid-19-vaccination-geographic-vaccination-rates-local-government-area-lga
 https://www.health.gov.au/sites/default/files/documents/2021/08/covid-19-vaccination-geographic-vaccination-rates---local-government-area-lga.xlsx
