@@ -1,14 +1,31 @@
 To regenerate the map:
 
-Download latest data
+  perl mk_html.pl
 
-  wget.bat 
+By default, a github specific google-maps key is used.
 
-Create a local version (assumes you have a valid api key; if not, see below)
+To create a version that can be used on your PC, you need a valid api key (see below)
+
+Then:
 
   perl mk_html.pl -l
 
-Open in browser
+To download the latest data
+
+  wget.bat 
+
+And then rename or copy to:
+
+  confirmed_cases_table1_location.csv
+
+To download vaccination data, you need to convert from .xlsx to .csv, and update the hardcoded filenames in mk_html.pl
+
+e.g.
+
+  my $current_vaccination_file='covid-19-vaccination-by-lga.2021-09-13.csv';
+  my $previous_vaccination_file='covid-19-vaccination-by-lga.2021-09-06.csv';
+
+To open in browser:
 
   start .\local_nsw_covid_map.html
 
@@ -32,12 +49,13 @@ Wait a minute, then sanity check at
 
 Look for the date to be updated.
 
-===============================================================
-You can get a new google api key from:
+== Google API Key ==
+
+To open a map on your own PC, or to host on your own website, you need a google api key, which you can get from:
 
   https://developers.google.com/maps/documentation/places/web-service/get-api-key
 
-More than a certain number of requests a month starts to cost money. It's a fairly large number, perhaps 28,000?
+More than a certain number of requests a month starts to cost money. It's a fairly large number of requests, perhaps 28,000?
 
 To monitor, visit the console:
 
