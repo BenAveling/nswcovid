@@ -12,7 +12,7 @@ https://www.nsw.gov.au/covid-19/rules/affected-area#map-local-government-areas-o
 
 http://honisoit.com/2017/09/food-fault-lines-mapping-class-division-through-food-chains/
 
-# vax'ns - not updated as often as the cases
+# vax'ns - updated on Mondays (or just after?)
 
 https://www.health.gov.au/resources/collections/covid-19-vaccination-geographic-vaccination-rates-lga <- this one best?
 
