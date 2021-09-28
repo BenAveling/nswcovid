@@ -129,12 +129,20 @@ sub read_vaccination($$)
   while(<$IN>){
     if(m/Data extracted from AIR - as at 2359hrs on (.*),,,,,/){
       $extracted_at=$1;
+      my $headers=<$IN>; 
+      # We don't uses these, just want to skip the line, but also checking that it is as expected.
+      # We've seen this change in harmless ways, so we could be more accepting. But would it be at the risk of not noticing a larger change?
+      last if($headers=~m/LGA Name,Jurisdiction,Remoteness,Dose 1 % coverage of 15\+,Dose 2 % coverage of 15\+,Population aged 15\+/);
+      last if($headers=~m/LGA 2019 Name of Residence,State of Residence,Remoteness,% Received dose 1 REMOTE_FLAGGED,% Received dose 2 REMOTE_FLAGGED,LGA Population/);
+      die "Failed to find headers";
     }
-    last if(m/LGA Name,Jurisdiction,Remoteness,Dose 1 % coverage of 15\+,Dose 2 % coverage of 15\+,Population aged 15\+/);
   }
   die unless $extracted_at;
   while(<$IN>){
+    next if m/^,*$/;
+    next if m/N\/A/i;
     chomp;
+    s/>95/95/g; # sigh
     my @fields=split /,/;
     #warn Dumper @fields;
     my $lga_name=$fields[0];
@@ -483,11 +491,12 @@ sub pick_colour(@)
   return qq{"$colour"};
 }
 
-sub print_cases($$$$$@)
+sub print_cases($$$$$$@)
 {
   my $name=shift;
   my $text=shift;
   my $cases=shift;
+  my $population=shift;
   my $lat=shift or die "no lat for '$name'";
   my $lng=shift or die "no lng for '$name'";
   my @lga_names=@_;
@@ -523,6 +532,7 @@ sub print_cases($$$$$@)
   }else{
     print "        // $name: cases all fall between $first and $last\n";
     $text.=case_s($t_cases). ($first eq $last ? " on $first" : (" ".($t_cases==2? "on":"between"). " $first and $last"));
+    $text.=sprintf(" (%.2f%% of population)",$t_cases/$population*100) if $population;
     $text.=$highest_msg if $highest_msg;
     # $text.="<p>";
     # foreach my $day (0..$pp_oldest_day) {
@@ -611,6 +621,7 @@ print qq[
       $title,
       $text,
       my $cases=$lga->{cases},
+      $lga->{population},
       my $lat=$lga_lat,
       my $lng=$lga_lng,
       $lga_name,
@@ -648,6 +659,7 @@ print qq[
       my $title="Postcode $postcode_number",
       my $text="$suburbs.\\n$lga_names LGA",
       my $cases=$postcode->{cases},
+      undef, # population, which we don't have
       my $lat=$postcode->{lat},
       my $lng=$postcode->{lng},
       @lga_names
@@ -689,8 +701,8 @@ sub case_s($)
 my $case_file='confirmed_cases_table1_location.csv';
 my $postcode_file='australian_postcodes.csv';
 my $lockdown_file='lockdowns.txt';
-my $current_vaccination_file='covid-19-vaccination-by-lga.2021-09-13.csv';
-my $previous_vaccination_file='covid-19-vaccination-by-lga.2021-09-06.csv';
+my $current_vaccination_file='covid-19-vaccination-local-government-area-lga-20-september-2021.csv';
+my $previous_vaccination_file='covid-19-vaccination-by-lga.2021-09-13.csv';
 my $api_key_file='google_maps_api_key.txt';
 my $local_api_key_file='local_google_maps_api_key.txt';
 
