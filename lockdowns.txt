@@ -1,10 +1,17 @@
-# FIXME: if any LGA's name is a substring of another LGA, bad stuff may happen.
-
+# Notes:
+#
+# If a name appears multiple times, the last one overrides earlier entries.
+#
+# If an LGA's name is a substring of another LGA, that may also override
+#
 # #####################################################
-# Greater Sydney (Note: Some of these LGA are overriden by entries later in this file)
+# Greater Sydney
+# Some of these LGA are overriden by entries later in this file
+
 https://www.nsw.gov.au/covid-19/rules/greater-sydney
 colour: orange
 region: Greater Sydney
+
 Bayside
 Blacktown
 Burwood
@@ -38,12 +45,15 @@ Woollahra
 
 # Sydney Surrounds (excludes Hawkesbury and Wollondilly?)
 Blue Mountains
-Central Coast
+# Central Coast
 Wollongong
-Shellharbour
+# Shellharbour
+
+# since 14 August, Central Coast, Shellharbour have been Regional/Rural
 
 # #####################################################
 # As at 2021-08-04, what was 3 locked down LGA is now 8
+
 https://www.nsw.gov.au/covid-19/rules/affected-area
 colour: red
 region: Area of concern
@@ -57,11 +67,11 @@ Georges River
 Liverpool
 Parramatta
 
-# As of 2021-08-08, add Penrith (strictly, only part of it, but will ignore that)
+# As of 2021-08-08, Penrith (strictly, only part of it, but will ignore that)
 
 Penrith
 
-# 2021-08-12 Add 
+# 2021-08-12 Add:
 
 Burwood
 Strathfield
@@ -70,44 +80,104 @@ Bayside
 # #####################################################
 # As of 5/8, also NewCastle and Hunter restrictions
 https://www.nsw.gov.au/covid-19/rules/affected-regions
-colour: yellow
+colour: purple
 region: Regional and rural
 
-# Newcastle & Hunter
+# 30/9 These are all out of date. Updated entries are below.
 
-Newcastle
-Cessnock
-Dungog
-Lake Macquarie
-Maitland
-Muswellbrook
-Port Stephens
-Singleton
+## Newcastle & Hunter
+#
+#Newcastle
+#Cessnock
+#Dungog
+#Lake Macquarie
+#Maitland
+#Muswellbrook
+#Port Stephens
+#Singleton
+#
+## 2021-08-07 + Armidale
+#Armidale
+#
+## 2021-08-09 + Tamworth
+#Tamworth
+#
+## As of 12/8, added
+#
+#Dubbo
+#
+## Northern Rivers
+#
+#Ballina
+#Byron
+#Lismore
+#Richmond Valley
+#
+## FN NSW
+#
+#Bogan
+#Bourke
+#Brewarrina
+#Coonamble
+#Gilgandra
+#Narromine
+#Walgett
+#Warren
 
-# 2021-08-07 + Armidale
-Armidale
+# 30/8 Below are the new entries. 
+# Any that end tomorrow morning, I've already commented out.
 
-# 2021-08-09 + Tamworth
-Tamworth
+# As of 14/8, no scheduled end date
 
-# As of 12/8, added
-
-Dubbo
-
-# Northern Rivers
-
-Ballina
-Byron
-Lismore
-Richmond Valley
-
-# FN NSW
-
-Bogan
+Bathurst Regional
 Bourke
-Brewarrina
-Coonamble
-Gilgandra
-Narromine
-Walgett
-Warren
+Broken Hill
+Central Coast
+Central Darling
+Cessnock
+Dubbo Regional
+Eurobodalla
+Goulburn Mulwarre
+Kiama
+Lake Macquarie
+Lithgow
+Maitland
+Newcastle
+Port Stephens
+Queanbeyan-Palerang Regional
+Shellharbour
+Shoalhaven
+Wingecarribee
+
+# 20/9 (to 5/10, if I remember to remove it)
+
+Cowra
+
+# 17/9 to 1/10
+
+#Hilltops
+
+# 14 August 2021 to 1 October 2021
+
+# Mid-Western Regional 	
+
+# 28 September 2021 to 5 October 2021 
+
+Muswellbrook 	
+
+# 29 September to 7 October 2021 
+
+Oberon 	
+
+# 28 September to 5 October 2021 
+
+Port Macquarie-Hastings 	
+
+# 30 September 8 October 2021
+
+Snowy Monaro Regional 	
+
+# 14 August 2021 to  1 October 2021
+
+# Walgett 	
+

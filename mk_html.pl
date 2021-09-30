@@ -66,8 +66,9 @@ use Data::Dumper;
 my %colours=(
     red=>"#ff0000",    # area of concern (was: western sydney)
     orange=>"#ff8800", # greater sydney and nearby
-    yellow=>"#aaaa00", # hunter (so far)
-    purple=>"#990099", # default
+    purple=>"#990099", # regional lockdowns
+    green=>"#cccc00",  # default
+    default=>"#cccc00",# default
 );
 
 my $pp_num_days=90;
@@ -319,8 +320,8 @@ print qq[<!DOCTYPE html>
       <!-- no one should have let me choose colours. Sorry. -->
       <div style="color: $colours{red}">Red: <A href="https://www.nsw.gov.au/covid-19/rules/affected-area">Area of Concern</A></div>
       <div style="color: $colours{orange}">Orange: <A href="https://www.nsw.gov.au/covid-19/rules/greater-sydney">Greater Sydney and nearby</A></div>
-      <div style="color: $colours{yellow}">Yellow: <A href="https://www.nsw.gov.au/covid-19/rules/affected-regions">Newcastle and Hunter</A></div>
-      <div style="color: $colours{purple}">Purple: <A href="https://www.nsw.gov.au/covid-19/rules/what-you-can-do-nsw">Other Rural and Regional</A></div>
+      <div style="color: $colours{purple}">Purple: <A href="https://www.nsw.gov.au/covid-19/rules/affected-regions">Newcastle and Hunter</A></div>
+      <div style="color: $colours{green}">Green: <A href="https://www.nsw.gov.au/covid-19/rules/what-you-can-do-nsw">Other Rural and Regional</A></div>
 
       <BR><strong>Data from:</strong> <A href="https://data.nsw.gov.au/data/dataset/covid-19-cases-by-location/resource/21304414-1ff1-4243-a5d2-f52778048b29">data.nsw.gov.au</A>
 
@@ -477,7 +478,7 @@ sub pick_colour(@)
 {
   my @lga_names=@_;
   my $lockdown_details="";
-  my $colour=$colours{purple};
+  my $colour=$colours{default};
   # my $url=undef;
   foreach my $lga_name (@lga_names){
     $lga_name =~ s/^The //i;
