@@ -1,7 +1,9 @@
 local_google_maps_api_key.txt
 local_nsw_covid_map.html
+nsw_covid_map.html
 .*.sw?
 *_
 confirmed_cases_table1_location.csv.*
 find.find
 dl
+*~
