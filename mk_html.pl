@@ -154,7 +154,7 @@ sub read_vaccination($$)
     $population.=$fields[6] if $fields[6];
     $dose1=~s/%//;
     $dose2=~s/%//;
-    $population=~s/"//g;
+    $population=~s/\s*"\s*//g;
     $lga_name=clean_lga_name($lga_name);
     my $lga=$lgas{$lga_name} || next;
     $lga->{dose1}{$period}=$dose1;
@@ -708,7 +708,7 @@ my $previous_vaccination_file='covid-19-vaccination-by-lga.2021-09-20.csv';
 my $api_key_file='google_maps_api_key.txt';
 my $local_api_key_file='local_google_maps_api_key.txt';
 
-my $out_file="nsw_covid_map.html";
+my $out_file="map/index.html";
 my $local_out_file="local_nsw_covid_map.html";
 
 while (my $argv = shift @ARGV) {
