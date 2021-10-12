@@ -128,7 +128,7 @@ sub read_vaccination($$)
   open(my $IN,$filename) or die "Can't read '$filename': $!";
   my $extracted_at;
   while(<$IN>){
-    if(m/Data extracted from AIR - as at 2359hrs on (.*),,,,,/){
+    if(m/Data extracted from AIR - as at 2359hrs on (.*)/){
       $extracted_at=$1;
       my $headers=<$IN>; 
       # We don't uses these, just want to skip the line, but also checking that it is as expected.
@@ -136,6 +136,7 @@ sub read_vaccination($$)
       last if($headers=~m/LGA Name,Jurisdiction,Remoteness,Dose 1 % coverage of 15\+,Dose 2 % coverage of 15\+,Population aged 15\+/);
       last if($headers=~m/LGA 2019 Name of Residence,State of Residence,Remoteness,% Received dose 1 REMOTE_FLAGGED,% Received dose 2 REMOTE_FLAGGED,LGA Population/);
       last if($headers=~m/LGA 2019 Name of Residence,State of Residence,Remoteness,% Received dose 1 ,% Received dose 2 ,LGA Population/);
+      last if($headers=~m/LGA 2019 Name of Residence\tState of Residence\tRemoteness\t% Received dose 1\s+% Received dose 2\s+LGA Population/);
       die "Failed to find headers in '$filename'";
     }
   }
@@ -144,8 +145,8 @@ sub read_vaccination($$)
     next if m/^,*$/;
     next if m/N\/A/i;
     chomp;
-    s/>95/95/g; # sigh
-    my @fields=split /,/;
+    s/>95/95/g; # anything over 95 is rounded down to 95. Can be > 100 if area's population has grown since previous census, but can't be helped.
+    my @fields=split /[\t,]/;
     #warn Dumper @fields;
     my $lga_name=$fields[0];
     my $dose1=$fields[3];
@@ -703,8 +704,8 @@ sub case_s($)
 my $case_file='confirmed_cases_table1_location.csv';
 my $postcode_file='australian_postcodes.csv';
 my $lockdown_file='lockdowns.txt';
-my $current_vaccination_file='covid-19-vaccination-by-lga.2021-09-27.csv';
-my $previous_vaccination_file='covid-19-vaccination-by-lga.2021-09-20.csv';
+my $current_vaccination_file='covid-19-vaccination-by-lga.2021-10-11.csv';
+my $previous_vaccination_file='covid-19-vaccination-by-lga.2021-10-04.csv';
 my $api_key_file='google_maps_api_key.txt';
 my $local_api_key_file='local_google_maps_api_key.txt';
 
