@@ -6,6 +6,7 @@
 #
 # #####################################################
 # Greater Sydney
+# Started 2021-06-26
 # Some of these LGA are overriden by entries later in this file
 
 https://www.nsw.gov.au/covid-19/rules/greater-sydney
