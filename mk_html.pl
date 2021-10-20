@@ -135,7 +135,7 @@ sub read_vaccination($$)
       # We've seen this change in harmless ways, so we could be more accepting. But would it be at the risk of not noticing a larger change?
       last if($headers=~m/LGA Name,Jurisdiction,Remoteness,Dose 1 % coverage of 15\+,Dose 2 % coverage of 15\+,Population aged 15\+/);
       last if($headers=~m/LGA 2019 Name of Residence,State of Residence,Remoteness,% Received dose 1 REMOTE_FLAGGED,% Received dose 2 REMOTE_FLAGGED,LGA Population/);
-      last if($headers=~m/LGA 2019 Name of Residence,State of Residence,Remoteness,% Received dose 1 ,% Received dose 2 ,LGA Population/);
+      last if($headers=~m/LGA 2019 Name of Residence,State of Residence,Remoteness,% Received dose 1 ?,% Received dose 2 ?,LGA Population/);
       last if($headers=~m/LGA 2019 Name of Residence\tState of Residence\tRemoteness\t% Received dose 1\s+% Received dose 2\s+LGA Population/);
       die "Failed to find headers in '$filename'";
     }
@@ -704,8 +704,8 @@ sub case_s($)
 my $case_file='confirmed_cases_table1_location.csv';
 my $postcode_file='australian_postcodes.csv';
 my $lockdown_file='lockdowns.txt';
-my $current_vaccination_file='covid-19-vaccination-by-lga.2021-10-11.csv';
-my $previous_vaccination_file='covid-19-vaccination-by-lga.2021-10-04.csv';
+my $current_vaccination_file='covid-19-vaccination-local-government-area-lga-18-october-2021.csv';
+my $previous_vaccination_file='covid-19-vaccination-by-lga.2021-10-11.csv';
 my $api_key_file='google_maps_api_key.txt';
 my $local_api_key_file='local_google_maps_api_key.txt';
 
