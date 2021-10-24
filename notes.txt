@@ -1,0 +1,12 @@
+2021-10-24
+
+Painful that the order of the confirmed cases csv changes each time it gets downloaded
+
+Means that there are a lot of not-real differences between version, unless I remember to sort it.
+
+Tempting to stop saving the .csv file.
+
+But there is a  continual trickle of updates to old entries - even months old entries can appear/disappear/change.
+
+I'll try automatically sorting it. That might be best of both worlds.
+
