@@ -3,7 +3,7 @@ local_nsw_covid_map.html
 nsw_covid_map.html
 .*.sw?
 *_
-confirmed_cases_table1_location.csv.*
 find.find
 dl
 *~
+confirmed_cases_table1_location.1.csv
