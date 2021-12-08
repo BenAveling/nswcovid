@@ -208,9 +208,15 @@ sub read_cases($){
       unshift @dates, $date;
     }
     if(!$lga_name){
-      die unless $suburb=~/Justice Health/;
+      if($suburb=~/Justice Health/){
       $lga_name='Correctional settings';
       $postcode='Correctional settings';
+      }elsif($suburb=~/Hunter New England/){
+      $lga_name='Upper Hunter';
+      $postcode='2328'; # Whatever
+      }else{
+      die "mystery suburb '$suburb' has no LGA";
+    }
     }
     $lga_name=clean_lga_name($lga_name);
     $lgas{$lga_name}{cases}{$date}++;
@@ -278,12 +284,18 @@ sub locate_lgas(){
       $avg_lat+=$postcode->{lat};
       $avg_lng+=$postcode->{lng};
     }
+    if(!$num_postcodes){
+      warn "LGA $lga_name has no unmasked postcodes\n";
+      next;
+    }
     $lgas{$lga_name}{lat}=sprintf("%.15g",$avg_lat/$num_postcodes);
     $lgas{$lga_name}{lng}=sprintf("%.15g",$avg_lng/$num_postcodes);
   }
   # Arbitrarily relocate 'Correctional Centre' to off Botany Bay.
   $lgas{'Correctional settings'}{lat}='-33.98968356474387';
   $lgas{'Correctional settings'}{lng}='151.319736391778';
+  $lgas{'Hotel Quarantine'}{lat}='-33.910105';
+  $lgas{'Hotel Quarantine'}{lng}='151.319736391778';
 }
 
 sub print_header()
@@ -704,8 +716,8 @@ sub case_s($)
 my $case_file='confirmed_cases_table1_location.csv';
 my $postcode_file='australian_postcodes.csv';
 my $lockdown_file='lockdowns.txt';
-my $current_vaccination_file='covid-19-vaccination-by-lga.2021-11-01.csv ';
-my $previous_vaccination_file='covid-19-vaccination-by-lga.2021-10-18.csv ';
+my $current_vaccination_file='covid-19-vaccination-local-government-area-lga-29-november-2021.csv';
+my $previous_vaccination_file='covid-19-vaccination-local-government-area-lga-22-november-2021.csv';
 my $api_key_file='google_maps_api_key.txt';
 my $local_api_key_file='local_google_maps_api_key.txt';
 
