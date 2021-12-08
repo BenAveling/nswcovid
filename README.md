@@ -22,5 +22,5 @@ This project is shared in the hope that it will be useful, but WITHOUT ANY WARRA
 
 History
 
-2021-08-05 An initial upload, consider it a working proof of concept
-2021-09-19 Lots of little changes, including vaccination data, displaying by lga or by suburb, some changes into input data and other small stuff.
+- 2021-08-05 An initial upload, consider it a working proof of concept
+- 2021-09-19 Lots of little changes, including vaccination data, displaying by lga or by suburb, some changes into input data and other small stuff.
