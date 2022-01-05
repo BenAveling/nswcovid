@@ -144,6 +144,7 @@ sub read_vaccination($$)
   while(<$IN>){
     next if m/^,*$/;
     next if m/N\/A/i;
+    next if m/Indicates LGAs with/;
     chomp;
     s/>95/95/g; # anything over 95 is rounded down to 95. Can be > 100 if area's population has grown since previous census, but can't be helped.
     my @fields=split /[\t,]/;
@@ -153,8 +154,12 @@ sub read_vaccination($$)
     my $dose2=$fields[4];
     my $population=$fields[5];
     $population.=$fields[6] if $fields[6];
-    $dose1=~s/%//;
-    $dose2=~s/%//;
+    if(!$dose1){
+      warn "No vax data: $_\n";
+    }else{
+      $dose1=~s/%//;
+      $dose2=~s/%//;
+    }
     $population=~s/\s*"\s*//g;
     $lga_name=clean_lga_name($lga_name);
     my $lga=$lgas{$lga_name} || next;
@@ -215,8 +220,9 @@ sub read_cases($){
       $lga_name='Upper Hunter';
       $postcode='2328'; # Whatever
       }else{
-      die "mystery suburb '$suburb' has no LGA";
-    }
+        warn "mystery suburb '$suburb' has no LGA";
+        next;
+      }
     }
     $lga_name=clean_lga_name($lga_name);
     $lgas{$lga_name}{cases}{$date}++;
@@ -589,7 +595,7 @@ sub print_vaxed($$$$$$$){
   my $dose2_prev=shift;
   my $colour=shift or die;
   my $high=$pp_box_size;
-  if(!$dose1_cur || !$dose2_cur || $dose1_cur eq "N/A" || $dose2_cur eq "N/A"){
+  if(!$dose1_prev || !$dose2_prev || $dose1_prev eq "N/A" || $dose2_prev eq "N/A"){
     print_hline($lat,$lng,$colour);
     return;
   }
@@ -625,10 +631,12 @@ print qq[
     if($lga->{population}){
       $text="Population $lga->{population}.";
       my $dose1=$lga->{dose1}{current};
-      if($dose1 && $dose1 ne "N/A"){
-        my $delta1=$lga->{dose1}{current}-$lga->{dose1}{previous};
+      my $prev1=$lga->{dose1}{previous};
+      if($dose1 && $dose1 ne "N/A" && $prev1){
+        my $delta1=$dose1-$prev1;
         my $dose2=$lga->{dose2}{current};
-        my $delta2=$lga->{dose2}{current}-$lga->{dose2}{previous};
+        my $prev2=$lga->{dose2}{previous};
+        my $delta2=$dose2-$prev2;
         $text .= sprintf " %0.1f%% 1st dosed and %0.1f%% double dosed, up %0.1f%% and %0.1f%% respectively on previous week.", $dose1, $dose2, $delta1, $delta2;
       }
     }
@@ -666,7 +674,7 @@ print qq[
     my $postcode=$postcodes{$postcode_number}; # could be a Correction Centre
     my @lga_names=sort keys %{$postcode->{lgas}};
     my $num_lgas = @lga_names or next;
-    warn "postcode $postcode_number has multiple LGA: @lga_names\n" if $num_lgas!=1;
+    #warn "postcode $postcode_number has multiple LGA: @lga_names\n" if $num_lgas!=1;
     my @suburbs=sort keys %{$postcode->{suburbs}};
     my $suburbs=join ", ", @suburbs;
     my $lga_names=join "/", @lga_names;
@@ -716,8 +724,8 @@ sub case_s($)
 my $case_file='confirmed_cases_table1_location.csv';
 my $postcode_file='australian_postcodes.csv';
 my $lockdown_file='lockdowns.txt';
-my $current_vaccination_file='covid-19-vaccination-local-government-area-lga-22-november-2021.csv';
-my $previous_vaccination_file='covid-19-vaccination-local-government-area-lga-6-december-2021.csv';
+my $current_vaccination_file='covid-19-vaccination-local-government-area-lga-6-december-2021.csv';
+my $previous_vaccination_file='covid-19-vaccination-local-government-area-lga-13-december-2021.csv';
 my $api_key_file='google_maps_api_key.txt';
 my $local_api_key_file='local_google_maps_api_key.txt';
 
