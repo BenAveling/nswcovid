@@ -1,6 +1,6 @@
 To regenerate the map:
 
-  perl mk_html.pl
+  perl plot.pl
 
 By default, a github specific google-maps key is used.
 
@@ -8,7 +8,7 @@ To create a version that can be used on your PC, you need a valid api key (see b
 
 Then:
 
-  perl mk_html.pl -l
+  perl plot.pl -l
 
 To download the latest data
 
@@ -18,7 +18,7 @@ And then rename or copy to:
 
   confirmed_cases_table1_location.csv
 
-To download vaccination data, you need to convert from .xlsx to .csv, and update the hardcoded filenames in mk_html.pl
+To download vaccination data, you need to convert from .xlsx to .csv, and update the hardcoded filenames in plot.pl
 
 e.g.
 
@@ -31,7 +31,7 @@ To open in browser:
 
 To create a version that can be uploaded to github
 
-  perl mk_html.pl
+  perl plot.pl
 
 If you want to compare first:
 

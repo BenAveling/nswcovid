@@ -30,7 +30,7 @@
 # ######################################################################
 
 my $usage = qq{Usage:
-  perl mk_html.pl [-l] [-d num_days]
+  perl plot.pl [-l] [-d num_days]
 
   -l output is for local use only
   -d show num_days worth of days [instead of the default 90]

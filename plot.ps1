@@ -1,3 +1,3 @@
-perl mk_html.pl
-perl mk_html.pl -l
+perl plot.pl
+perl plot.pl -l
 start .\local_nsw_covid_map.html
