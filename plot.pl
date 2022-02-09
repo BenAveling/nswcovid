@@ -21,6 +21,7 @@
 # This script creates a google maps html page that shows
 # recent cases in each LGA or Postcode
 #
+# FIXME: We have lots of mystery suburbs that don't map to LGA. :-/
 # FIXME: One of our 'LGAs' is the collective correctional system.
 # This possibly breaks multiple unconscious assumptions.
 # But (except briefly), the cases in Justice Health don't have an LGA
@@ -43,6 +44,7 @@ Note: Input and output files are currently hardcoded.
 # 2021-07-25 new option: -d
 # 2021-09-04 Added vax % 
 #            Removed one popup - leaving only the 'marker'
+# 2022-02-08 Changed the scale (thanks Omicron)
 # ######################################################################
 
 # ####
@@ -447,7 +449,7 @@ print qq[<!DOCTYPE html>
       }
       function add_boxes(name,label,text,lat,lng,cases,colour) {
         add_text(lat,lng,name,label,text);
-        var high=$pp_box_size;
+        var high=$pp_box_size / 10;
         var wide=$pp_box_size; // For a single case to be a square, keep wide=high
         var s=lat;
         var w=lng;
@@ -580,7 +582,7 @@ sub print_hline($$$){
   my $lat=shift or die;
   my $lng=shift or die;
   my $colour=shift or die;
-  my $high=$pp_box_size;
+  # my $high=$pp_box_size;
   my $wide=$pp_vax_wide;
   my $n=$lat; my $s=$lat; my $w=$lng; my $e=$w+$wide;
   print qq{        add_box($n,$w,$s,$e,$colour);\n};
@@ -650,15 +652,15 @@ print qq[
       $lga_name,
     );
     # next if $lga_name =~ m/correctional settings/i;
-    print_vaxed(
-      $lga->{lat},
-      $lga->{lng},
-      $lga->{dose1}{current},
-      $lga->{dose2}{current},
-      $lga->{dose1}{previous},
-      $lga->{dose2}{previous},
-      my $colour=pick_colour($lga_name)
-    );
+#    print_vaxed(
+#      $lga->{lat},
+#      $lga->{lng},
+#      $lga->{dose1}{current},
+#      $lga->{dose2}{current},
+#      $lga->{dose1}{previous},
+#      $lga->{dose2}{previous},
+#      my $colour=pick_colour($lga_name)
+#    );
   }
 print qq[        displaying = 'lgas';
       }
