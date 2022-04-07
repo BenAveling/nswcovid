@@ -2,7 +2,7 @@
 
 # ######################################################################
 
-#   Copyright (C) 2021  Ben Aveling
+#   Copyright (C) 2021-22  Ben Aveling
 
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
 # This possibly breaks multiple unconscious assumptions.
 # But (except briefly), the cases in Justice Health don't have an LGA
 # e.g. 2020-07-29,,,Justice Health,,
-# One option might be to put Justice Health at
+# So have arbitrarily put Justice Health at
 # -33.98968356474387, 151.319736391778 (i.e. Botany Bay)
 # ######################################################################
 
@@ -45,6 +45,7 @@ Note: Input and output files are currently hardcoded.
 # 2021-09-04 Added vax % 
 #            Removed one popup - leaving only the 'marker'
 # 2022-02-08 Changed the scale (thanks Omicron)
+# 2022-04-08 Switch to read confirmed_cases_table1_location_agg.csv
 # ######################################################################
 
 # ####
@@ -73,7 +74,7 @@ my %colours=(
     default=>"#cccc00",# default
 );
 
-my $pp_num_days=90;
+my $pp_num_days=365;
 my $pp_oldest_day;
 my $pp_box_size;
 my $pp_vax_wide;
@@ -203,14 +204,17 @@ sub read_cases($){
   open(CSV,$file) or die;
   my $ignore_header=<CSV>;
   while(<CSV>){
-    next if m/,,,,$/; # These seem to represent a non-disclosed case, e.g one in corrective services
+    next if m/,,,,$/; # These seem to represent a non-disclosed case, e.g one in corrective services. Probably doesn't apply any more.
     chomp;
     # fields are: notification_date,postcode,lhd_2010_code,lhd_2010_name,lga_code19,lga_name19
+    # notification_date,postcode,lhd_2010_code,lhd_2010_name,lga_code19,lga_name19,confirmed_by_pcr(always N/A?),confirmed_cases_count
+
     my @fields=split /,/;
     my $date=$fields[0];
     my $postcode=$fields[1];
     my $suburb=$fields[3];
     my $lga_name=$fields[5];
+    my $case_count=$fields[7];
     if(!@dates || $date ne $dates[0]){
       unshift @dates, $date;
     }
@@ -219,18 +223,18 @@ sub read_cases($){
       $lga_name='Correctional settings';
       $postcode='Correctional settings';
       }elsif($suburb=~/Hunter New England/){
-      $lga_name='Upper Hunter';
-      $postcode='2328'; # Whatever
+        $lga_name='Upper Hunter';
+        $postcode='2328'; # Whatever
       }else{
         warn "mystery suburb '$suburb' has no LGA";
         next;
       }
     }
     $lga_name=clean_lga_name($lga_name);
-    $lgas{$lga_name}{cases}{$date}++;
-    $lgas{$lga_name}{postcodes}{$postcode}++;
-    # $suburbs{$suburb}{$date}++;
-    $postcodes{$postcode}{cases}{$date}++;
+    $lgas{$lga_name}{cases}{$date}+=$case_count;
+    $lgas{$lga_name}{postcodes}{$postcode}+=$case_count;
+    # $suburbs{$suburb}{$date}+=$case_count;
+    $postcodes{$postcode}{cases}{$date}+=$case_count;
     $postcodes{$postcode}{lgas}{$lga_name}=1;
   }
   # Pick the last however many full days, ignoring the latest day which is probably only a part day (TODO, print latest day, but with dashed lines?)
@@ -287,8 +291,15 @@ sub locate_lgas(){
         --$num_postcodes;
         next;
       }
-      my $postcode=$postcodes{$postcode_num} or warn "no postcode: $postcode_num";
-      die "postcode $postcode_num has no lat" if ! $postcode->{lat};
+      my $postcode=$postcodes{$postcode_num};
+      if(!$postcode){
+        warn "no postcode: $postcode_num\n";
+        next;
+      }
+      if(!$postcode->{lat} || !$postcode->{lng}){
+        warn "postcode $postcode_num has no lat (lga $lga_name)\n";
+        next;
+      }
       $avg_lat+=$postcode->{lat};
       $avg_lng+=$postcode->{lng};
     }
@@ -302,6 +313,7 @@ sub locate_lgas(){
   # Arbitrarily relocate 'Correctional Centre' to off Botany Bay.
   $lgas{'Correctional settings'}{lat}='-33.98968356474387';
   $lgas{'Correctional settings'}{lng}='151.319736391778';
+  # Arbitrarily relocate 'Hotel quarantine' to offshore as well.
   $lgas{'Hotel Quarantine'}{lat}='-33.910105';
   $lgas{'Hotel Quarantine'}{lng}='151.319736391778';
 }
@@ -520,7 +532,7 @@ sub print_cases($$$$$$@)
   my $text=shift;
   my $cases=shift;
   my $population=shift;
-  my $lat=shift or die "no lat for '$name'";
+  my $lat=shift or return; # FIXME "no lat for '$name'";
   my $lng=shift or die "no lng for '$name'";
   my @lga_names=@_;
   print "        // $name is at $lat,$lng\n";
@@ -579,7 +591,7 @@ sub print_cases($$$$$$@)
 }
 
 sub print_hline($$$){
-  my $lat=shift or die;
+  my $lat=shift or return; # FIXME
   my $lng=shift or die;
   my $colour=shift or die;
   # my $high=$pp_box_size;
@@ -723,7 +735,7 @@ sub case_s($)
 
 # Files
 
-my $case_file='confirmed_cases_table1_location.csv';
+my $case_file='confirmed_cases_table1_location_agg.csv';
 my $postcode_file='australian_postcodes.csv';
 my $lockdown_file='lockdowns.txt';
 my $current_vaccination_file='covid-19-vaccination-local-government-area-lga-6-december-2021.csv';

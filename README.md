@@ -24,3 +24,4 @@ History
 
 - 2021-08-05 An initial upload, consider it a working proof of concept
 - 2021-09-19 Lots of little changes, including vaccination data, displaying by lga or by suburb, some changes into input data and other small stuff.
+- 2022-04-08 Format of input file has changed - now has a number of cases column

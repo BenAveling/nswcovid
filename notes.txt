@@ -1,3 +1,11 @@
+2022-04-08 08:35:05
+
+Seems that NSW Gov has changed the format of the csv file - now have an extra column saying how many cases in postcode/whatever.
+
+  https://data.nsw.gov.au/data/dataset/aefcde60-3b0c-4bc0-9af1-6fe652944ec2/resource/5d63b527-e2b8-4c42-ad6f-677f14433520/download/confirmed_cases_table1_location_agg.csv
+
+sensible change, but breaks the scripts.
+
 2021-10-24
 
 Painful that the order of the confirmed cases csv changes each time it gets downloaded

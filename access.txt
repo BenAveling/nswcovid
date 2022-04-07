@@ -1,0 +1,9 @@
+To get a new github access token
+
+- click your profile photo in top right of github 
+- navigate to
+  - settings
+  - developer settings
+  - personal access tokens
+- click regenerate token
+- copy the token
